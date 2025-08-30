@@ -5,14 +5,6 @@ import compression from 'vite-plugin-compression';
 
 export default defineConfig({
   base: './',
-  server: {
-    proxy: {
-      '/api/v1': {
-        target: 'https://zhangzhou.claret.space:37881',
-        changeOrigin: true,
-      }
-    }
-  },
   plugins: [
     compression({
       algorithm: 'brotliCompress',
