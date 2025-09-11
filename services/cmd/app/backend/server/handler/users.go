@@ -68,7 +68,7 @@ func Register(c *gin.Context) {
 			return
 		}
 	}
-	vcodeStatus := utils.CompareVerifyCode(req.Vcode, req.Email)
+	vcodeStatus := utils.CompareVerifyCode(req.Captcha, req.Email)
 	if !vcodeStatus {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "captchaError")})
 		return
@@ -257,7 +257,7 @@ func UpdatePassword(c *gin.Context) {
 	}
 
 	// 验证验证码
-	vcodeStatus := utils.CompareVerifyCode(req.Vcode, req.Email)
+	vcodeStatus := utils.CompareVerifyCode(req.Captcha, req.Email)
 	if !vcodeStatus {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "captchaError")})
 		return
@@ -306,9 +306,9 @@ func UploadAvatar(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "invalidrequest")})
 		return
 	}
-	newFileName := fmt.Sprintf("%d%s", userInfo.Uid, path.Ext(file.Filename))
+	newFileName := fmt.Sprintf("%d%s", userInfo.Id, path.Ext(file.Filename))
 	tempFilePath := filepath.Join(global.AvatarsDir, newFileName)
-	compressedFilePath := filepath.Join(global.AvatarsDir, fmt.Sprintf("%d%s", userInfo.Uid, path.Ext(file.Filename)))
+	compressedFilePath := filepath.Join(global.AvatarsDir, fmt.Sprintf("%d%s", userInfo.Id, path.Ext(file.Filename)))
 	if _, err := os.Stat(compressedFilePath); err == nil {
 		os.Remove(compressedFilePath)
 	}

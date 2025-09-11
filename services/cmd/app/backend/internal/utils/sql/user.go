@@ -10,7 +10,7 @@ import (
 // 用户注册
 func Register(username, password, email, tokensecret string, role int) bool {
 	now := time.Now()
-	err := global.DB.Create(&global.User{Username: username, Password: password, Email: email, Create_at: now, Role: role, TokenSecret: tokensecret, IsBan: false}).Error
+	err := global.DB.Create(&global.User{Username: username, Password: password, Email: email, CreatedAt: now, Role: role, TokenSecret: tokensecret, IsBan: false}).Error
 	return err == nil
 }
 

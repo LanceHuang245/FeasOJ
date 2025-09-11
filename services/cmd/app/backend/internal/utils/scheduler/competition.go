@@ -31,19 +31,19 @@ func ScheduleCompetitionStatus() {
 			competitions := sql.GetUpcomingCompetitions()
 
 			for _, competition := range competitions {
-				if !sentNotifications[competition.ContestID] {
-					durationUntilStart := time.Until(competition.Start_at)
+				if !sentNotifications[competition.Id] {
+					durationUntilStart := time.Until(competition.StartAt)
 
 					if durationUntilStart > 0 && durationUntilStart <= time.Minute {
 						// 使用AfterFunc精确调度
 						time.AfterFunc(durationUntilStart, func() {
 							// 获取参与该竞赛的用户
-							usersInCompetition := sql.SelectUsersCompetition(competition.ContestID)
+							usersInCompetition := sql.SelectUsersCompetition(competition.Id)
 
 							// 发送竞赛开始的消息
 							for _, user := range usersInCompetition {
-								if user.ContestID == competition.ContestID {
-									if client, ok := handler.Clients[fmt.Sprint(user.Uid)]; ok {
+								if user.Id == competition.Id {
+									if client, ok := handler.Clients[fmt.Sprint(user.UserId)]; ok {
 										// 获取用户语言
 										lang := client.Lang
 										tag := language.Make(lang)
@@ -58,7 +58,7 @@ func ScheduleCompetitionStatus() {
 							}
 
 							// 记录已发送通知
-							sentNotifications[competition.ContestID] = true
+							sentNotifications[competition.Id] = true
 						})
 					}
 				}

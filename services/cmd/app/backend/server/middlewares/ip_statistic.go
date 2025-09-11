@@ -17,7 +17,7 @@ func IPStatistic() gin.HandlerFunc {
 		now := time.Now()
 
 		visit := global.IPVisit{
-			IP:         ip,
+			IpAddress:  ip,
 			VisitCount: 1,
 			LastVisit:  now,
 		}

@@ -93,6 +93,7 @@ func ConsumeJudgeResults() {
 		err = <-errChan
 		log.Println("[FeasOJ] Judge result consumer error, reconnecting:", err)
 		ch.Close()
+
 		conn.Close()
 		time.Sleep(5 * time.Second)
 	}

@@ -27,12 +27,12 @@ func SelectProblemInfo(pid string) global.ProblemInfoRequest {
 	var problem global.ProblemInfoRequest
 	global.DB.Table("problems").Where("pid = ? AND is_visible = ?", pid, true).First(&problemall)
 	problem = global.ProblemInfoRequest{
-		Pid:         problemall.Pid,
+		Id:          problemall.Id,
 		Difficulty:  problemall.Difficulty,
 		Title:       problemall.Title,
 		Content:     problemall.Content,
-		Timelimit:   problemall.Timelimit,
-		Memorylimit: problemall.Memorylimit,
+		TimeLimit:   problemall.TimeLimit,
+		MemoryLimit: problemall.MemoryLimit,
 		Input:       problemall.Input,
 		Output:      problemall.Output,
 	}
@@ -54,15 +54,15 @@ func SelectProblemTestCases(pid string) global.AdminProblemInfoRequest {
 	}
 
 	result = global.AdminProblemInfoRequest{
-		Pid:         problem.Pid,
+		Id:          problem.Id,
 		Difficulty:  problem.Difficulty,
 		Title:       problem.Title,
 		Content:     problem.Content,
-		Timelimit:   problem.Timelimit,
-		Memorylimit: problem.Memorylimit,
+		TimeLimit:   problem.TimeLimit,
+		MemoryLimit: problem.MemoryLimit,
 		Input:       problem.Input,
 		Output:      problem.Output,
-		ContestID:   problem.ContestID,
+		ContestId:   problem.ContestId,
 		IsVisible:   problem.IsVisible,
 		TestCases:   testCases,
 	}
@@ -74,15 +74,15 @@ func SelectProblemTestCases(pid string) global.AdminProblemInfoRequest {
 func UpdateProblem(req global.AdminProblemInfoRequest) error {
 	// 更新题目表
 	problem := global.Problem{
-		Pid:         req.Pid,
+		Id:          req.Id,
 		Difficulty:  req.Difficulty,
 		Title:       req.Title,
 		Content:     req.Content,
-		Timelimit:   req.Timelimit,
-		Memorylimit: req.Memorylimit,
+		TimeLimit:   req.TimeLimit,
+		MemoryLimit: req.MemoryLimit,
 		Input:       req.Input,
 		Output:      req.Output,
-		ContestID:   req.ContestID,
+		ContestId:   req.ContestId,
 		IsVisible:   req.IsVisible,
 	}
 	if err := global.DB.Save(&problem).Error; err != nil {
@@ -91,11 +91,11 @@ func UpdateProblem(req global.AdminProblemInfoRequest) error {
 
 	// 获取该题目的测试样例
 	var existingTestCases []global.TestCase
-	if err := global.DB.Where("pid = ?", req.Pid).Find(&existingTestCases).Error; err != nil {
+	if err := global.DB.Where("pid = ?", req.Id).Find(&existingTestCases).Error; err != nil {
 		return err
 	}
 
-	// 找出前端不存在的测试样例，并将其从数据库中删除
+	// 找出前端传入的测试样例中不存在的测试样例，并将其从数据库中删除
 	existingTestCaseMap := make(map[string]global.TestCase)
 	for _, testCase := range existingTestCases {
 		existingTestCaseMap[testCase.InputData] = testCase
@@ -114,11 +114,11 @@ func UpdateProblem(req global.AdminProblemInfoRequest) error {
 	// 更新或添加新的测试样例
 	for _, testCase := range req.TestCases {
 		var existingTestCase global.TestCase
-		if err := global.DB.Where("pid = ? AND input_data = ?", req.Pid, testCase.InputData).First(&existingTestCase).Error; err != nil {
+		if err := global.DB.Where("pid = ? AND input_data = ?", req.Id, testCase.InputData).First(&existingTestCase).Error; err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				// 如果测试样例不存在，则创建新的样例
 				newTestCase := global.TestCase{
-					Pid:        req.Pid,
+					Id:         req.Id,
 					InputData:  testCase.InputData,
 					OutputData: testCase.OutputData,
 				}

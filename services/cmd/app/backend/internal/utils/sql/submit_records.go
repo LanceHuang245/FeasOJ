@@ -72,6 +72,6 @@ func SelectAllSubmitRecords() []global.SubmitRecord {
 
 // 添加提交记录
 func AddSubmitRecord(Uid, Pid int, Result, Language, Username, Code string) bool {
-	err := global.DB.Table("submit_records").Create(&global.SubmitRecord{Uid: Uid, Pid: Pid, Username: Username, Result: Result, Time: time.Now(), Language: Language, Code: Code})
+	err := global.DB.Table("submit_records").Create(&global.SubmitRecord{UserId: Uid, ProblemId: Pid, Username: Username, Result: Result, Time: time.Now(), Language: Language, Code: Code})
 	return err == nil
 }

@@ -175,10 +175,10 @@ func CalculateScore(c *gin.Context) {
 		var submissions []global.SubmitRecord
 		global.DB.
 			Where("uid = ? AND result = ? AND time BETWEEN ? AND ?",
-				user.Uid,
+				user.UserId,
 				"Success",
-				competition.Start_at,
-				competition.End_at).
+				competition.StartAt,
+				competition.EndAt).
 			Find(&submissions)
 
 		// 计算分数
@@ -188,7 +188,7 @@ func CalculateScore(c *gin.Context) {
 			err := global.DB.
 				Table("problems").
 				Select("difficulty").
-				Where("contest_id = ? AND pid = ?", competitionId, submission.Pid).
+				Where("contest_id = ? AND pid = ?", competitionId, submission.ProblemId).
 				Row().
 				Scan(&difficulty)
 			if err != nil {
@@ -207,10 +207,10 @@ func CalculateScore(c *gin.Context) {
 
 		// 更新用户分数
 		if score > 0 {
-			global.DB.Model(&global.User{}).Where("uid = ?", user.Uid).Update("score", gorm.Expr("score + ?", score))
+			global.DB.Model(&global.User{}).Where("uid = ?", user.UserId).Update("score", gorm.Expr("score + ?", score))
 		}
 
-		global.DB.Model(&global.UserCompetitions{}).Where("uid = ?", user.Uid).Update("score", score)
+		global.DB.Model(&global.UserCompetitions{}).Where("uid = ?", user.UserId).Update("score", score)
 	}
 
 	global.DB.Model(&global.Competition{}).Where("contest_id = ?", competitionId).Update("scored", true)

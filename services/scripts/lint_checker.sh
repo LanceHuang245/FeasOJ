@@ -10,7 +10,7 @@ fi
 echo "Now Linting Backend..."
 echo "====================================================================================="
 
-cd services/cmd/server/backend
+cd services/cmd/app/backend
 
 golangci-lint run
 

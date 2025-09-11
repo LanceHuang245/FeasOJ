@@ -36,7 +36,7 @@ func AddDiscussion(title, content string, uid int) bool {
 	if title == "" || content == "" {
 		return false
 	}
-	err := global.DB.Table("Discussions").Create(&global.Discussion{Uid: uid, Title: title, Content: content, Create_at: time.Now()}).Error
+	err := global.DB.Table("Discussions").Create(&global.Discussion{UserId: uid, Title: title, Content: content, CreatedAt: time.Now()}).Error
 	return err == nil
 }
 
@@ -48,7 +48,7 @@ func DelDiscussion(Did int) bool {
 
 // 添加评论
 func AddComment(content string, did, uid int, profanity bool) bool {
-	return global.DB.Table("Comments").Create(&global.Comment{Did: did, Uid: uid, Content: content, Create_at: time.Now(), Profanity: profanity}).Error == nil
+	return global.DB.Table("Comments").Create(&global.Comment{Id: did, UserId: uid, Content: content, CreatedAt: time.Now(), Profanity: profanity}).Error == nil
 }
 
 // 获取指定讨论ID的所有评论信息

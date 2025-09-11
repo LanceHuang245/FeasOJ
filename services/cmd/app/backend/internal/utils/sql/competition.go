@@ -41,7 +41,7 @@ func DeleteCompetition(Cid int) bool {
 
 // 管理员更新/添加竞赛
 func UpdateCompetition(req global.AdminCompetitionInfoRequest) error {
-	if err := global.DB.Table("competitions").Where("contest_id = ?", req.ContestID).Save(&req).Error; err != nil {
+	if err := global.DB.Table("competitions").Where("contest_id = ?", req.Id).Save(&req).Error; err != nil {
 		return err
 	}
 	return nil
@@ -54,7 +54,7 @@ func AddUserCompetition(userId int, competitionId int) error {
 	// 当前时间
 	nowDateTime := time.Now()
 	if err := global.DB.Table("user_competitions").Create(
-		&global.UserCompetitions{ContestID: competitionId, Uid: userId, Username: userInfo.Username, Join_date: nowDateTime}).Error; err != nil {
+		&global.UserCompetitions{Id: competitionId, UserId: userId, Username: userInfo.Username, JoinDate: nowDateTime}).Error; err != nil {
 		return err
 	}
 	return nil

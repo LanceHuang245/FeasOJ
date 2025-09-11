@@ -43,7 +43,7 @@ func GetProblemInfo(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": GetMessage(c, "internalServerError")})
 		return
 	}
-	if problemInfo.Pid == 0 {
+	if problemInfo.Id == 0 {
 		// 缓存未命中
 		problemInfo = sql.SelectProblemInfo(c.Param("id"))
 		// 数据存入缓存，时间10分钟
@@ -85,7 +85,7 @@ func UploadCode(c *gin.Context) {
 	defer rdb.Close()
 
 	// 提交频率限制
-	userRateLimitKey := fmt.Sprintf("ratelimit:%d", userInfo.Uid)
+	userRateLimitKey := fmt.Sprintf("ratelimit:%d", userInfo.Id)
 
 	// 检查是否在限制时间内
 	exists, _ := rdb.Exists(userRateLimitKey).Result()
@@ -98,7 +98,7 @@ func UploadCode(c *gin.Context) {
 	rdb.Set(userRateLimitKey, 1, 10*time.Second)
 
 	// 将文件名改为用户ID_题目ID.扩展名
-	newFileName := fmt.Sprintf("%d_%s%s", userInfo.Uid, problem, path.Ext(file.Filename))
+	newFileName := fmt.Sprintf("%d_%s%s", userInfo.Id, problem, path.Ext(file.Filename))
 
 	// 保存文件到临时目录
 	tempFilePath := filepath.Join(os.TempDir(), newFileName)
@@ -149,7 +149,7 @@ func UploadCode(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": GetMessage(c, "internalServerError")})
 		return
 	}
-	sql.AddSubmitRecord(userInfo.Uid, pidInt, "Running...", language, username, string(code))
+	sql.AddSubmitRecord(userInfo.Id, pidInt, "Running...", language, username, string(code))
 	c.JSON(http.StatusOK, gin.H{"message": GetMessage(c, "success")})
 }
 

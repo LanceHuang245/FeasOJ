@@ -58,7 +58,7 @@ func CreateDiscussion(c *gin.Context) {
 	defer rdb.Close()
 
 	// 设置频率限制键
-	userRateLimitKey := fmt.Sprintf("discussionRateLimit:%d", userInfo.Uid)
+	userRateLimitKey := fmt.Sprintf("discussionRateLimit:%d", userInfo.Id)
 	exists, _ := rdb.Exists(userRateLimitKey).Result()
 	if exists == 1 {
 		c.JSON(http.StatusTooManyRequests, gin.H{"message": GetMessage(c, "rateLimit")})
@@ -69,7 +69,7 @@ func CreateDiscussion(c *gin.Context) {
 	rdb.Set(userRateLimitKey, 1, 15*time.Second)
 
 	// 创建讨论
-	if !sql.AddDiscussion(title, content, userInfo.Uid) {
+	if !sql.AddDiscussion(title, content, userInfo.Id) {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": GetMessage(c, "internalServerError")})
 		return
 	}
@@ -117,7 +117,7 @@ func AddComment(c *gin.Context) {
 	defer rdb.Close()
 
 	// 设置频率限制键
-	userRateLimitKey := fmt.Sprintf("commentRateLimit:%d", userInfo.Uid)
+	userRateLimitKey := fmt.Sprintf("commentRateLimit:%d", userInfo.Id)
 	exists, _ := rdb.Exists(userRateLimitKey).Result()
 	if exists == 1 {
 		c.JSON(http.StatusTooManyRequests, gin.H{"message": GetMessage(c, "rateLimit")})
@@ -135,7 +135,7 @@ func AddComment(c *gin.Context) {
 		}
 	}
 
-	if !sql.AddComment(content, did, userInfo.Uid, false) {
+	if !sql.AddComment(content, did, userInfo.Id, false) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
 	}

@@ -20,12 +20,12 @@ func GetSubmitRecordsByUsername(c *gin.Context) {
 	encodedUsername, _ := url.QueryUnescape(checker)
 	username := c.Param("username")
 	if encodedUsername != username {
-		uid := sql.SelectUserInfo(username).Uid
+		uid := sql.SelectUserInfo(username).Id
 		submitrecords := sql.SelectSRByUidForChecker(uid)
 		c.JSON(http.StatusOK, gin.H{"submitrecords": submitrecords})
 		return
 	} else {
-		uid := sql.SelectUserInfo(username).Uid
+		uid := sql.SelectUserInfo(username).Id
 		submitrecords := sql.SelectSubmitRecordsByUid(uid)
 		c.JSON(http.StatusOK, gin.H{"submitrecords": submitrecords})
 		return
