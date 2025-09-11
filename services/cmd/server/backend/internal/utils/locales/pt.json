@@ -1,0 +1,21 @@
+{
+  "loginSuccess": "Login realizado com sucesso!",
+  "success": "Sucesso!",
+  "failed": "Falha!",
+  "internalServerError": "Erro interno do servidor",
+  "invalidrequest": "Requisição inválida",
+  "captchaError": "Erro no CAPTCHA",
+  "userAlreadyinUse": "Nome de usuário ou e-mail já está em uso.",
+  "userIsBanned": "Usuário suspenso.",
+  "userNotFound": "Usuário não encontrado.",
+  "unauthorized": "Não autorizado",
+  "forbidden": "Proibido",
+  "wrongPassword": "Senha incorreta",
+  "rateLimit": "Você já realizou este envio. Tente novamente mais tarde.",
+  "userAlreadyExists": "Usuário já existe",
+  "competition_started": "A competição que você entrou já começou.",
+  "problem_completed": "Problema {{.PID}} concluído!",
+  "competition_scored": "Competição foi pontuada.",
+  "profanity": "Conteúdo inadequado detectado.",
+  "illegalImage": "Imagem ilegal detectada."
+}

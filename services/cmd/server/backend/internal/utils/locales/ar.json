@@ -1,0 +1,21 @@
+{
+  "loginSuccess": "تم تسجيل الدخول بنجاح!",
+  "success": "نجاح!",
+  "failed": "فشل!",
+  "internalServerError": "خطأ داخلي في الخادم",
+  "invalidrequest": "طلب غير صالح",
+  "captchaError": "خطأ في التحقق البصري",
+  "userAlreadyinUse": "اسم المستخدم أو البريد الإلكتروني مُستخدم بالفعل.",
+  "userIsBanned": "المستخدم محظور.",
+  "userNotFound": "المستخدم غير موجود.",
+  "unauthorized": "غير مصرّح",
+  "forbidden": "ممنوع",
+  "wrongPassword": "كلمة مرور خاطئة",
+  "rateLimit": "لقد قمت بالإرسال مسبقًا، يرجى المحاولة لاحقًا.",
+  "userAlreadyExists": "المستخدم موجود مسبقًا",
+  "competition_started": "المسابقة التي انضممت إليها قد بدأت.",
+  "problem_completed": "تم حل المسألة {{.PID}}!",
+  "competition_scored": "تم تقييم المسابقة.",
+  "profanity": "تم اكتشاف ألفاظ غير لائقة.",
+  "illegalImage": "تم اكتشاف صورة غير قانونية."
+}

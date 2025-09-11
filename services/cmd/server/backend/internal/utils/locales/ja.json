@@ -1,0 +1,21 @@
+{
+  "loginSuccess": "ログインに成功しました！",
+  "success": "成功しました！",
+  "failed": "失敗しました！",
+  "internalServerError": "サーバーエラーが発生しました",
+  "invalidrequest": "無効なリクエストです",
+  "captchaError": "無効なキャプチャコードです",
+  "userAlreadyinUse": "すでに使用されているユーザー名またはEメール",
+  "userIsBanned": "このユーザーは禁止されています",
+  "userNotFound": "ユーザーが見つかりません",
+  "unauthorized": "認証に失敗しました",
+  "forbidden": "アクセスが拒否されました",
+  "wrongPassword": "パスワードが間違っています",
+  "rateLimit": "すでに送信済みです。後でもう一度送信してください。",
+  "userAlreadyExists": "ユーザーがすでに存在します",
+  "competition_started": "あなたがエントリーした大会が始まりました。",
+  "problem_completed": "問題{{.PID}}が完了しました！",
+  "competition_scored": "コンペティションは採点された。",
+  "profanity": "不適切な言葉は使用できません。",
+  "illegalImage": "画像に不適切なコンテンツが含まれています。"
+}

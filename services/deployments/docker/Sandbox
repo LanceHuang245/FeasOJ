@@ -1,0 +1,40 @@
+FROM alpine:edge
+
+# 替换为中国国内镜像源(If you are not in China mainland, annotate it)
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+RUN echo "https://mirrors.aliyun.com/alpine/edge/testing" >> /etc/apk/repositories
+RUN echo "https://mirrors.aliyun.com/alpine/edge/community" >> /etc/apk/repositories
+
+# If you are not in China mainland, Unannotate it
+# RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+# RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
+
+# 更新包列表并安装必要的软件
+RUN apk update && apk add --no-cache \
+    build-base \
+    gcc \
+    g++ \
+    openjdk17 \
+    go \
+    python3 \
+    py3-pip \
+    rust \
+    cargo \
+    php \
+    php-cli \
+    php-common \
+    php-json \
+    php-phar \
+    php-iconv \
+    php-openssl \
+    php-mbstring \
+    php-tokenizer \
+    php-xml \
+    php-curl \
+    fpc
+
+# 设置工作目录
+WORKDIR /workspace
+
+# 设置默认命令
+CMD ["sh"]

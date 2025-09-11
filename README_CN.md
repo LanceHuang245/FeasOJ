@@ -5,12 +5,12 @@
     </a>
 </p>
 
+> FeasOJ Backend与FeasOJ JudgeCore现已迁移到该项目中。
+
 # FeasOJ
 ### 项目简介
 FeasOJ 是一个基于 Vue 和 Golang 的在线编程练习平台，支持多国语言、讨论区、竞赛等功能，旨在为用户提供一个方便、高效的学习和练习环境。
 <br>
-[FeasOJ-Backend](https://github.com/ClaretWheel1481/FeasOJ-Backend)
-[FeasOJ-JudgeCore](https://github.com/ClaretWheel1481/FeasOJ-JudgeCore)
 [ImageGuard](https://github.com/ClaretWheel1481/ImageGuard)
 [Profanity Detector](https://github.com/ClaretWheel1481/ProfanityDetector)
 [API Document(CN)](https://claret-feasoj.apifox.cn)

@@ -1,0 +1,21 @@
+{
+  "loginSuccess": "登錄成功！",
+  "success": "成功！",
+  "failed": "失敗！",
+  "internalServerError": "內部伺服器錯誤",
+  "invalidrequest": "無效的請求",
+  "captchaError": "驗證碼錯誤",
+  "userAlreadyinUse": "用戶名或郵箱已經被使用。",
+  "userIsBanned": "用戶已被封鎖",
+  "userNotFound": "用戶不存在",
+  "unauthorized": "未授權",
+  "forbidden": "禁止訪問",
+  "wrongPassword": "密碼錯誤",
+  "rateLimit": "您已經提交過一次，請稍後再試。",
+  "userAlreadyExists": "用戶已經存在",
+  "competition_started": "您參加的比賽已經開始。",
+  "problem_completed": "題目 {{.PID}} 已完成！",
+  "competition_scored": "比賽得分已計算！",
+  "profanity": "監測到不允許的語言。",
+  "illegalImage": "圖片包含非法內容。"
+}

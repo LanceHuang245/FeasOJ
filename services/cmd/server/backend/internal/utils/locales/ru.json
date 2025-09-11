@@ -1,0 +1,21 @@
+{
+  "loginSuccess": "Успешный вход!",
+  "success": "Успешно!",
+  "failed": "Ошибка!",
+  "internalServerError": "Внутренняя ошибка сервера",
+  "invalidrequest": "Некорректный запрос",
+  "captchaError": "Ошибка капчи",
+  "userAlreadyinUse": "Имя пользователя или email уже заняты.",
+  "userIsBanned": "Пользователь заблокирован.",
+  "userNotFound": "Пользователь не найден.",
+  "unauthorized": "Не авторизован",
+  "forbidden": "Доступ запрещен",
+  "wrongPassword": "Неверный пароль",
+  "rateLimit": "Вы уже отправляли это ранее, попробуйте позже.",
+  "userAlreadyExists": "Пользователь уже существует",
+  "competition_started": "Соревнование, в которое вы вошли, уже началось.",
+  "problem_completed": "Задача {{.PID}} решена!",
+  "competition_scored": "Соревнование оценено.",
+  "profanity": "Обнаружена ненормативная лексика.",
+  "illegalImage": "Обнаружено запрещенное изображение."
+}
