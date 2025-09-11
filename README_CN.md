@@ -5,7 +5,8 @@
     </a>
 </p>
 
-> FeasOJ [Backend](https://github.com/LanceHuang245/FeasOJ-Backend) 和 [JudgeCore](https://github.com/LanceHuang245/FeasOJ-JudgeCore)现已迁移到该项目中。
+> FeasOJ [Backend](https://github.com/LanceHuang245/FeasOJ-Backend) 和 [JudgeCore](https://github.com/LanceHuang245/FeasOJ-JudgeCore)现已迁移到该项目中！\
+> 现在FeasOJ正在进行全面优化、重构，请等待下一个正式版发布后使用，敬请期待！
 
 # FeasOJ
 ### 项目简介
