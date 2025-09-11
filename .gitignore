@@ -20,11 +20,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-backend-src/main
-backend-src/src/go.sum
-backend-src/config
-backend-src/logs
-backend-src/avatars
-backend-src/pkg
-backend-src/codefiles
-backend-src/certificate
