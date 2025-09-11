@@ -1,10 +1,11 @@
 package handler
 
 import (
-	"FeasOJ/internal/config"
-	"FeasOJ/internal/global"
-	"FeasOJ/internal/utils"
-	"FeasOJ/internal/utils/sql"
+	"FeasOJ/app/backend/internal/config"
+	"FeasOJ/app/backend/internal/global"
+	"FeasOJ/app/backend/internal/utils"
+	"FeasOJ/pkg/databases/repository"
+	"FeasOJ/pkg/structs"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -51,14 +52,14 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	var req global.RegisterRequest
+	var req structs.RegisterRequest
 	if err := c.ShouldBind(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "invalidRequest")})
 		return
 	}
 
 	// 判断用户或邮箱是否存在
-	if sql.IsUserExist(req.Username, req.Email) {
+	if repository.IsUserExist(global.Db, req.Username, req.Email) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "userAlreadyinUse")})
 		return
 	}
@@ -73,7 +74,7 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "captchaError")})
 		return
 	}
-	success := sql.Register(req.Username, utils.EncryptPassword(req.Password), req.Email, uuid.New().String(), 0)
+	success := repository.Register(global.Db, req.Username, utils.EncryptPassword(req.Password), req.Email, uuid.New().String(), 0)
 
 	// 计数键
 	var counterKey string
@@ -121,7 +122,7 @@ func Login(c *gin.Context) {
 	// 查用户名
 	var username string
 	if utils.IsEmail(userParam) {
-		username = sql.SelectUserByEmail(userParam).Username
+		username = repository.SelectUserByEmail(global.Db, userParam).Username
 	} else {
 		username = userParam
 	}
@@ -136,7 +137,7 @@ func Login(c *gin.Context) {
 	}
 
 	// 是否封号
-	if sql.SelectUserInfo(username).IsBan {
+	if repository.SelectUserInfo(global.Db, username).IsBan {
 		c.JSON(http.StatusForbidden, gin.H{"message": GetMessage(c, "userIsBanned")})
 		return
 	}
@@ -177,12 +178,12 @@ func GetCaptcha(c *gin.Context) {
 
 	// 原有校验逻辑：注册/重置场景区分
 	if isCreate == "false" {
-		if sql.SelectUserByEmail(email).Username == "" {
+		if repository.SelectUserByEmail(global.Db, email).Username == "" {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": GetMessage(c, "internalServerError")})
 			return
 		}
 	} else {
-		if sql.SelectUserByEmail(email).Username != "" {
+		if repository.SelectUserByEmail(global.Db, email).Username != "" {
 			c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "userAlreadyinUse")})
 			return
 		}
@@ -210,12 +211,12 @@ func VerifyUserInfo(c *gin.Context) {
 		return
 	}
 	if utils.IsEmail(unescapeUsername) {
-		Username = sql.SelectUserByEmail(unescapeUsername).Username
+		Username = repository.SelectUserByEmail(global.Db, unescapeUsername).Username
 	} else {
 		Username = unescapeUsername
 	}
 	// 查询对应的用户信息
-	userInfo := sql.SelectUserInfo(Username)
+	userInfo := repository.SelectUserInfo(global.Db, Username)
 	if userInfo.Username == "" {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": GetMessage(c, "internalServerError")})
 	} else {
@@ -228,7 +229,7 @@ func GetUserInfo(c *gin.Context) {
 	// 获取用户名
 	username := c.Param("username")
 	// 查询对应的用户信息
-	userInfo := sql.SelectUserInfo(username)
+	userInfo := repository.SelectUserInfo(global.Db, username)
 	if userInfo.Username == "" {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": GetMessage(c, "internalServerError")})
 	} else {
@@ -238,7 +239,7 @@ func GetUserInfo(c *gin.Context) {
 
 // 更新密码
 func UpdatePassword(c *gin.Context) {
-	var req global.UpdatePasswordRequest
+	var req structs.UpdatePasswordRequest
 	if err := c.ShouldBind(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "invalidRequest")})
 		return
@@ -251,7 +252,7 @@ func UpdatePassword(c *gin.Context) {
 	}
 
 	// 检查邮箱是否存在
-	if sql.SelectUserByEmail(req.Email).Username == "" {
+	if repository.SelectUserByEmail(global.Db, req.Email).Username == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "emailNotExist")})
 		return
 	}
@@ -264,7 +265,7 @@ func UpdatePassword(c *gin.Context) {
 	}
 
 	// 更新密码
-	success := sql.UpdatePassword(req.Email, utils.EncryptPassword(req.NewPassword))
+	success := repository.UpdatePassword(global.Db, req.Email, utils.EncryptPassword(req.NewPassword))
 	if success {
 		c.JSON(http.StatusOK, gin.H{"message": GetMessage(c, "success")})
 	} else {
@@ -284,7 +285,7 @@ func UpdateSynopsis(c *gin.Context) {
 			return
 		}
 	}
-	if sql.UpdateSynopsis(username, synopsis) {
+	if repository.UpdateSynopsis(global.Db, username, synopsis) {
 		c.JSON(http.StatusOK, gin.H{"message": GetMessage(c, "success")})
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
@@ -301,7 +302,7 @@ func UploadAvatar(c *gin.Context) {
 	encodedUsername := c.GetHeader("Username")
 	username, _ := url.QueryUnescape(encodedUsername)
 	// 获取用户信息
-	userInfo := sql.SelectUserInfo(username)
+	userInfo := repository.SelectUserInfo(global.Db, username)
 	if userInfo.Username == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "invalidrequest")})
 		return
@@ -338,7 +339,7 @@ func UploadAvatar(c *gin.Context) {
 	}
 
 	// 上传压缩后的头像路径至数据库
-	if !sql.UpdateAvatar(username, newFileName) {
+	if !repository.UpdateAvatar(global.Db, username, newFileName) {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": GetMessage(c, "internalServerError")})
 		return
 	}
@@ -349,10 +350,10 @@ func UploadAvatar(c *gin.Context) {
 func GetRanking(c *gin.Context) {
 	cacheKey := "ranking"
 	// 从缓存中获取数据
-	var ranking []global.UserInfoRequest
+	var ranking []structs.UserInfoRequest
 	err := utils.GetCache(cacheKey, &ranking)
 	if err != nil || len(ranking) == 0 {
-		ranking = sql.SelectRank100Users()
+		ranking = repository.SelectRank100Users(global.Db)
 		// 缓存5分钟
 		err := utils.SetCache(cacheKey, ranking, 5*time.Minute)
 		if err != nil {
@@ -379,7 +380,7 @@ func SendVerifycode(c *gin.Context) {
 	}
 
 	// 检查邮箱是否已被注册
-	if sql.SelectUserByEmail(email).Username != "" {
+	if repository.SelectUserByEmail(global.Db, email).Username != "" {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "emailAlreadyinUse")})
 		return
 	}

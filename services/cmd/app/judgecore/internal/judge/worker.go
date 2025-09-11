@@ -1,10 +1,11 @@
 package judge
 
 import (
-	"JudgeCore/internal/config"
-	"JudgeCore/internal/global"
-	"JudgeCore/internal/utils"
-	"JudgeCore/internal/utils/sql"
+	"FeasOJ/app/judgecore/internal/config"
+	"FeasOJ/app/judgecore/internal/global"
+	"FeasOJ/app/judgecore/internal/utils"
+	"FeasOJ/pkg/databases/repository"
+	"FeasOJ/pkg/structs"
 	"log"
 	"strconv"
 	"strings"
@@ -103,16 +104,16 @@ func worker(taskChan chan Task, ch *amqp.Channel, wg *sync.WaitGroup, db *gorm.D
 	defer wg.Done()
 
 	for task := range taskChan {
-		problem, err := sql.SelectProblemByPid(db, task.PID)
+		problem, err := repository.SelectProblemByPid(db, task.PID)
 		if err != nil {
 			log.Printf("[FeasOJ] Failed to get problem info for PID %d: %v", task.PID, err)
 			continue
 		}
 
-		testCases := sql.SelectTestCasesByPid(db, task.PID)
+		testCases := repository.SelectTestCasesByPid(db, task.PID)
 		if len(testCases) == 0 {
 			log.Printf("[FeasOJ] No test cases found for PID %d", task.PID)
-			sql.ModifyJudgeStatus(db, task.UID, task.PID, global.SystemError)
+			repository.ModifyJudgeStatus(db, task.UID, task.PID, global.SystemError)
 			continue
 		}
 
@@ -120,9 +121,9 @@ func worker(taskChan chan Task, ch *amqp.Channel, wg *sync.WaitGroup, db *gorm.D
 		pool.containerIDs.Store(task.Name, containerID)
 
 		result := CompileAndRun(task.Name, containerID, problem, testCases)
-		sql.ModifyJudgeStatus(db, task.UID, task.PID, result)
+		repository.ModifyJudgeStatus(db, task.UID, task.PID, result)
 
-		resultMsg := global.JudgeResultMessage{
+		resultMsg := structs.JudgeResultMessage{
 			UserID:    task.UID,
 			ProblemID: task.PID,
 			Status:    result,

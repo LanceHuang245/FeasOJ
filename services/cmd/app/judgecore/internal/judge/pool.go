@@ -1,7 +1,7 @@
 package judge
 
 import (
-	"JudgeCore/internal/config"
+	"FeasOJ/app/judgecore/internal/config"
 	"context"
 	"log"
 	"os/exec"

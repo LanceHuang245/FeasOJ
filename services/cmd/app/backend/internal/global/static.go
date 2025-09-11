@@ -12,7 +12,7 @@ var CertDir string
 var DocsDir string
 
 // 全局变量 - 数据库连接对象
-var DB *gorm.DB
+var Db *gorm.DB
 
 // 全局变量 - 微服务地址
 var ImageGuardAddr string

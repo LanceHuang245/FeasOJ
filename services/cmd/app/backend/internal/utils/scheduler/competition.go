@@ -1,9 +1,10 @@
 package scheduler
 
 import (
-	"FeasOJ/internal/utils"
-	"FeasOJ/internal/utils/sql"
-	"FeasOJ/server/handler"
+	"FeasOJ/app/backend/internal/global"
+	"FeasOJ/app/backend/internal/utils"
+	"FeasOJ/app/backend/server/handler"
+	"FeasOJ/pkg/databases/repository"
 	"fmt"
 	"log"
 	"time"
@@ -28,7 +29,7 @@ func ScheduleCompetitionStatus() {
 			log.Println("[FeasOJ] Competition scheduler running:", time.Now())
 
 			// 获取未开始的竞赛
-			competitions := sql.GetUpcomingCompetitions()
+			competitions := repository.GetUpcomingCompetitions(global.Db)
 
 			for _, competition := range competitions {
 				if !sentNotifications[competition.Id] {
@@ -38,7 +39,7 @@ func ScheduleCompetitionStatus() {
 						// 使用AfterFunc精确调度
 						time.AfterFunc(durationUntilStart, func() {
 							// 获取参与该竞赛的用户
-							usersInCompetition := sql.SelectUsersCompetition(competition.Id)
+							usersInCompetition := repository.SelectUsersCompetition(global.Db, competition.Id)
 
 							// 发送竞赛开始的消息
 							for _, user := range usersInCompetition {
@@ -65,12 +66,12 @@ func ScheduleCompetitionStatus() {
 			}
 
 			// 更新竞赛状态
-			if err := sql.UpdateCompetitionStatus(); err != nil {
+			if err := repository.UpdateCompetitionStatus(global.Db); err != nil {
 				log.Println("[FeasOJ] Error updating competition status:", err)
 			}
 
 			// 更新题目状态
-			if err := sql.UpdateProblemVisibility(); err != nil {
+			if err := repository.UpdateProblemVisibility(global.Db); err != nil {
 				log.Println("[FeasOJ] Error updating competition's problem status:", err)
 			}
 		})

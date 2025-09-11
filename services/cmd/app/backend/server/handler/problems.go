@@ -1,9 +1,10 @@
 package handler
 
 import (
-	"FeasOJ/internal/global"
-	"FeasOJ/internal/utils"
-	"FeasOJ/internal/utils/sql"
+	"FeasOJ/app/backend/internal/global"
+	"FeasOJ/app/backend/internal/utils"
+	"FeasOJ/pkg/databases/repository"
+	"FeasOJ/pkg/structs"
 	"bytes"
 	"fmt"
 	"io"
@@ -22,20 +23,20 @@ import (
 // 获取所有题目
 func GetAllProblems(c *gin.Context) {
 	// 实时性要求较高，不做数据缓存
-	problems := sql.SelectAllProblems()
+	problems := repository.SelectAllProblems(global.Db)
 	c.JSON(http.StatusOK, gin.H{"problems": problems})
 }
 
 // 获取题目信息
 func GetProblemInfo(c *gin.Context) {
 	pid, _ := strconv.Atoi(c.Param("id"))
-	if !sql.IsProblemVisible(pid) {
+	if !repository.IsProblemVisible(global.Db, pid) {
 		c.JSON(http.StatusForbidden, gin.H{"message": GetMessage(c, "forbidden")})
 		return
 	}
 	// 生成缓存键
 	cacheKey := "problemInfo_" + c.Param("id")
-	var problemInfo global.ProblemInfoRequest
+	var problemInfo structs.ProblemInfoRequest
 
 	// 从缓存中获取数据
 	err := utils.GetCache(cacheKey, &problemInfo)
@@ -45,7 +46,7 @@ func GetProblemInfo(c *gin.Context) {
 	}
 	if problemInfo.Id == 0 {
 		// 缓存未命中
-		problemInfo = sql.SelectProblemInfo(c.Param("id"))
+		problemInfo = repository.SelectProblemInfo(global.Db, c.Param("id"))
 		// 数据存入缓存，时间10分钟
 		err = utils.SetCache(cacheKey, problemInfo, 10*time.Minute)
 		if err != nil {
@@ -70,7 +71,7 @@ func UploadCode(c *gin.Context) {
 	}
 
 	// 获取用户ID
-	userInfo := sql.SelectUserInfo(username)
+	userInfo := repository.SelectUserInfo(global.Db, username)
 
 	// 连接到 RabbitMQ
 	conn, ch, err := utils.ConnectRabbitMQ()
@@ -149,7 +150,7 @@ func UploadCode(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": GetMessage(c, "internalServerError")})
 		return
 	}
-	sql.AddSubmitRecord(userInfo.Id, pidInt, "Running...", language, username, string(code))
+	repository.AddSubmitRecord(global.Db, userInfo.Id, pidInt, "Running...", language, username, string(code))
 	c.JSON(http.StatusOK, gin.H{"message": GetMessage(c, "success")})
 }
 

@@ -1,7 +1,9 @@
 package judge
 
 import (
-	"JudgeCore/internal/global"
+	"FeasOJ/app/judgecore/internal/global"
+	"FeasOJ/pkg/databases/tables"
+	"FeasOJ/pkg/structs"
 	"context"
 	"errors"
 	"fmt"
@@ -59,7 +61,7 @@ func BuildImage(currentDir string) bool {
 }
 
 // CompileAndRun 编译并运行代码
-func CompileAndRun(filename string, containerID string, problem *global.Problem, testCases []*global.TestCaseRequest) string {
+func CompileAndRun(filename string, containerID string, problem *tables.Problem, testCases []*structs.TestCaseRequest) string {
 	taskDir := fmt.Sprintf("/workspace/task_%d", time.Now().UnixNano())
 
 	mkdirCmd := exec.Command("docker", "exec", containerID, "mkdir", "-p", taskDir)
@@ -182,10 +184,10 @@ func resetTaskDirectory(containerID, taskDir string) error {
 	return nil
 }
 
-func parseLimits(problem *global.Problem) (timeLimit int, memoryLimit int, err error) {
+func parseLimits(problem *tables.Problem) (timeLimit int, memoryLimit int, err error) {
 	re := regexp.MustCompile(`\d+`)
 
-	timeMatches := re.FindAllString(problem.Timelimit, -1)
+	timeMatches := re.FindAllString(problem.TimeLimit, -1)
 	if len(timeMatches) == 0 {
 		return 0, 0, fmt.Errorf("no time limit found")
 	}
@@ -194,7 +196,7 @@ func parseLimits(problem *global.Problem) (timeLimit int, memoryLimit int, err e
 		return 0, 0, err
 	}
 
-	memMatches := re.FindAllString(problem.Memorylimit, -1)
+	memMatches := re.FindAllString(problem.MemoryLimit, -1)
 	if len(memMatches) == 0 {
 		return 0, 0, fmt.Errorf("no memory limit found")
 	}

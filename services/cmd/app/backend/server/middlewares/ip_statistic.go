@@ -1,7 +1,8 @@
 package middlewares
 
 import (
-	"FeasOJ/internal/global"
+	"FeasOJ/app/backend/internal/global"
+	"FeasOJ/pkg/databases/tables"
 	"time"
 
 	"gorm.io/gorm/clause"
@@ -16,13 +17,13 @@ func IPStatistic() gin.HandlerFunc {
 		ip := c.ClientIP()
 		now := time.Now()
 
-		visit := global.IPVisit{
+		visit := tables.IPVisit{
 			IpAddress:  ip,
 			VisitCount: 1,
 			LastVisit:  now,
 		}
 
-		global.DB.Clauses(clause.OnConflict{
+		global.Db.Clauses(clause.OnConflict{
 			Columns: []clause.Column{{Name: "ip"}},
 			DoUpdates: clause.Assignments(map[string]interface{}{
 				"visit_count": gorm.Expr("visit_count + ?", 1),

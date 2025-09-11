@@ -1,9 +1,9 @@
 package server
 
 import (
-	"JudgeCore/internal/judge"
-	"JudgeCore/server/handler"
-	"JudgeCore/server/middlewares"
+	"FeasOJ/app/judgecore/internal/judge"
+	"FeasOJ/app/judgecore/server/handler"
+	"FeasOJ/app/judgecore/server/middlewares"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

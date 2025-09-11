@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"FeasOJ/internal/global"
+	"FeasOJ/app/backend/internal/global"
 	"io"
 	"log"
 	"os"

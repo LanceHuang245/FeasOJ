@@ -1,8 +1,9 @@
 package utils
 
 import (
-	"FeasOJ/internal/config"
-	"FeasOJ/internal/global"
+	"FeasOJ/app/backend/internal/config"
+	"FeasOJ/app/backend/internal/global"
+	"FeasOJ/pkg/databases/tables"
 	"fmt"
 	"log"
 	"time"
@@ -30,16 +31,16 @@ func InitAdminAccount() (string, string, string, string, int) {
 
 // 创建表
 func InitTable() bool {
-	err := global.DB.AutoMigrate(
-		&global.User{},
-		&global.Problem{},
-		&global.SubmitRecord{},
-		&global.Discussion{},
-		&global.Comment{},
-		&global.TestCase{},
-		&global.Competition{},
-		&global.UserCompetitions{},
-		&global.IPVisit{},
+	err := global.Db.AutoMigrate(
+		&tables.User{},
+		&tables.Problem{},
+		&tables.SubmitRecord{},
+		&tables.Discussion{},
+		&tables.Comment{},
+		&tables.TestCase{},
+		&tables.Competition{},
+		&tables.UserCompetitions{},
+		&tables.IPVisit{},
 	)
 	return err == nil
 }
@@ -70,8 +71,8 @@ func ConnectSql() *gorm.DB {
 }
 
 // 根据用户名获取用户信息
-func SelectUser(username string) global.User {
-	var user global.User
-	global.DB.Where("username = ?", username).First(&user)
+func SelectUser(username string) tables.User {
+	var user tables.User
+	global.Db.Where("username = ?", username).First(&user)
 	return user
 }

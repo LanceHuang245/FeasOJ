@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"FeasOJ/internal/config"
-	"FeasOJ/internal/global"
+	"FeasOJ/app/backend/internal/config"
+	"FeasOJ/app/backend/internal/global"
 	"bytes"
 	"encoding/json"
 	"errors"

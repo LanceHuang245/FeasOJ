@@ -1,9 +1,10 @@
 package handler
 
 import (
-	"FeasOJ/internal/config"
-	"FeasOJ/internal/utils"
-	"FeasOJ/internal/utils/sql"
+	"FeasOJ/app/backend/internal/config"
+	"FeasOJ/app/backend/internal/global"
+	"FeasOJ/app/backend/internal/utils"
+	"FeasOJ/pkg/databases/repository"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -18,7 +19,7 @@ func GetAllDiscussions(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	itemsPerPage, _ := strconv.Atoi(c.DefaultQuery("itemsPerPage", "12"))
 
-	discussions, total := sql.SelectDiscussList(page, itemsPerPage)
+	discussions, total := repository.SelectDiscussList(global.Db, page, itemsPerPage)
 	c.JSON(http.StatusOK, gin.H{
 		"discussions": discussions,
 		"total":       total,
@@ -28,7 +29,7 @@ func GetAllDiscussions(c *gin.Context) {
 // 获取指定id讨论信息
 func GetDiscussionByDid(c *gin.Context) {
 	did, _ := strconv.Atoi(c.Param("did"))
-	discussion := sql.SelectDiscussionByDid(did)
+	discussion := repository.SelectDiscussionByDid(global.Db, did)
 	c.JSON(http.StatusOK, gin.H{"discussionInfo": discussion})
 }
 
@@ -52,7 +53,7 @@ func CreateDiscussion(c *gin.Context) {
 	}
 
 	// 获取用户ID
-	userInfo := sql.SelectUserInfo(username)
+	userInfo := repository.SelectUserInfo(global.Db, username)
 
 	rdb := utils.ConnectRedis()
 	defer rdb.Close()
@@ -69,7 +70,7 @@ func CreateDiscussion(c *gin.Context) {
 	rdb.Set(userRateLimitKey, 1, 15*time.Second)
 
 	// 创建讨论
-	if !sql.AddDiscussion(title, content, userInfo.Id) {
+	if !repository.AddDiscussion(global.Db, title, content, userInfo.Id) {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": GetMessage(c, "internalServerError")})
 		return
 	}
@@ -80,7 +81,7 @@ func CreateDiscussion(c *gin.Context) {
 // 删除讨论
 func DeleteDiscussion(c *gin.Context) {
 	did, _ := strconv.Atoi(c.Param("did"))
-	if sql.DelDiscussion(did) {
+	if repository.DelDiscussion(global.Db, did) {
 		c.JSON(http.StatusOK, gin.H{"message": GetMessage(c, "success")})
 	} else {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": GetMessage(c, "internalServerError")})
@@ -90,14 +91,14 @@ func DeleteDiscussion(c *gin.Context) {
 // 获取指定讨论的评论
 func GetComment(c *gin.Context) {
 	did, _ := strconv.Atoi(c.Param("did"))
-	comments := sql.SelectCommentsByDid(did)
+	comments := repository.SelectCommentsByDid(global.Db, did)
 	c.JSON(http.StatusOK, gin.H{"comments": comments})
 }
 
 // 删除指定Cid的评论
 func DelComment(c *gin.Context) {
 	cid, _ := strconv.Atoi(c.Param("cid"))
-	if !sql.DeleteCommentByCid(cid) {
+	if !repository.DeleteCommentByCid(global.Db, cid) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
 	}
@@ -111,7 +112,7 @@ func AddComment(c *gin.Context) {
 	content := c.PostForm("content")
 	did, _ := strconv.Atoi(c.Param("did"))
 	// 获取用户ID
-	userInfo := sql.SelectUserInfo(username)
+	userInfo := repository.SelectUserInfo(global.Db, username)
 
 	rdb := utils.ConnectRedis()
 	defer rdb.Close()
@@ -135,7 +136,7 @@ func AddComment(c *gin.Context) {
 		}
 	}
 
-	if !sql.AddComment(content, did, userInfo.Id, false) {
+	if !repository.AddComment(global.Db, content, did, userInfo.Id, false) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
 	}

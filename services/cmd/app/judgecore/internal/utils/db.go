@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"JudgeCore/internal/config"
+	"FeasOJ/app/judgecore/internal/config"
 	"fmt"
 	"time"
 
@@ -31,6 +31,6 @@ func ConnectSql(dbConfig config.Database) (*gorm.DB, error) {
 	sqlDB.SetMaxIdleConns(dbConfig.MaxIdleConns)
 	sqlDB.SetMaxOpenConns(dbConfig.MaxOpenConns)
 	sqlDB.SetConnMaxLifetime(time.Duration(dbConfig.MaxLifeTime) * time.Second)
-	
+
 	return db, nil
 }

@@ -1,9 +1,9 @@
 package judge
 
 import (
-	"FeasOJ/internal/global"
-	"FeasOJ/internal/utils"
-	"FeasOJ/server/handler"
+	"FeasOJ/app/backend/internal/utils"
+	"FeasOJ/app/backend/server/handler"
+	"FeasOJ/pkg/structs"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -67,7 +67,7 @@ func ConsumeJudgeResults() {
 				}
 			}()
 			for d := range msgs {
-				var result global.JudgeResultMessage
+				var result structs.JudgeResultMessage
 				if err := json.Unmarshal(d.Body, &result); err != nil {
 					log.Printf("[FeasOJ] Error decoding result: %v", err)
 					continue

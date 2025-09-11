@@ -3,7 +3,7 @@ echo "Go Lint Checker Starting..."
 cd "$(dirname "$0")/../../"
 
 if [ -z "$(which golangci-lint)" ]; then
-  echo "golangci-lint not installed"
+  echo "golangci-lint not installed, you can install it by following the instructions at https://golangci-lint.run/docs/welcome/install/"
   exit 1
 fi
 

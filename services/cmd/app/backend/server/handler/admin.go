@@ -1,8 +1,10 @@
 package handler
 
 import (
-	"FeasOJ/internal/global"
-	"FeasOJ/internal/utils/sql"
+	"FeasOJ/app/backend/internal/global"
+	"FeasOJ/pkg/databases/repository"
+	"FeasOJ/pkg/databases/tables"
+	"FeasOJ/pkg/structs"
 	"net/http"
 	"strconv"
 
@@ -13,26 +15,26 @@ import (
 
 // 管理员获取所有题目
 func GetAllProblemsAdmin(c *gin.Context) {
-	problems := sql.SelectAllProblemsAdmin()
+	problems := repository.SelectAllProblemsAdmin(global.Db)
 	c.JSON(http.StatusOK, gin.H{"problems": problems})
 }
 
 // 管理员获取指定题目所有信息
 func GetProblemAllInfo(c *gin.Context) {
-	problemInfo := sql.SelectProblemTestCases(c.Param("pid"))
+	problemInfo := repository.SelectProblemTestCases(global.Db, c.Param("pid"))
 	c.JSON(http.StatusOK, gin.H{"problemInfo": problemInfo})
 }
 
 // 更新题目信息
 func UpdateProblemInfo(c *gin.Context) {
-	var req global.AdminProblemInfoRequest
+	var req structs.AdminProblemInfoRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "invalidrequest")})
 		return
 	}
 
 	// 更新题目信息
-	if err := sql.UpdateProblem(req); err != nil {
+	if err := repository.UpdateProblem(global.Db, req); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": GetMessage(c, "internalServerError")})
 		return
 	}
@@ -44,7 +46,7 @@ func UpdateProblemInfo(c *gin.Context) {
 func DeleteProblem(c *gin.Context) {
 	pid := c.Param("pid")
 	pidInt, _ := strconv.Atoi(pid)
-	if !sql.DeleteProblemAllInfo(pidInt) {
+	if !repository.DeleteProblemAllInfo(global.Db, pidInt) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
 	}
@@ -53,7 +55,7 @@ func DeleteProblem(c *gin.Context) {
 
 // 管理员获取所有用户信息
 func GetAllUsersInfo(c *gin.Context) {
-	usersInfo := sql.SelectAllUsersInfo()
+	usersInfo := repository.SelectAllUsersInfo(global.Db)
 	c.JSON(http.StatusOK, gin.H{"usersInfo": usersInfo})
 }
 
@@ -62,7 +64,7 @@ func PromoteUser(c *gin.Context) {
 	uid := c.Query("uid")
 	uidInt, _ := strconv.Atoi(uid)
 
-	if !sql.PromoteToAdmin(uidInt) {
+	if !repository.PromoteToAdmin(global.Db, uidInt) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
 	}
@@ -74,12 +76,12 @@ func DemoteUser(c *gin.Context) {
 	uid := c.Query("uid")
 	uidInt, _ := strconv.Atoi(uid)
 
-	if sql.SelectAdminCount() <= 1 {
+	if repository.SelectAdminCount(global.Db) <= 1 {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
 	}
 
-	if !sql.DemoteToUser(uidInt) {
+	if !repository.DemoteToUser(global.Db, uidInt) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
 	}
@@ -91,7 +93,7 @@ func BanUser(c *gin.Context) {
 	uid := c.Query("uid")
 	uidInt, _ := strconv.Atoi(uid)
 
-	if !sql.BanUser(uidInt) {
+	if !repository.BanUser(global.Db, uidInt) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
 	}
@@ -103,7 +105,7 @@ func UnbanUser(c *gin.Context) {
 	uid := c.Query("uid")
 	uidInt, _ := strconv.Atoi(uid)
 
-	if !sql.UnbanUser(uidInt) {
+	if !repository.UnbanUser(global.Db, uidInt) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
 	}
@@ -112,14 +114,14 @@ func UnbanUser(c *gin.Context) {
 
 // 管理员获取竞赛列表
 func GetCompetitionListAdmin(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"contests": sql.SelectCompetitionInfoAdmin()})
+	c.JSON(http.StatusOK, gin.H{"contests": repository.SelectCompetitionInfoAdmin(global.Db)})
 }
 
 // 管理员获取指定竞赛ID信息
 func GetCompetitionInfoAdmin(c *gin.Context) {
 	cid := c.Param("cid")
 	cidInt, _ := strconv.Atoi(cid)
-	c.JSON(http.StatusOK, gin.H{"contest": sql.SelectCompetitionInfoAdminByCid(cidInt)})
+	c.JSON(http.StatusOK, gin.H{"contest": repository.SelectCompetitionInfoAdminByCid(global.Db, cidInt)})
 }
 
 // 删除指定ID竞赛
@@ -127,7 +129,7 @@ func DeleteCompetition(c *gin.Context) {
 	cid := c.Param("cid")
 	cidInt, _ := strconv.Atoi(cid)
 
-	if !sql.DeleteCompetition(cidInt) {
+	if !repository.DeleteCompetition(global.Db, cidInt) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
 	}
@@ -136,14 +138,14 @@ func DeleteCompetition(c *gin.Context) {
 
 // 更新/添加竞赛信息
 func UpdateCompetitionInfo(c *gin.Context) {
-	var req global.AdminCompetitionInfoRequest
+	var req structs.AdminCompetitionInfoRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "invalidrequest")})
 		return
 	}
 
 	// 更新竞赛信息
-	if err := sql.UpdateCompetition(req); err != nil {
+	if err := repository.UpdateCompetition(global.Db, req); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": GetMessage(c, "internalServerError")})
 		return
 	}
@@ -156,15 +158,15 @@ func CalculateScore(c *gin.Context) {
 	competitionId, _ := strconv.Atoi(c.Param("cid"))
 
 	// 查询竞赛信息
-	var competition global.Competition
-	global.DB.First(&competition, competitionId)
+	var competition tables.Competition
+	global.Db.First(&competition, competitionId)
 	if competition.Scored {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "competition_scored")})
 		return
 	}
 
 	// 查询竞赛参与用户
-	users := sql.SelectUsersCompetition(competitionId)
+	users := repository.SelectUsersCompetition(global.Db, competitionId)
 	if len(users) == 0 {
 		c.JSON(http.StatusOK, gin.H{"message": GetMessage(c, "success")})
 		return
@@ -172,8 +174,8 @@ func CalculateScore(c *gin.Context) {
 
 	// 遍历所有参与竞赛的用户
 	for _, user := range users {
-		var submissions []global.SubmitRecord
-		global.DB.
+		var submissions []tables.SubmitRecord
+		global.Db.
 			Where("uid = ? AND result = ? AND time BETWEEN ? AND ?",
 				user.UserId,
 				"Success",
@@ -185,7 +187,7 @@ func CalculateScore(c *gin.Context) {
 		score := 0
 		for _, submission := range submissions {
 			var difficulty string
-			err := global.DB.
+			err := global.Db.
 				Table("problems").
 				Select("difficulty").
 				Where("contest_id = ? AND pid = ?", competitionId, submission.ProblemId).
@@ -207,13 +209,13 @@ func CalculateScore(c *gin.Context) {
 
 		// 更新用户分数
 		if score > 0 {
-			global.DB.Model(&global.User{}).Where("uid = ?", user.UserId).Update("score", gorm.Expr("score + ?", score))
+			global.Db.Model(&tables.User{}).Where("uid = ?", user.UserId).Update("score", gorm.Expr("score + ?", score))
 		}
 
-		global.DB.Model(&global.UserCompetitions{}).Where("uid = ?", user.UserId).Update("score", score)
+		global.Db.Model(&tables.UserCompetitions{}).Where("uid = ?", user.UserId).Update("score", score)
 	}
 
-	global.DB.Model(&global.Competition{}).Where("contest_id = ?", competitionId).Update("scored", true)
+	global.Db.Model(&tables.Competition{}).Where("contest_id = ?", competitionId).Update("scored", true)
 
 	c.JSON(http.StatusOK, gin.H{"message": GetMessage(c, "success")})
 }
@@ -224,7 +226,7 @@ func GetScoreBoard(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	itemsPerPage, _ := strconv.Atoi(c.DefaultQuery("itemsPerPage", "10"))
 
-	users, total := sql.GetScores(competitionId, page, itemsPerPage)
+	users, total := repository.GetScores(global.Db, competitionId, page, itemsPerPage)
 
 	c.JSON(http.StatusOK, gin.H{
 		"users": users,
@@ -234,6 +236,6 @@ func GetScoreBoard(c *gin.Context) {
 
 // 获取IP访问统计信息
 func GetIPStatistics(c *gin.Context) {
-	ipStatistics := sql.SelectIPStatistics()
+	ipStatistics := repository.SelectIPStatistics(global.Db)
 	c.JSON(http.StatusOK, gin.H{"ipStatistics": ipStatistics})
 }

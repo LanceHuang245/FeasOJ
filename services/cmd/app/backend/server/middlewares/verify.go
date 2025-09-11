@@ -1,9 +1,10 @@
 package middlewares
 
 import (
-	"FeasOJ/internal/utils"
-	"FeasOJ/internal/utils/sql"
-	"FeasOJ/server/handler"
+	"FeasOJ/app/backend/internal/global"
+	"FeasOJ/app/backend/internal/utils"
+	"FeasOJ/app/backend/server/handler"
+	"FeasOJ/pkg/databases/repository"
 	"net/http"
 	"net/url"
 
@@ -22,7 +23,7 @@ func HeaderVerify() gin.HandlerFunc {
 			return
 		}
 		if utils.IsEmail(username) {
-			User = sql.SelectUserByEmail(username).Username
+			User = repository.SelectUserByEmail(global.Db, username).Username
 		} else {
 			User = username
 		}

@@ -1,23 +1,25 @@
-package sql
+package repository
 
 import (
-	"FeasOJ/internal/global"
+	"FeasOJ/pkg/databases/tables"
 	"strings"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 // 倒序查询指定用户ID的30天内的提交题目记录
-func SelectSubmitRecordsByUid(uid int) []global.SubmitRecord {
-	var records []global.SubmitRecord
-	global.DB.Where("uid = ?", uid).
+func SelectSubmitRecordsByUid(db *gorm.DB, uid int) []tables.SubmitRecord {
+	var records []tables.SubmitRecord
+	db.Where("uid = ?", uid).
 		Where("time > ?", time.Now().Add(-30*24*time.Hour)).Order("time desc").Find(&records)
 	return records
 }
 
 // 倒序查询指定用户ID的30天内的提交题目记录
 // 如果题目所属竞赛正在进行中，则返回的 Code 字段为空字符串
-func SelectSRByUidForChecker(uid int) []global.SubmitRecord {
-	var records []global.SubmitRecord
+func SelectSRByUidForChecker(db *gorm.DB, uid int) []tables.SubmitRecord {
+	var records []tables.SubmitRecord
 	selectFields := []string{
 		"submit_records.sid",
 		"submit_records.pid",
@@ -30,7 +32,7 @@ func SelectSRByUidForChecker(uid int) []global.SubmitRecord {
 		"CASE WHEN competitions.status = 1 THEN '' ELSE submit_records.code END AS code",
 	}
 
-	global.DB.
+	db.
 		Table("submit_records").
 		Select(strings.Join(selectFields, ", ")).
 		Joins("JOIN problems ON problems.pid = submit_records.pid").
@@ -44,8 +46,8 @@ func SelectSRByUidForChecker(uid int) []global.SubmitRecord {
 }
 
 // 返回 SubmitRecord 表中 30 天内的记录
-func SelectAllSubmitRecords() []global.SubmitRecord {
-	var records []global.SubmitRecord
+func SelectAllSubmitRecords(db *gorm.DB) []tables.SubmitRecord {
+	var records []tables.SubmitRecord
 	selectFields := []string{
 		"sr.sid",
 		"sr.pid",
@@ -57,7 +59,7 @@ func SelectAllSubmitRecords() []global.SubmitRecord {
 		"CASE WHEN c.status = 1 THEN '' ELSE sr.code END AS code",
 	}
 
-	global.DB.
+	db.
 		Table("submit_records AS sr").
 		Select(strings.Join(selectFields, ", ")).
 		Joins("JOIN problems AS p ON p.pid = sr.pid").
@@ -71,7 +73,7 @@ func SelectAllSubmitRecords() []global.SubmitRecord {
 }
 
 // 添加提交记录
-func AddSubmitRecord(Uid, Pid int, Result, Language, Username, Code string) bool {
-	err := global.DB.Table("submit_records").Create(&global.SubmitRecord{UserId: Uid, ProblemId: Pid, Username: Username, Result: Result, Time: time.Now(), Language: Language, Code: Code})
+func AddSubmitRecord(db *gorm.DB, Uid, Pid int, Result, Language, Username, Code string) bool {
+	err := db.Table("submit_records").Create(&tables.SubmitRecord{UserId: Uid, ProblemId: Pid, Username: Username, Result: Result, Time: time.Now(), Language: Language, Code: Code})
 	return err == nil
 }

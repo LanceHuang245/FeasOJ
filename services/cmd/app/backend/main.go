@@ -1,13 +1,13 @@
 package main
 
 import (
-	"FeasOJ/internal/config"
-	"FeasOJ/internal/global"
-	"FeasOJ/internal/judge"
-	"FeasOJ/internal/utils"
-	"FeasOJ/internal/utils/scheduler"
-	"FeasOJ/internal/utils/sql"
-	"FeasOJ/server"
+	"FeasOJ/app/backend/internal/config"
+	"FeasOJ/app/backend/internal/global"
+	"FeasOJ/app/backend/internal/judge"
+	"FeasOJ/app/backend/internal/utils"
+	"FeasOJ/app/backend/internal/utils/scheduler"
+	"FeasOJ/app/backend/server"
+	"FeasOJ/pkg/databases/repository"
 	"bufio"
 	"log"
 	"net/http"
@@ -57,7 +57,7 @@ func main() {
 	}
 
 	// 初始化数据库
-	global.DB = utils.ConnectSql()
+	global.Db = utils.ConnectSql()
 	if utils.InitTable() {
 		log.Println("[FeasOJ] Database initialization complete")
 	} else {
@@ -66,10 +66,11 @@ func main() {
 	}
 
 	// 初始化管理员账户
-	if sql.GetAdminUser(1) {
+	if repository.GetAdminUser(global.Db, 1) {
 		log.Println("[FeasOJ] The administrator account already exists and will continue")
 	} else {
-		sql.Register(utils.InitAdminAccount())
+		adminUsername, adminPassword, adminEmail, adminTokenSecret, adminRole := utils.InitAdminAccount()
+		repository.Register(global.Db, adminUsername, adminPassword, adminEmail, adminTokenSecret, adminRole)
 	}
 
 	// 测试邮箱模块是否正常

@@ -1,7 +1,8 @@
 package handler
 
 import (
-	"FeasOJ/internal/utils/sql"
+	"FeasOJ/app/backend/internal/global"
+	"FeasOJ/pkg/databases/repository"
 	"net/http"
 	"net/url"
 
@@ -10,7 +11,7 @@ import (
 
 // 获取所有提交记录
 func GetAllSubmitRecords(c *gin.Context) {
-	submitrecords := sql.SelectAllSubmitRecords()
+	submitrecords := repository.SelectAllSubmitRecords(global.Db)
 	c.JSON(http.StatusOK, gin.H{"submitrecords": submitrecords})
 }
 
@@ -20,13 +21,13 @@ func GetSubmitRecordsByUsername(c *gin.Context) {
 	encodedUsername, _ := url.QueryUnescape(checker)
 	username := c.Param("username")
 	if encodedUsername != username {
-		uid := sql.SelectUserInfo(username).Id
-		submitrecords := sql.SelectSRByUidForChecker(uid)
+		uid := repository.SelectUserInfo(global.Db, username).Id
+		submitrecords := repository.SelectSRByUidForChecker(global.Db, uid)
 		c.JSON(http.StatusOK, gin.H{"submitrecords": submitrecords})
 		return
 	} else {
-		uid := sql.SelectUserInfo(username).Id
-		submitrecords := sql.SelectSubmitRecordsByUid(uid)
+		uid := repository.SelectUserInfo(global.Db, username).Id
+		submitrecords := repository.SelectSubmitRecordsByUid(global.Db, uid)
 		c.JSON(http.StatusOK, gin.H{"submitrecords": submitrecords})
 		return
 	}

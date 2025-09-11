@@ -1,10 +1,10 @@
 package main
 
 import (
-	"JudgeCore/internal/config"
-	"JudgeCore/internal/judge"
-	"JudgeCore/internal/utils"
-	"JudgeCore/server"
+	"FeasOJ/app/judgecore/internal/config"
+	"FeasOJ/app/judgecore/internal/judge"
+	"FeasOJ/app/judgecore/internal/utils"
+	"FeasOJ/app/judgecore/server"
 	"bufio"
 	"fmt"
 	"log"

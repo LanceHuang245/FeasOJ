@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"JudgeCore/internal/config"
+	"FeasOJ/app/judgecore/internal/config"
 	"fmt"
 	"log"
 

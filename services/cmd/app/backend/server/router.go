@@ -1,8 +1,8 @@
 package server
 
 import (
-	"FeasOJ/server/handler"
-	"FeasOJ/server/middlewares"
+	"FeasOJ/app/backend/server/handler"
+	"FeasOJ/app/backend/server/middlewares"
 
 	"github.com/gin-gonic/gin"
 )

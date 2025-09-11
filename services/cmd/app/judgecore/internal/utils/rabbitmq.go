@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"JudgeCore/internal/config"
-	"JudgeCore/internal/global"
+	"FeasOJ/app/judgecore/internal/config"
+	"FeasOJ/pkg/structs"
 	"encoding/json"
 
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -39,7 +39,7 @@ func ConnectRabbitMQ(rmqConfig config.RabbitMQ) (*amqp.Connection, *amqp.Channel
 }
 
 // PublishJudgeResult 将判题结果发布到消息队列
-func PublishJudgeResult(ch *amqp.Channel, result global.JudgeResultMessage) error {
+func PublishJudgeResult(ch *amqp.Channel, result structs.JudgeResultMessage) error {
 	_, err := ch.QueueDeclare(
 		"judgeResults", // 队列名称
 		true,           // 持久化
