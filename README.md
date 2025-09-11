@@ -1,12 +1,12 @@
 English | [简体中文](README_CN.md)
 <p align="center">
     <a href="https://github.com/LanceHuang245/FeasOJ">
-        <img src="assets/logo.png" height="200"/>
+        <img src="images/logo.png" height="200"/>
     </a>
 </p>
 
 > FeasOJ [Backend](https://github.com/LanceHuang245/FeasOJ-Backend) and [JudgeCore](https://github.com/LanceHuang245/FeasOJ-JudgeCore) has been migrated to this project.\
-> FeasOJ is now undergoing comprehensive optimization and reconstruction. Please wait for the next stable version to be released and use it. Stay tuned!
+> FeasOJ is now undergoing comprehensive optimization and reconstruction. Please wait for the next stable version to be released and use it. Stay tuned! To track the real-time progress, please visit the [TODO List](/docs/CONFIG_README_EN.md).
 
 # FeasOJ
 ### Project Description
@@ -31,18 +31,28 @@ FeasOJ is an online programming practice platform based on Vue and Golang, suppo
 - Code Submission: Support users to submit code and compile and run in the sandbox to return the result
 - Real-time notification: Support real-time notification of question results and contest messages (SSE)
 
-### Project Structure (Outdated)
+### Project Structure
 ```
 FeasOJ
 │ 
-├─public
-├─src
-│  ├─assets
-│  ├─components
-│  ├─pages
-│  ├─plugins
-│  ├─router
-│  └─utils
+├─images
+├─docs
+├─services       # Back-end and JudgeCore src
+│  ├─cmd
+│  │ ├─app
+│  │ │  ├─backend
+│  │ │  └─judgecore
+│  │ └─pkg
+│  ├─go.mod
+│  ├─go.sum
+│  └─scripts
+├─web            # Front-end src
+│  ├─public
+│  ├─src
+│  ├─index.html
+│  ├─package-lock.json
+│  ├─package.json
+│  └─vite.config.js
 ```
 
 ### Environment
@@ -83,11 +93,11 @@ If you want to contribute adding new language or improving existing language, fo
 - Create a [pull request](https://github.com/LanceHuang245/FeasOJ/pulls)
 
 ### Screenshots
-![Main](/assets/Main.png)
-![Login](/assets/Login.png)
-![Problem](/assets/Problem.png)
-![Profile](/assets/Profile.png)
-More screenshots can be found in the [assets](/assets) folder.
+![Main](/images/Main.png)
+![Login](/images/Login.png)
+![Problem](/images/Problem.png)
+![Profile](/images/Profile.png)
+More screenshots can be found in the [images](/images) folder.
 
 ### Thanks
 - [Vue](https://github.com/vuejs/vue)

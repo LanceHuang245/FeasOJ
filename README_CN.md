@@ -1,16 +1,17 @@
 [English](README.md) | 简体中文
 <p align="center">
     <a href="https://github.com/LanceHuang245/FeasOJ">
-        <img src="assets/logo.png" height="200"/>
+        <img src="images/logo.png" height="200"/>
     </a>
 </p>
 
 > FeasOJ [Backend](https://github.com/LanceHuang245/FeasOJ-Backend) 和 [JudgeCore](https://github.com/LanceHuang245/FeasOJ-JudgeCore)现已迁移到该项目中！\
-> 现在FeasOJ正在进行全面优化、重构，请等待下一个正式版发布后使用，敬请期待！
+> 现在FeasOJ正在进行全面优化、重构，请等待下一个正式版发布后使用，敬请期待！想追踪实时进展，请前往[待办事项](/docs/TODO_LIST_CN.md)~
 
 # FeasOJ
 ### 项目简介
 FeasOJ 是一个基于 Vue 和 Golang 的在线编程练习平台，支持多国语言、讨论区、竞赛等功能，旨在为用户提供一个方便、高效的学习和练习环境。
+
 ### 相关链接
 [ImageGuard](https://github.com/LanceHuang245/ImageGuard)\
 [Profanity Detector](https://github.com/LanceHuang245/ProfanityDetector)\
@@ -35,14 +36,24 @@ FeasOJ 是一个基于 Vue 和 Golang 的在线编程练习平台，支持多国
 ```
 FeasOJ
 │ 
-├─public
-├─src
-│  ├─assets
-│  ├─components
-│  ├─pages
-│  ├─plugins
-│  ├─router
-│  └─utils
+├─images
+├─docs
+├─services       # 后端与JudeCore代码
+│  ├─cmd
+│  │ ├─app
+│  │ │  ├─backend
+│  │ │  └─judgecore
+│  │ └─pkg
+│  ├─go.mod
+│  ├─go.sum
+│  └─scripts
+├─web            # 前端代码
+│  ├─public
+│  ├─src
+│  ├─index.html
+│  ├─package-lock.json
+│  ├─package.json
+│  └─vite.config.js
 ```
 
 ### 环境
@@ -83,11 +94,11 @@ FeasOJ
 - 创建一个 [pull request](https://github.com/LanceHuang245/FeasOJ/pulls) 即可
 
 ### 项目截图
-![Main](/assets/Main.png)
-![Login](/assets/Login.png)
-![Problem](/assets/Problem.png)
-![Profile](/assets/Profile.png)
-更多图片可在 [assets](/assets) 中查看。
+![Main](/images/Main.png)
+![Login](/images/Login.png)
+![Problem](/images/Problem.png)
+![Profile](/images/Profile.png)
+更多图片可在 [images](/images) 中查看。
 
 ### 致谢
 - [Vue](https://github.com/vuejs/vue)
