@@ -1,7 +1,7 @@
 English | [简体中文](README_CN.md)
 <p align="center">
     <a href="https://github.com/ClaretWheel1481/FeasOJ">
-        <img src="public/logo.png" height="200"/>
+        <img src="assets/logo.png" height="200"/>
     </a>
 </p>
 
