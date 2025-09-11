@@ -1,20 +1,20 @@
 [English](README.md) | 简体中文
 <p align="center">
-    <a href="https://github.com/ClaretWheel1481/FeasOJ">
+    <a href="https://github.com/LanceHuang245/FeasOJ">
         <img src="assets/logo.png" height="200"/>
     </a>
 </p>
 
-> FeasOJ Backend与FeasOJ JudgeCore现已迁移到该项目中。
+> FeasOJ [Backend](https://github.com/LanceHuang245/FeasOJ-Backend) 和 [JudgeCore](https://github.com/LanceHuang245/FeasOJ-JudgeCore)现已迁移到该项目中。
 
 # FeasOJ
 ### 项目简介
 FeasOJ 是一个基于 Vue 和 Golang 的在线编程练习平台，支持多国语言、讨论区、竞赛等功能，旨在为用户提供一个方便、高效的学习和练习环境。
 <br>
-[ImageGuard](https://github.com/ClaretWheel1481/ImageGuard)
-[Profanity Detector](https://github.com/ClaretWheel1481/ProfanityDetector)
-[API Document(CN)](https://claret-feasoj.apifox.cn)
-[API Document(EN)](https://claret-feasoj.apifox.cn/en/)
+
+[ImageGuard](https://github.com/LanceHuang245/ImageGuard)
+[Profanity Detector](https://github.com/LanceHuang245/ProfanityDetector)
+[API 文档](https://claret-feasoj.apifox.cn)
 
 ### 项目特性
 - 多语言支持：支持多种语言，包括英语、西班牙语、法语、意大利语、日语、简体中文等
@@ -51,7 +51,7 @@ FeasOJ
 ### 如何运行
 1. 克隆此库。
 2. 运行 `pnpm i` 安装依赖项。
-3. 配置 `src/utils/axios.js` 中的 `apiUrl` 为你的[FeasOJ-Bakcend](https://github.com/ClaretWheel1481/FeasOJ-Backend)服务器地址。
+3. 配置 `src/utils/axios.js` 中的 `apiUrl` 为你的[FeasOJ-Bakcend](https://github.com/LanceHuang245/FeasOJ-Backend)服务器地址。
 4. 运行 `pnpm dev` 启动前端服务器。
 
 ### 注意
@@ -71,10 +71,10 @@ FeasOJ
 - 繁體中文
 
 如果您想要增加语言翻译或优化当前的翻译，请按照以下步骤：
-- [Fork](https://github.com/ClaretWheel1481/FeasOJ/fork) 该项目仓库
+- [Fork](https://github.com/LanceHuang245/FeasOJ/fork) 该项目仓库
 - 复制 `src/plugins/locales/en.js` 文件并以您想要的语言代码作为文件名称，粘贴到 `src/plugins/locales`，或者直接修改您想优化的文件
 - 翻译文件中的内容
-- 创建一个 [pull request](https://github.com/ClaretWheel1481/FeasOJ/pulls) 即可
+- 创建一个 [pull request](https://github.com/LanceHuang245/FeasOJ/pulls) 即可
 
 ### 项目截图
 ![Main](/assets/Main.png)

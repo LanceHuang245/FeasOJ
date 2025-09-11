@@ -1,17 +1,19 @@
 English | [简体中文](README_CN.md)
 <p align="center">
-    <a href="https://github.com/ClaretWheel1481/FeasOJ">
+    <a href="https://github.com/LanceHuang245/FeasOJ">
         <img src="assets/logo.png" height="200"/>
     </a>
 </p>
+
+> FeasOJ [Backend](https://github.com/LanceHuang245/FeasOJ-Backend) and [JudgeCore](https://github.com/LanceHuang245/FeasOJ-JudgeCore) has been migrated to this project.
 
 # FeasOJ
 ### Project Description
 FeasOJ is an online programming practice platform based on Vue and Golang, supporting multi-languages, discussion forums, contests and other features, aiming to provide users with a convenient and efficient learning and practice environment.
 <br>
-[ImageGuard](https://github.com/ClaretWheel1481/ImageGuard)
-[Profanity Detector](https://github.com/ClaretWheel1481/ProfanityDetector)
-[API Document(CN)](https://claret-feasoj.apifox.cn)
+
+[ImageGuard](https://github.com/LanceHuang245/ImageGuard)
+[Profanity Detector](https://github.com/LanceHuang245/ProfanityDetector)
 [API Document(EN)](https://claret-feasoj.apifox.cn/en/)
 
 ### Features
@@ -48,7 +50,7 @@ FeasOJ
 ### How to run
 1. Clone repository.
 2. Run `pnpm i` Install dependencies.
-3. Config `src/utils/axios.js` to your [FeasOJ-Backend](https://github.com/ClaretWheel1481/FeasOJ-Backend) address.
+3. Config `src/utils/axios.js` to your [FeasOJ-Backend](https://github.com/LanceHuang245/FeasOJ-Backend) address.
 4. Run `pnpm dev` to start the front-end server.
 
 ### Notice
@@ -68,10 +70,10 @@ If you find any bugs, please open an issue.
 - Traditional Chinese
 
 If you want to contribute adding new language or improving existing language, follow this step:
-- [Fork](https://github.com/ClaretWheel1481/FeasOJ/fork) this repository
+- [Fork](https://github.com/LanceHuang245/FeasOJ/fork) this repository
 - Copy `src/plugins/locales/en.js` file into `src/plugins/locales` with a new language code as the file name or edit the existing language file
 - Translate all the keys in the new language file
-- Create a [pull request](https://github.com/ClaretWheel1481/FeasOJ/pulls)
+- Create a [pull request](https://github.com/LanceHuang245/FeasOJ/pulls)
 
 ### Screenshots
 ![Main](/assets/Main.png)
