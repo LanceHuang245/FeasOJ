@@ -100,11 +100,10 @@ func main() {
 		log.Fatalf("[FeasOJ] Failed to register service with Consul: %v", err)
 	}
 
-	// 优雅地关闭
-	gracefulShutdown(logFile, judgePool)
+	shutdown(logFile, judgePool)
 }
 
-func gracefulShutdown(logFile *os.File, pool *judge.JudgePool) {
+func shutdown(logFile *os.File, pool *judge.JudgePool) {
 	// 监听终端输入或中断信号
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)

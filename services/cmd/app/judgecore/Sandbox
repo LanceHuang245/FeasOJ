@@ -36,5 +36,8 @@ RUN apk update && apk add --no-cache \
 # 设置工作目录
 WORKDIR /workspace
 
+# 清除缓存
+RUN apk cache clean
+
 # 设置默认命令
 CMD ["sh"]
