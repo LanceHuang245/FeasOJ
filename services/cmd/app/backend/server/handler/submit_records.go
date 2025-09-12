@@ -12,7 +12,7 @@ import (
 // 获取所有提交记录
 func GetAllSubmitRecords(c *gin.Context) {
 	submitrecords := repository.SelectAllSubmitRecords(global.Db)
-	c.JSON(http.StatusOK, gin.H{"submitrecords": submitrecords})
+	c.JSON(http.StatusOK, gin.H{"data": submitrecords})
 }
 
 // 获取指定用户提交记录
@@ -23,12 +23,12 @@ func GetSubmitRecordsByUsername(c *gin.Context) {
 	if encodedUsername != username {
 		uid := repository.SelectUserInfo(global.Db, username).Id
 		submitrecords := repository.SelectSRByUidForChecker(global.Db, uid)
-		c.JSON(http.StatusOK, gin.H{"submitrecords": submitrecords})
+		c.JSON(http.StatusOK, gin.H{"data": submitrecords})
 		return
 	} else {
 		uid := repository.SelectUserInfo(global.Db, username).Id
 		submitrecords := repository.SelectSubmitRecordsByUid(global.Db, uid)
-		c.JSON(http.StatusOK, gin.H{"submitrecords": submitrecords})
+		c.JSON(http.StatusOK, gin.H{"data": submitrecords})
 		return
 	}
 

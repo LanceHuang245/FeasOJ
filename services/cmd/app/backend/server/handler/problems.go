@@ -24,10 +24,10 @@ import (
 func GetAllProblems(c *gin.Context) {
 	// 实时性要求较高，不做数据缓存
 	problems := repository.SelectAllProblems(global.Db)
-	c.JSON(http.StatusOK, gin.H{"problems": problems})
+	c.JSON(http.StatusOK, gin.H{"data": problems})
 }
 
-// 获取题目信息
+// 获取指定题目信息
 func GetProblemInfo(c *gin.Context) {
 	pid, _ := strconv.Atoi(c.Param("id"))
 	if !repository.IsProblemVisible(global.Db, pid) {
@@ -55,12 +55,12 @@ func GetProblemInfo(c *gin.Context) {
 		}
 
 	}
-	c.JSON(http.StatusOK, gin.H{"problemInfo": problemInfo})
+	c.JSON(http.StatusOK, gin.H{"data": problemInfo})
 }
 
 // 提交代码
 func UploadCode(c *gin.Context) {
-	problem := c.Param("pid")
+	problem := c.Param("id")
 	pidInt, _ := strconv.Atoi(problem)
 	encodedUsername := c.GetHeader("Username")
 	username, _ := url.QueryUnescape(encodedUsername)

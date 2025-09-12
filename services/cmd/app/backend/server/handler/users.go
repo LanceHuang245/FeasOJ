@@ -158,7 +158,6 @@ func Login(c *gin.Context) {
 	}
 }
 
-// 获取验证码
 // 获取验证码（IP + 邮箱 1 分钟限流）
 func GetCaptcha(c *gin.Context) {
 	clientIP := c.ClientIP()
@@ -219,7 +218,7 @@ func VerifyUserInfo(c *gin.Context) {
 	if userInfo.Username == "" {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": GetMessage(c, "internalServerError")})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"info": userInfo})
+		c.JSON(http.StatusOK, gin.H{"data": userInfo})
 	}
 }
 
@@ -232,7 +231,7 @@ func GetUserInfo(c *gin.Context) {
 	if userInfo.Username == "" {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": GetMessage(c, "internalServerError")})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"info": userInfo})
+		c.JSON(http.StatusOK, gin.H{"data": userInfo})
 	}
 }
 
@@ -361,7 +360,7 @@ func GetRanking(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{"ranking": ranking})
+	c.JSON(http.StatusOK, gin.H{"data": ranking})
 }
 
 // 发送验证码

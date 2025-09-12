@@ -16,13 +16,13 @@ import (
 // 管理员获取所有题目
 func GetAllProblemsAdmin(c *gin.Context) {
 	problems := repository.SelectAllProblemsAdmin(global.Db)
-	c.JSON(http.StatusOK, gin.H{"problems": problems})
+	c.JSON(http.StatusOK, gin.H{"data": problems})
 }
 
 // 管理员获取指定题目所有信息
 func GetProblemAllInfo(c *gin.Context) {
-	problemInfo := repository.SelectProblemTestCases(global.Db, c.Param("pid"))
-	c.JSON(http.StatusOK, gin.H{"problemInfo": problemInfo})
+	problemInfo := repository.SelectProblemTestCases(global.Db, c.Param("id"))
+	c.JSON(http.StatusOK, gin.H{"data": problemInfo})
 }
 
 // 更新题目信息
@@ -44,9 +44,8 @@ func UpdateProblemInfo(c *gin.Context) {
 
 // 删除题目及其输入输出样例
 func DeleteProblem(c *gin.Context) {
-	pid := c.Param("pid")
-	pidInt, _ := strconv.Atoi(pid)
-	if !repository.DeleteProblemAllInfo(global.Db, pidInt) {
+	problemId, _ := strconv.Atoi(c.Param("id"))
+	if !repository.DeleteProblemAllInfo(global.Db, problemId) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
 	}
@@ -56,56 +55,25 @@ func DeleteProblem(c *gin.Context) {
 // 管理员获取所有用户信息
 func GetAllUsersInfo(c *gin.Context) {
 	usersInfo := repository.SelectAllUsersInfo(global.Db)
-	c.JSON(http.StatusOK, gin.H{"usersInfo": usersInfo})
+	c.JSON(http.StatusOK, gin.H{"data": usersInfo})
 }
 
-// 晋升用户
-func PromoteUser(c *gin.Context) {
-	uid := c.Query("uid")
-	uidInt, _ := strconv.Atoi(uid)
-
-	if !repository.PromoteToAdmin(global.Db, uidInt) {
+// 晋升/降级用户
+func ChangeUserPrivilege(c *gin.Context) {
+	userId, _ := strconv.Atoi(c.Query("user_id"))
+	action, _ := strconv.Atoi(c.Query("action"))
+	if !repository.ChangePrivilege(global.Db, userId, action) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": GetMessage(c, "success")})
 }
 
-// 降级用户
-func DemoteUser(c *gin.Context) {
-	uid := c.Query("uid")
-	uidInt, _ := strconv.Atoi(uid)
-
-	if repository.SelectAdminCount(global.Db) <= 1 {
-		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
-		return
-	}
-
-	if !repository.DemoteToUser(global.Db, uidInt) {
-		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"message": GetMessage(c, "success")})
-}
-
-// 封禁用户
-func BanUser(c *gin.Context) {
-	uid := c.Query("uid")
-	uidInt, _ := strconv.Atoi(uid)
-
-	if !repository.BanUser(global.Db, uidInt) {
-		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"message": GetMessage(c, "success")})
-}
-
-// 解封用户
-func UnbanUser(c *gin.Context) {
-	uid := c.Query("uid")
-	uidInt, _ := strconv.Atoi(uid)
-
-	if !repository.UnbanUser(global.Db, uidInt) {
+// 封禁/解禁用户
+func ChangeUserStatus(c *gin.Context) {
+	userId, _ := strconv.Atoi(c.Query("user_id"))
+	status, _ := strconv.ParseBool(c.Query("status"))
+	if !repository.ChangeUserStatus(global.Db, userId, status) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
 	}
@@ -114,22 +82,20 @@ func UnbanUser(c *gin.Context) {
 
 // 管理员获取竞赛列表
 func GetCompetitionListAdmin(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"contests": repository.SelectCompetitionInfoAdmin(global.Db)})
+	c.JSON(http.StatusOK, gin.H{"data": repository.SelectCompetitionInfoAdmin(global.Db)})
 }
 
 // 管理员获取指定竞赛ID信息
 func GetCompetitionInfoAdmin(c *gin.Context) {
-	cid := c.Param("cid")
-	cidInt, _ := strconv.Atoi(cid)
-	c.JSON(http.StatusOK, gin.H{"contest": repository.SelectCompetitionInfoAdminByCid(global.Db, cidInt)})
+	competitionId, _ := strconv.Atoi(c.Param("id"))
+	c.JSON(http.StatusOK, gin.H{"data": repository.SelectCompetitionInfoAdminByCid(global.Db, competitionId)})
 }
 
 // 删除指定ID竞赛
 func DeleteCompetition(c *gin.Context) {
-	cid := c.Param("cid")
-	cidInt, _ := strconv.Atoi(cid)
+	competitionId, _ := strconv.Atoi(c.Param("id"))
 
-	if !repository.DeleteCompetition(global.Db, cidInt) {
+	if !repository.DeleteCompetition(global.Db, competitionId) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
 	}
@@ -155,7 +121,7 @@ func UpdateCompetitionInfo(c *gin.Context) {
 
 // 计算分数
 func CalculateScore(c *gin.Context) {
-	competitionId, _ := strconv.Atoi(c.Param("cid"))
+	competitionId, _ := strconv.Atoi(c.Param("id"))
 
 	// 查询竞赛信息
 	var competition tables.Competition
@@ -176,7 +142,7 @@ func CalculateScore(c *gin.Context) {
 	for _, user := range users {
 		var submissions []tables.SubmitRecord
 		global.Db.
-			Where("uid = ? AND result = ? AND time BETWEEN ? AND ?",
+			Where("user_id = ? AND result = ? AND time BETWEEN ? AND ?",
 				user.UserId,
 				"Success",
 				competition.StartAt,
@@ -190,7 +156,7 @@ func CalculateScore(c *gin.Context) {
 			err := global.Db.
 				Table("problems").
 				Select("difficulty").
-				Where("contest_id = ? AND pid = ?", competitionId, submission.ProblemId).
+				Where("competition_id = ? AND problem_id = ?", competitionId, submission.ProblemId).
 				Row().
 				Scan(&difficulty)
 			if err != nil {
@@ -198,31 +164,31 @@ func CalculateScore(c *gin.Context) {
 			}
 
 			switch difficulty {
-			case "简单":
+			case "0":
 				score += 1
-			case "中等":
+			case "1":
 				score += 3
-			case "困难":
+			case "2":
 				score += 5
 			}
 		}
 
 		// 更新用户分数
 		if score > 0 {
-			global.Db.Model(&tables.Users{}).Where("uid = ?", user.UserId).Update("score", gorm.Expr("score + ?", score))
+			global.Db.Model(&tables.Users{}).Where("user_id = ?", user.UserId).Update("score", gorm.Expr("score + ?", score))
 		}
 
-		global.Db.Model(&tables.UserCompetitions{}).Where("uid = ?", user.UserId).Update("score", score)
+		global.Db.Model(&tables.UserCompetitions{}).Where("user_id = ?", user.UserId).Update("score", score)
 	}
 
-	global.Db.Model(&tables.Competition{}).Where("contest_id = ?", competitionId).Update("scored", true)
+	global.Db.Model(&tables.Competition{}).Where("competition_id = ?", competitionId).Update("scored", true)
 
 	c.JSON(http.StatusOK, gin.H{"message": GetMessage(c, "success")})
 }
 
 // 查询指定竞赛中，参与人员的得分情况
 func GetScoreBoard(c *gin.Context) {
-	competitionId, _ := strconv.Atoi(c.Param("cid"))
+	competitionId, _ := strconv.Atoi(c.Param("id"))
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	itemsPerPage, _ := strconv.Atoi(c.DefaultQuery("itemsPerPage", "10"))
 
@@ -237,5 +203,5 @@ func GetScoreBoard(c *gin.Context) {
 // 获取IP访问统计信息
 func GetIPStatistics(c *gin.Context) {
 	ipStatistics := repository.SelectIPStatistics(global.Db)
-	c.JSON(http.StatusOK, gin.H{"ipStatistics": ipStatistics})
+	c.JSON(http.StatusOK, gin.H{"data": ipStatistics})
 }

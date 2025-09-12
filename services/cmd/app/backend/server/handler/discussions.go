@@ -21,16 +21,16 @@ func GetAllDiscussions(c *gin.Context) {
 
 	discussions, total := repository.SelectDiscussList(global.Db, page, itemsPerPage)
 	c.JSON(http.StatusOK, gin.H{
-		"discussions": discussions,
-		"total":       total,
+		"data":  discussions,
+		"total": total,
 	})
 }
 
 // 获取指定id讨论信息
 func GetDiscussionByDid(c *gin.Context) {
-	did, _ := strconv.Atoi(c.Param("did"))
+	did, _ := strconv.Atoi(c.Param("id"))
 	discussion := repository.SelectDiscussionByDid(global.Db, did)
-	c.JSON(http.StatusOK, gin.H{"discussionInfo": discussion})
+	c.JSON(http.StatusOK, gin.H{"data": discussion})
 }
 
 // 创建讨论
@@ -80,7 +80,7 @@ func CreateDiscussion(c *gin.Context) {
 
 // 删除讨论
 func DeleteDiscussion(c *gin.Context) {
-	did, _ := strconv.Atoi(c.Param("did"))
+	did, _ := strconv.Atoi(c.Param("id"))
 	if repository.DelDiscussion(global.Db, did) {
 		c.JSON(http.StatusOK, gin.H{"message": GetMessage(c, "success")})
 	} else {
@@ -90,14 +90,14 @@ func DeleteDiscussion(c *gin.Context) {
 
 // 获取指定讨论的评论
 func GetComment(c *gin.Context) {
-	did, _ := strconv.Atoi(c.Param("did"))
+	did, _ := strconv.Atoi(c.Param("id"))
 	comments := repository.SelectCommentsByDid(global.Db, did)
-	c.JSON(http.StatusOK, gin.H{"comments": comments})
+	c.JSON(http.StatusOK, gin.H{"data": comments})
 }
 
 // 删除指定Cid的评论
 func DelComment(c *gin.Context) {
-	cid, _ := strconv.Atoi(c.Param("cid"))
+	cid, _ := strconv.Atoi(c.Param("id"))
 	if !repository.DeleteCommentByCid(global.Db, cid) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
@@ -110,7 +110,7 @@ func AddComment(c *gin.Context) {
 	encodedUsername := c.GetHeader("Username")
 	username, _ := url.QueryUnescape(encodedUsername)
 	content := c.PostForm("content")
-	did, _ := strconv.Atoi(c.Param("did"))
+	did, _ := strconv.Atoi(c.Param("id"))
 	// 获取用户ID
 	userInfo := repository.SelectUserInfo(global.Db, username)
 

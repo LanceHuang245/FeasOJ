@@ -16,15 +16,15 @@ var Clients = make(map[string]Client)
 
 // SSEHandler SSE推送
 func SSEHandler(c *gin.Context) {
-	uid := c.Param("uid")
+	userId := c.Param("id")
 	lang := c.Query("lang") // 获取语言参数
 	if lang == "" {
 		lang = "en" // 默认使用英文
 	}
 
 	messageChan := make(chan string)
-	Clients[uid] = Client{MessageChan: messageChan, Lang: lang}
-	defer delete(Clients, uid)
+	Clients[userId] = Client{MessageChan: messageChan, Lang: lang}
+	defer delete(Clients, userId)
 
 	c.Writer.Header().Set("Content-Type", "text/event-stream")
 	c.Writer.Header().Set("Cache-Control", "no-cache")

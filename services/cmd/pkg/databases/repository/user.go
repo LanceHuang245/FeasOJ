@@ -28,24 +28,14 @@ func UpdateUser(db *gorm.DB, Uid int, field string, value interface{}) bool {
 	return db.Table("users").Where("uid = ?", Uid).Update(field, value).Error == nil
 }
 
-// 封禁用户
-func BanUser(db *gorm.DB, Uid int) bool {
-	return UpdateUser(db, Uid, "is_ban", true)
-}
-
-// 解除封禁
-func UnbanUser(db *gorm.DB, Uid int) bool {
-	return UpdateUser(db, Uid, "is_ban", false)
+// 封禁/解禁用户
+func ChangeUserStatus(db *gorm.DB, userId int, status bool) bool {
+	return UpdateUser(db, userId, "is_ban", status)
 }
 
 // 晋升为管理员
-func PromoteToAdmin(db *gorm.DB, Uid int) bool {
-	return UpdateUser(db, Uid, "role", 1)
-}
-
-// 降级为普通用户
-func DemoteToUser(db *gorm.DB, Uid int) bool {
-	return UpdateUser(db, Uid, "role", 0)
+func ChangePrivilege(db *gorm.DB, userId, action int) bool {
+	return UpdateUser(db, userId, "role", action)
 }
 
 // 管理员获取所有用户信息
