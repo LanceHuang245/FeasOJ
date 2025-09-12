@@ -91,17 +91,17 @@ type TestCaseRequest struct {
 
 // 管理员获取题目信息请求体
 type AdminProblemInfoRequest struct {
-	Id          int               `json:"id"`
-	Difficulty  int               `json:"difficulty"`
-	Title       string            `json:"title"`
-	Content     string            `json:"content"`
-	TimeLimit   string            `json:"time_limit"`
-	MemoryLimit string            `json:"memory_limit"`
-	Input       string            `json:"input"`
-	Output      string            `json:"output"`
-	ContestId   int               `json:"contest_id"`
-	IsVisible   bool              `json:"is_visible"`
-	TestCases   []TestCaseRequest `json:"test_cases"`
+	Id            int               `json:"id"`
+	Difficulty    int               `json:"difficulty"`
+	Title         string            `json:"title"`
+	Content       string            `json:"content"`
+	TimeLimit     string            `json:"time_limit"`
+	MemoryLimit   string            `json:"memory_limit"`
+	Input         string            `json:"input"`
+	Output        string            `json:"output"`
+	CompetitionId int               `json:"competition_id"`
+	IsVisible     bool              `json:"is_visible"`
+	TestCases     []TestCaseRequest `json:"test_cases"`
 }
 
 // 管理员获取竞赛信息请求体

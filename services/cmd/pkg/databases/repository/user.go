@@ -12,7 +12,7 @@ import (
 // 用户注册
 func Register(db *gorm.DB, username, password, email, tokensecret string, role int) bool {
 	now := time.Now()
-	err := db.Create(&tables.User{Username: username, Password: password, Email: email, CreatedAt: now, Role: role, TokenSecret: tokensecret, IsBan: false}).Error
+	err := db.Create(&tables.Users{Username: username, Password: password, Email: email, CreatedAt: now, Role: role, TokenSecret: tokensecret, IsBan: false}).Error
 	return err == nil
 }
 
@@ -50,14 +50,14 @@ func SelectAllUsersInfo(db *gorm.DB) []structs.UserInfoRequest {
 
 // 更新用户的头像路径
 func UpdateAvatar(db *gorm.DB, username, avatarpath string) bool {
-	err := db.Model(&tables.User{}).
+	err := db.Model(&tables.Users{}).
 		Where("username = ?", username).Update("avatar", avatarpath).Error
 	return err == nil
 }
 
 // 更新个人简介
 func UpdateSynopsis(db *gorm.DB, username, synopsis string) bool {
-	err := db.Model(&tables.User{}).
+	err := db.Model(&tables.Users{}).
 		Where("username = ?", username).Update("synopsis", synopsis).Error
 	return err == nil
 }
@@ -65,16 +65,16 @@ func UpdateSynopsis(db *gorm.DB, username, synopsis string) bool {
 // 根据email与username判断是否该用户已存在
 func IsUserExist(db *gorm.DB, username, email string) bool {
 	if db.Where("username = ?", username).
-		First(&tables.User{}).Error == nil || db.Where("email = ?", email).
-		First(&tables.User{}).Error == nil {
+		First(&tables.Users{}).Error == nil || db.Where("email = ?", email).
+		First(&tables.Users{}).Error == nil {
 		return true
 	}
 	return false
 }
 
 // 根据邮箱获取用户信息
-func SelectUserByEmail(db *gorm.DB, email string) tables.User {
-	var user tables.User
+func SelectUserByEmail(db *gorm.DB, email string) tables.Users {
+	var user tables.Users
 	db.Where("email = ?", email).First(&user)
 	return user
 }
@@ -82,7 +82,7 @@ func SelectUserByEmail(db *gorm.DB, email string) tables.User {
 // 根据email修改密码
 func UpdatePassword(db *gorm.DB, email, newpassword string) bool {
 	tokensecret := uuid.New().String()
-	err := db.Model(&tables.User{}).
+	err := db.Model(&tables.Users{}).
 		Where("email = ?", email).Update("password", newpassword).
 		Update("token_secret", tokensecret).Error
 	return err == nil
@@ -99,7 +99,7 @@ func SelectUserInfo(db *gorm.DB, username string) structs.UserInfoRequest {
 // 获取是否管理员用户
 func GetAdminUser(db *gorm.DB, role int) bool {
 	// role = 1表示管理员
-	var user tables.User
+	var user tables.Users
 	err := db.Where("role = ?", role).First(&user).Error
 	return err == nil
 }

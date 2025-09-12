@@ -209,7 +209,7 @@ func CalculateScore(c *gin.Context) {
 
 		// 更新用户分数
 		if score > 0 {
-			global.Db.Model(&tables.User{}).Where("uid = ?", user.UserId).Update("score", gorm.Expr("score + ?", score))
+			global.Db.Model(&tables.Users{}).Where("uid = ?", user.UserId).Update("score", gorm.Expr("score + ?", score))
 		}
 
 		global.Db.Model(&tables.UserCompetitions{}).Where("uid = ?", user.UserId).Update("score", score)

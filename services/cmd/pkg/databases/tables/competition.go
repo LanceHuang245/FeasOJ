@@ -20,9 +20,10 @@ type Competition struct {
 
 // 用户竞赛关联表
 type UserCompetitions struct {
-	Id       int       `gorm:"comment:比赛ID;not null"`
-	UserId   int       `gorm:"comment:用户ID;not null"`
-	Username string    `gorm:"comment:用户名;not null"`
-	JoinDate time.Time `gorm:"comment:加入时间;not null"`
-	Score    int       `gorm:"comment:用户分数;"`
+	Id            int       `gorm:"comment:ID;primaryKey;autoIncrement"`
+	CompetitionId int       `gorm:"comment:比赛ID;not null"`
+	UserId        int       `gorm:"comment:用户ID;not null"`
+	Username      string    `gorm:"comment:用户名;not null"`
+	JoinDate      time.Time `gorm:"comment:加入时间;not null"`
+	Score         int       `gorm:"comment:用户分数;"`
 }

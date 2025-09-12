@@ -3,7 +3,7 @@ package tables
 import "time"
 
 // 用户表
-type User struct {
+type Users struct {
 	Id          int       `gorm:"comment:用户ID;primaryKey;autoIncrement"`
 	Avatar      string    `gorm:"comment:头像存放路径"`
 	Username    string    `gorm:"comment:用户名;not null;unique"`

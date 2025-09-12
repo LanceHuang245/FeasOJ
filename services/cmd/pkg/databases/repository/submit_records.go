@@ -11,7 +11,7 @@ import (
 // 倒序查询指定用户ID的30天内的提交题目记录
 func SelectSubmitRecordsByUid(db *gorm.DB, uid int) []tables.SubmitRecord {
 	var records []tables.SubmitRecord
-	db.Where("uid = ?", uid).
+	db.Where("user_id = ?", uid).
 		Where("time > ?", time.Now().Add(-30*24*time.Hour)).Order("time desc").Find(&records)
 	return records
 }
@@ -21,9 +21,9 @@ func SelectSubmitRecordsByUid(db *gorm.DB, uid int) []tables.SubmitRecord {
 func SelectSRByUidForChecker(db *gorm.DB, uid int) []tables.SubmitRecord {
 	var records []tables.SubmitRecord
 	selectFields := []string{
-		"submit_records.sid",
-		"submit_records.pid",
-		"submit_records.uid",
+		"submit_records.id",
+		"submit_records.problem_id",
+		"submit_records.user_id",
 		"submit_records.username",
 		"submit_records.result",
 		"submit_records.time",
@@ -35,9 +35,9 @@ func SelectSRByUidForChecker(db *gorm.DB, uid int) []tables.SubmitRecord {
 	db.
 		Table("submit_records").
 		Select(strings.Join(selectFields, ", ")).
-		Joins("JOIN problems ON problems.pid = submit_records.pid").
-		Joins("JOIN competitions ON competitions.contest_id = problems.contest_id").
-		Where("submit_records.uid = ?", uid).
+		Joins("JOIN problems ON problems.id = submit_records.problem_id").
+		Joins("JOIN competitions ON competitions.id = problems.competition_id").
+		Where("submit_records.user_id = ?", uid).
 		Where("submit_records.time > ?", time.Now().Add(-30*24*time.Hour)).
 		Order("submit_records.time DESC").
 		Find(&records)
@@ -49,9 +49,9 @@ func SelectSRByUidForChecker(db *gorm.DB, uid int) []tables.SubmitRecord {
 func SelectAllSubmitRecords(db *gorm.DB) []tables.SubmitRecord {
 	var records []tables.SubmitRecord
 	selectFields := []string{
-		"sr.sid",
-		"sr.pid",
-		"sr.uid",
+		"sr.id",
+		"sr.problem_id",
+		"sr.user_id",
 		"sr.username",
 		"sr.result",
 		"sr.time",
@@ -62,8 +62,8 @@ func SelectAllSubmitRecords(db *gorm.DB) []tables.SubmitRecord {
 	db.
 		Table("submit_records AS sr").
 		Select(strings.Join(selectFields, ", ")).
-		Joins("JOIN problems AS p ON p.pid = sr.pid").
-		Joins("LEFT JOIN competitions AS c ON c.contest_id = p.contest_id").
+		Joins("JOIN problems AS p ON p.id = sr.problem_id").
+		Joins("LEFT JOIN competitions AS c ON c.id = p.competition_id").
 		Where("sr.time > ?", time.Now().Add(-30*24*time.Hour)).
 		Where("c.status IS NULL OR c.status != 0 OR p.is_visible = ?", true).
 		Order("sr.time DESC").
@@ -76,4 +76,11 @@ func SelectAllSubmitRecords(db *gorm.DB) []tables.SubmitRecord {
 func AddSubmitRecord(db *gorm.DB, Uid, Pid int, Result, Language, Username, Code string) bool {
 	err := db.Table("submit_records").Create(&tables.SubmitRecord{UserId: Uid, ProblemId: Pid, Username: Username, Result: Result, Time: time.Now(), Language: Language, Code: Code})
 	return err == nil
+}
+
+// ModifyJudgeStatus 修改提交记录状态
+func ModifyJudgeStatus(db *gorm.DB, Uid, Pid int, Result string) error {
+	// 将result为Running...的记录修改为返回状态
+	result := db.Table("submit_records").Where("user_id = ? AND problem_id = ? AND result = ?", Uid, Pid, "Running...").Update("result", Result)
+	return result.Error
 }

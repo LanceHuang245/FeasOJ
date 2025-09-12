@@ -16,9 +16,9 @@ func SelectCompetitionsInfo(db *gorm.DB) []structs.CompetitionRequest {
 }
 
 // 用户获取指定竞赛ID信息
-func SelectCompetitionInfoByCid(db *gorm.DB, Cid int) structs.CompetitionRequest {
+func SelectCompetitionInfoByCid(db *gorm.DB, id int) structs.CompetitionRequest {
 	var competition structs.CompetitionRequest
-	db.Table("competitions").Where("contest_id = ?", Cid).Find(&competition)
+	db.Table("competitions").Where("id = ?", id).Find(&competition)
 	return competition
 }
 
@@ -30,21 +30,21 @@ func SelectCompetitionInfoAdmin(db *gorm.DB) []structs.AdminCompetitionInfoReque
 }
 
 // 管理员获取指定竞赛ID信息
-func SelectCompetitionInfoAdminByCid(db *gorm.DB, Cid int) structs.AdminCompetitionInfoRequest {
+func SelectCompetitionInfoAdminByCid(db *gorm.DB, id int) structs.AdminCompetitionInfoRequest {
 	var competition structs.AdminCompetitionInfoRequest
-	db.Table("competitions").Where("contest_id = ?", Cid).Find(&competition)
+	db.Table("competitions").Where("id = ?", id).Find(&competition)
 	return competition
 }
 
 // 管理员删除竞赛
-func DeleteCompetition(db *gorm.DB, Cid int) bool {
-	result := db.Table("competitions").Where("contest_id = ?", Cid).Delete(&structs.CompetitionRequest{})
+func DeleteCompetition(db *gorm.DB, id int) bool {
+	result := db.Table("competitions").Where("id = ?", id).Delete(&structs.CompetitionRequest{})
 	return result.RowsAffected > 0
 }
 
 // 管理员更新/添加竞赛
 func UpdateCompetition(db *gorm.DB, req structs.AdminCompetitionInfoRequest) error {
-	if err := db.Table("competitions").Where("contest_id = ?", req.Id).Save(&req).Error; err != nil {
+	if err := db.Table("competitions").Where("id = ?", req.Id).Save(&req).Error; err != nil {
 		return err
 	}
 	return nil
@@ -52,8 +52,8 @@ func UpdateCompetition(db *gorm.DB, req structs.AdminCompetitionInfoRequest) err
 
 // 将用户添加至用户-竞赛表
 func AddUserCompetition(db *gorm.DB, userId int, competitionId int) error {
-	var userInfo tables.User
-	db.Table("users").Where("uid = ?", userId).Find(&userInfo)
+	var userInfo tables.Users
+	db.Table("users").Where("id = ?", userId).Find(&userInfo)
 	// 当前时间
 	nowDateTime := time.Now()
 	if err := db.Table("user_competitions").Create(
@@ -68,9 +68,9 @@ func SelectUsersCompetition(db *gorm.DB, competitionId int) []structs.Competitio
 	var users []structs.CompetitionUserRequest
 
 	db.Table("user_competitions").
-		Select("user_competitions.contest_id, user_competitions.uid, user_competitions.username, user_competitions.join_date, users.avatar").
-		Joins("JOIN users ON user_competitions.uid = users.uid").
-		Where("user_competitions.contest_id = ?", competitionId).
+		Select("user_competitions.competition_id, user_competitions.user_id, user_competitions.username, user_competitions.join_date, users.avatar").
+		Joins("JOIN users ON user_competitions.user_id = users.id").
+		Where("user_competitions.competition_id = ?", competitionId).
 		Find(&users)
 
 	return users
@@ -78,12 +78,12 @@ func SelectUsersCompetition(db *gorm.DB, competitionId int) []structs.Competitio
 
 // 查询用户是否在指定竞赛中
 func SelectUserCompetition(db *gorm.DB, userId int, competitionId int) bool {
-	return db.Table("user_competitions").Where("uid = ? AND contest_id = ?", userId, competitionId).Find(&tables.UserCompetitions{}).RowsAffected > 0
+	return db.Table("user_competitions").Where("user_id = ? AND competition_id = ?", userId, competitionId).Find(&tables.UserCompetitions{}).RowsAffected > 0
 }
 
 // 将用户从用户-竞赛表删除
 func DeleteUserCompetition(db *gorm.DB, userId int, competitionId int) error {
-	if err := db.Table("user_competitions").Where("uid = ? AND contest_id = ?", userId, competitionId).Delete(&tables.UserCompetitions{}).Error; err != nil {
+	if err := db.Table("user_competitions").Where("user_id = ? AND competition_id = ?", userId, competitionId).Delete(&tables.UserCompetitions{}).Error; err != nil {
 		return err
 	}
 	return nil
@@ -132,7 +132,7 @@ func GetScores(db *gorm.DB, competitionId, page, itemsPerPage int) ([]tables.Use
 	var users []tables.UserCompetitions
 	var total int64
 
-	db.Where("contest_id = ?", competitionId).Model(&tables.UserCompetitions{}).Count(&total).Offset((page - 1) * itemsPerPage).Limit(itemsPerPage).Find(&users)
+	db.Where("competition_id = ?", competitionId).Model(&tables.UserCompetitions{}).Count(&total).Offset((page - 1) * itemsPerPage).Limit(itemsPerPage).Find(&users)
 
 	return users, total
 }

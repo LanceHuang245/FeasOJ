@@ -23,10 +23,10 @@ func SelectAllProblemsAdmin(db *gorm.DB) []tables.Problem {
 }
 
 // 获取指定PID的题目除了Input_full_path Output_full_path外的所有信息
-func SelectProblemInfo(db *gorm.DB, pid string) structs.ProblemInfoRequest {
+func SelectProblemInfo(db *gorm.DB, id string) structs.ProblemInfoRequest {
 	var problemall tables.Problem
 	var problem structs.ProblemInfoRequest
-	db.Table("problems").Where("pid = ? AND is_visible = ?", pid, true).First(&problemall)
+	db.Table("problems").Where("id = ? AND is_visible = ?", id, true).First(&problemall)
 	problem = structs.ProblemInfoRequest{
 		Id:          problemall.Id,
 		Difficulty:  problemall.Difficulty,
@@ -41,31 +41,31 @@ func SelectProblemInfo(db *gorm.DB, pid string) structs.ProblemInfoRequest {
 }
 
 // 获取指定题目所有信息
-func SelectProblemTestCases(db *gorm.DB, pid string) structs.AdminProblemInfoRequest {
+func SelectProblemTestCases(db *gorm.DB, problemId string) structs.AdminProblemInfoRequest {
 	var problem tables.Problem
 	var testCases []structs.TestCaseRequest
 	var result structs.AdminProblemInfoRequest
 
-	if err := db.First(&problem, pid).Error; err != nil {
+	if err := db.First(&problem, problemId).Error; err != nil {
 		return result
 	}
 
-	if err := db.Table("test_cases").Where("pid = ?", pid).Select("input_data,output_data").Find(&testCases).Error; err != nil {
+	if err := db.Table("test_cases").Where("problem_id = ?", problemId).Select("input_data,output_data").Find(&testCases).Error; err != nil {
 		return result
 	}
 
 	result = structs.AdminProblemInfoRequest{
-		Id:          problem.Id,
-		Difficulty:  problem.Difficulty,
-		Title:       problem.Title,
-		Content:     problem.Content,
-		TimeLimit:   problem.TimeLimit,
-		MemoryLimit: problem.MemoryLimit,
-		Input:       problem.Input,
-		Output:      problem.Output,
-		ContestId:   problem.ContestId,
-		IsVisible:   problem.IsVisible,
-		TestCases:   testCases,
+		Id:            problem.Id,
+		Difficulty:    problem.Difficulty,
+		Title:         problem.Title,
+		Content:       problem.Content,
+		TimeLimit:     problem.TimeLimit,
+		MemoryLimit:   problem.MemoryLimit,
+		Input:         problem.Input,
+		Output:        problem.Output,
+		CompetitionId: problem.CompetitionId,
+		IsVisible:     problem.IsVisible,
+		TestCases:     testCases,
 	}
 
 	return result
@@ -75,16 +75,16 @@ func SelectProblemTestCases(db *gorm.DB, pid string) structs.AdminProblemInfoReq
 func UpdateProblem(db *gorm.DB, req structs.AdminProblemInfoRequest) error {
 	// 更新题目表
 	problem := tables.Problem{
-		Id:          req.Id,
-		Difficulty:  req.Difficulty,
-		Title:       req.Title,
-		Content:     req.Content,
-		TimeLimit:   req.TimeLimit,
-		MemoryLimit: req.MemoryLimit,
-		Input:       req.Input,
-		Output:      req.Output,
-		ContestId:   req.ContestId,
-		IsVisible:   req.IsVisible,
+		Id:            req.Id,
+		Difficulty:    req.Difficulty,
+		Title:         req.Title,
+		Content:       req.Content,
+		TimeLimit:     req.TimeLimit,
+		MemoryLimit:   req.MemoryLimit,
+		Input:         req.Input,
+		Output:        req.Output,
+		CompetitionId: req.CompetitionId,
+		IsVisible:     req.IsVisible,
 	}
 	if err := db.Save(&problem).Error; err != nil {
 		return err
@@ -92,7 +92,7 @@ func UpdateProblem(db *gorm.DB, req structs.AdminProblemInfoRequest) error {
 
 	// 获取该题目的测试样例
 	var existingTestCases []tables.TestCase
-	if err := db.Where("pid = ?", req.Id).Find(&existingTestCases).Error; err != nil {
+	if err := db.Where("problem_id = ?", req.Id).Find(&existingTestCases).Error; err != nil {
 		return err
 	}
 
@@ -115,7 +115,7 @@ func UpdateProblem(db *gorm.DB, req structs.AdminProblemInfoRequest) error {
 	// 更新或添加新的测试样例
 	for _, testCase := range req.TestCases {
 		var existingTestCase tables.TestCase
-		if err := db.Where("pid = ? AND input_data = ?", req.Id, testCase.InputData).First(&existingTestCase).Error; err != nil {
+		if err := db.Where("problem_id = ? AND input_data = ?", req.Id, testCase.InputData).First(&existingTestCase).Error; err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				// 如果测试样例不存在，则创建新的样例
 				newTestCase := tables.TestCase{
@@ -141,12 +141,12 @@ func UpdateProblem(db *gorm.DB, req structs.AdminProblemInfoRequest) error {
 }
 
 // 删除题目及其所有测试样例
-func DeleteProblemAllInfo(db *gorm.DB, pid int) bool {
-	if db.Table("problems").Where("pid = ?", pid).Delete(&tables.Problem{}).Error != nil {
+func DeleteProblemAllInfo(db *gorm.DB, problemId int) bool {
+	if db.Table("problems").Where("id = ?", problemId).Delete(&tables.Problem{}).Error != nil {
 		return false
 	}
 
-	if db.Table("test_cases").Where("pid = ?", pid).Delete(&tables.TestCase{}).Error != nil {
+	if db.Table("test_cases").Where("problem_id = ?", problemId).Delete(&tables.TestCase{}).Error != nil {
 		return false
 	}
 
@@ -154,38 +154,38 @@ func DeleteProblemAllInfo(db *gorm.DB, pid int) bool {
 }
 
 // 获取指定竞赛ID的所有题目列表
-func SelectProblemsByCompID(db *gorm.DB, competitionID int) []structs.ProblemInfoRequest {
+func SelectProblemsByCompID(db *gorm.DB, competitionId int) []structs.ProblemInfoRequest {
 	var problems []structs.ProblemInfoRequest
-	if err := db.Table("problems").Where("contest_id = ?", competitionID).Find(&problems).Error; err != nil {
+	if err := db.Table("problems").Where("competition_id = ?", competitionId).Find(&problems).Error; err != nil {
 		return nil
 	}
 	return problems
 }
 
 // 获取指定题目ID是否可用
-func IsProblemVisible(db *gorm.DB, problemID int) bool {
-	return db.Table("problems").Where("pid = ? AND is_visible = ?", problemID, 1).First(&tables.Problem{}).Error == nil
+func IsProblemVisible(db *gorm.DB, id int) bool {
+	return db.Table("problems").Where("id = ? AND is_visible = ?", id, 1).First(&tables.Problem{}).Error == nil
 }
 
 // 题目状态更新
 func UpdateProblemVisibility(db *gorm.DB) error {
 	// 更新状态为正在进行中的题目：is_visible 为 1
 	if err := db.Table("problems").
-		Where("contest_id IN (SELECT contest_id FROM competitions WHERE status = ?)", 1).
+		Where("competition_id IN (SELECT competition_id FROM competitions WHERE status = ?)", 1).
 		Update("is_visible", 1).Error; err != nil {
 		return err
 	}
 
 	// 更新状态为已结束的题目：is_visible 为 1
 	if err := db.Table("problems").
-		Where("contest_id IN (SELECT contest_id FROM competitions WHERE status = ?)", 1).
+		Where("competition_id IN (SELECT competition_id FROM competitions WHERE status = ?)", 1).
 		Update("is_visible", 1).Error; err != nil {
 		return err
 	}
 
 	// 更新状态为未开始的题目：is_visible 为 0
 	if err := db.Table("problems").
-		Where("contest_id IN (SELECT contest_id FROM competitions WHERE status = ?)", 0).
+		Where("competition_id IN (SELECT competition_id FROM competitions WHERE status = ?)", 0).
 		Update("is_visible", 0).Error; err != nil {
 		return err
 	}
@@ -194,17 +194,10 @@ func UpdateProblemVisibility(db *gorm.DB) error {
 }
 
 // SelectTestCasesByPid 获取指定题目的测试样例
-func SelectTestCasesByPid(db *gorm.DB, pid int) []*structs.TestCaseRequest {
+func SelectTestCasesByPid(db *gorm.DB, problemId int) []*structs.TestCaseRequest {
 	var testCases []*structs.TestCaseRequest
-	db.Table("test_cases").Where("pid = ?", pid).Select("input_data, output_data").Find(&testCases)
+	db.Table("test_cases").Where("problem_id = ?", problemId).Select("input_data, output_data").Find(&testCases)
 	return testCases
-}
-
-// ModifyJudgeStatus 修改提交记录状态
-func ModifyJudgeStatus(db *gorm.DB, Uid, Pid int, Result string) error {
-	// 将result为Running...的记录修改为返回状态
-	result := db.Table("submit_records").Where("uid = ? AND pid = ? AND result = ?", Uid, Pid, "Running...").Update("result", Result)
-	return result.Error
 }
 
 // SelectProblemByPid 获取指定题目信息
