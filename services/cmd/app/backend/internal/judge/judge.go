@@ -31,7 +31,7 @@ func JudgeCorePing() bool {
 // 获取JudgeCore服务地址
 func GetJudgeCoreAddress() string {
 	consulConfig := api.DefaultConfig()
-	consulConfig.Address = config.GlobalConfig.Consul.Address
+	consulConfig.Address = config.GlobalConfig.Consul.Host
 	consulClient, err := api.NewClient(consulConfig)
 	if err != nil {
 		log.Println("[FeasOJ] Error connecting to Consul:", err)

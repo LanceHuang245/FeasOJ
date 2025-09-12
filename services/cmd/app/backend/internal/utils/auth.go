@@ -38,8 +38,8 @@ func GenerateToken(username string) (string, error) {
 	claims := token.Claims.(jwt.MapClaims)
 	claims["username"] = username
 	claims["exp"] = time.Now().Add(config.GetJWTExpirePeriod()).Unix()
-	// 生成Token
-	tokenString, err := token.SignedString([]byte(SelectUser(username).TokenSecret))
+	// 生成Token，使用配置中的密钥
+	tokenString, err := token.SignedString(config.GetJWTSecretKey())
 	if err != nil {
 		return "", fmt.Errorf("[FeasOJ] Generate token error：%v", err)
 	}
@@ -54,7 +54,7 @@ func VerifyToken(username, tokenString string) bool {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("%v", token.Header["alg"])
 		}
-		return []byte(SelectUser(username).TokenSecret), nil
+		return config.GetJWTSecretKey(), nil
 	})
 	if token.Valid {
 		return true

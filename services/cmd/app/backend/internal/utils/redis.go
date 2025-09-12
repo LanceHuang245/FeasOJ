@@ -11,10 +11,10 @@ import (
 
 // ConnectRedis 连接到Redis并返回redis.Client对象
 func ConnectRedis() *redis.Client {
-	cfg := config.GlobalConfig.Redis
+	redisConfig := config.GlobalConfig.Redis
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     cfg.Address,
-		Password: cfg.Password,
+		Addr:     redisConfig.Host,
+		Password: redisConfig.Password,
 		DB:       0,
 	})
 	return rdb

@@ -68,7 +68,7 @@ func ImageGuardPing() bool {
 // 获取ImageGuard服务
 func GetImageGuardAddress() string {
 	consulConfig := api.DefaultConfig()
-	consulConfig.Address = config.GlobalConfig.Consul.Address
+	consulConfig.Address = config.GlobalConfig.Consul.Host
 	consulClient, err := api.NewClient(consulConfig)
 	if err != nil {
 		log.Println("[FeasOJ] Error connecting to Consul:", err)

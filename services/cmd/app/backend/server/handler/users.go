@@ -17,7 +17,6 @@ import (
 	"github.com/go-redis/redis"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 // 自增登录计数器
@@ -74,7 +73,7 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "captchaError")})
 		return
 	}
-	success := repository.Register(global.Db, req.Username, utils.EncryptPassword(req.Password), req.Email, uuid.New().String(), 0)
+	success := repository.Register(global.Db, req.Username, utils.EncryptPassword(req.Password), req.Email, 0)
 
 	// 计数键
 	var counterKey string
@@ -128,7 +127,7 @@ func Login(c *gin.Context) {
 	}
 
 	// 验证用户存在
-	storedPwd := utils.SelectUser(username).Password
+	storedPwd := repository.SelectUser(global.Db, username).Password
 	if storedPwd == "" {
 		// 统计失败
 		incrLoginCounter(rdb, clientIP, false)

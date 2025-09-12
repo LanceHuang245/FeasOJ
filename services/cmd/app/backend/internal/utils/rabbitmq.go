@@ -9,7 +9,7 @@ import (
 // ConnectRabbitMQ 建立与 RabbitMQ 的连接
 func ConnectRabbitMQ() (*amqp.Connection, *amqp.Channel, error) {
 	// 连接到 RabbitMQ 服务
-	conn, err := amqp.Dial(config.GlobalConfig.RabbitMQ.Address)
+	conn, err := amqp.Dial(config.GlobalConfig.RabbitMQ.Host)
 	if err != nil {
 		return nil, nil, err
 	}

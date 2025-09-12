@@ -8,13 +8,12 @@ import (
 	"log"
 	"time"
 
-	"github.com/google/uuid"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 // 创建管理员
-func InitAdminAccount() (string, string, string, string, int) {
+func InitAdminAccount() (string, string, string, int) {
 	var adminUsername string
 	var adminPassword string
 	var adminEmail string
@@ -26,7 +25,7 @@ func InitAdminAccount() (string, string, string, string, int) {
 	fmt.Print("[FeasOJ] Email: ")
 	fmt.Scanln(&adminEmail)
 
-	return adminUsername, EncryptPassword(adminPassword), adminEmail, uuid.New().String(), 1
+	return adminUsername, EncryptPassword(adminPassword), adminEmail, 1
 }
 
 // 创建表
@@ -40,7 +39,7 @@ func InitTable() bool {
 		&tables.TestCase{},
 		&tables.Competition{},
 		&tables.UserCompetitions{},
-		&tables.IPVisit{},
+		&tables.IPVisits{},
 	)
 	return err == nil
 }
@@ -68,11 +67,4 @@ func ConnectSql() *gorm.DB {
 	sqlDB.SetMaxOpenConns(config.GlobalConfig.MySQL.MaxOpenConns)
 	sqlDB.SetConnMaxLifetime(time.Duration(config.GlobalConfig.MySQL.MaxLifeTime) * time.Second)
 	return db
-}
-
-// 根据用户名获取用户信息
-func SelectUser(username string) tables.Users {
-	var user tables.Users
-	global.Db.Where("username = ?", username).First(&user)
-	return user
 }

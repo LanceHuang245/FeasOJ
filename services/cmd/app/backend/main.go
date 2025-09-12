@@ -69,8 +69,8 @@ func main() {
 	if repository.GetAdminUser(global.Db, 1) {
 		log.Println("[FeasOJ] The administrator account already exists and will continue")
 	} else {
-		adminUsername, adminPassword, adminEmail, adminTokenSecret, adminRole := utils.InitAdminAccount()
-		repository.Register(global.Db, adminUsername, adminPassword, adminEmail, adminTokenSecret, adminRole)
+		adminUsername, adminPassword, adminEmail, adminRole := utils.InitAdminAccount()
+		repository.Register(global.Db, adminUsername, adminPassword, adminEmail, adminRole)
 	}
 
 	// 测试邮箱模块是否正常
@@ -150,12 +150,12 @@ func main() {
 	}
 
 	if config.GlobalConfig.Server.EnableHTTPS {
-		go startServer("https", config.GlobalConfig.Server.Address, config.GlobalConfig.Server.CertPath, config.GlobalConfig.Server.KeyPath)
+		go startServer("https", config.GlobalConfig.Server.Host, config.GlobalConfig.Server.CertPath, config.GlobalConfig.Server.KeyPath)
 	} else {
-		go startServer("http", config.GlobalConfig.Server.Address, "", "")
+		go startServer("http", config.GlobalConfig.Server.Host, "", "")
 	}
 
-	log.Println("[FeasOJ] Server is running on", config.GlobalConfig.Server.Address, "Https Status:", config.GlobalConfig.Server.EnableHTTPS)
+	log.Println("[FeasOJ] Server is running on", config.GlobalConfig.Server.Host, "Https Status:", config.GlobalConfig.Server.EnableHTTPS)
 
 	// 监听终端输入
 	scanner := bufio.NewScanner(os.Stdin)

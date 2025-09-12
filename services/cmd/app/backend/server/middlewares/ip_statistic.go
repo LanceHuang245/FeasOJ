@@ -17,7 +17,7 @@ func IPStatistic() gin.HandlerFunc {
 		ip := c.ClientIP()
 		now := time.Now()
 
-		visit := tables.IPVisit{
+		visit := tables.IPVisits{
 			IpAddress:  ip,
 			VisitCount: 1,
 			LastVisit:  now,

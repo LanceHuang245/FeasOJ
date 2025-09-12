@@ -10,10 +10,17 @@ import (
 )
 
 // 用户注册
-func Register(db *gorm.DB, username, password, email, tokensecret string, role int) bool {
+func Register(db *gorm.DB, username, password, email string, role int) bool {
 	now := time.Now()
-	err := db.Create(&tables.Users{Username: username, Password: password, Email: email, CreatedAt: now, Role: role, TokenSecret: tokensecret, IsBan: false}).Error
+	err := db.Create(&tables.Users{Username: username, Password: password, Email: email, CreatedAt: now, Role: role, IsBan: false}).Error
 	return err == nil
+}
+
+// 根据用户名获取用户信息
+func SelectUser(db *gorm.DB, username string) tables.Users {
+	var user tables.Users
+	db.Where("username = ?", username).First(&user)
+	return user
 }
 
 // 管理员更新用户信息
@@ -119,8 +126,8 @@ func SelectRank100Users(db *gorm.DB) []structs.UserInfoRequest {
 }
 
 // 获取所有IP统计信息
-func SelectIPStatistics(db *gorm.DB) []tables.IPVisit {
-	var ipStatistics []tables.IPVisit
+func SelectIPStatistics(db *gorm.DB) []tables.IPVisits {
+	var ipStatistics []tables.IPVisits
 	db.Table("ip_visits").Order("visit_count desc").Find(&ipStatistics)
 	return ipStatistics
 }
