@@ -88,8 +88,9 @@ onUnmounted(() => {
 
 .main-title {
   font-size: 3rem;
-  font-weight: 700;
+  font-weight: 400;
   margin: 0;
+  letter-spacing: -0.015625em;
 }
 
 .content-card {

@@ -1,7 +1,7 @@
 [English](README.md) | 简体中文
 <p align="center">
     <a href="https://github.com/LanceHuang245/FeasOJ">
-        <img src="images/logo.png" height="250"/>
+        <img src="images/logo.png" height="200"/>
     </a>
 </p>
 
