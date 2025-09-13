@@ -58,11 +58,11 @@ export const difficultyColor = (difficulty) => {
 
 export const difficultyLang = (difficulty) => {
     switch (difficulty) {
-        case '简单':
+        case '0':
             return 'message.easy';
-        case '中等':
+        case '1':
             return 'message.medium';
-        case '困难':
+        case '2':
             return 'message.hard';
         default:
             return 'message.easy';

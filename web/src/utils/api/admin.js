@@ -57,7 +57,7 @@ export const updateProblemInfo = async (problemInfo) => {
 
 // 管理员删除题目信息
 export const deleteProblemAllInfo = async (pid) => {
-    return await axios.delete(`${apiUrl}/admin/problems/${pid}`, {
+    return await axios.post(`${apiUrl}/admin/problems/${pid}`,{}, {
         headers: {
             Username: encodeURIComponent(userName.value),
             Authorization: token.value,

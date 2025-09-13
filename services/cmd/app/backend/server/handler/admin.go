@@ -25,7 +25,7 @@ func GetProblemAllInfo(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": problemInfo})
 }
 
-// 更新题目信息
+// 新增/更新题目信息
 func UpdateProblemInfo(c *gin.Context) {
 	var req structs.AdminProblemInfoRequest
 	if err := c.ShouldBindJSON(&req); err != nil {

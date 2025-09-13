@@ -34,37 +34,37 @@ const batchDialog = ref(false)
 const batchInput = ref('')
 
 const testCaseHeaders = [
-    { title: t('message.input'), value: 'input', align: 'center' },
-    { title: t('message.output'), value: 'output', align: 'center' },
+    { title: t('message.input'), value: 'input_data', align: 'center' },
+    { title: t('message.output'), value: 'output_data', align: 'center' },
     { title: t('message.operation'), value: 'actions', align: 'center', sortable: false }
 ]
 
 const difficultyOptions = [
-    { value: '简单', label: t('message.easy') },
-    { value: '中等', label: t('message.medium') },
-    { value: '困难', label: t('message.hard') }
+    { value: 0, label: t('message.easy') },
+    { value: 1, label: t('message.medium') },
+    { value: 2, label: t('message.hard') }
 ];
 
 const problemFields = reactive({
-    pid: null,
+    id: null,
     title: "",
     content: "",
-    difficulty: "",
+    difficulty: 0,
     time_limit: "",
     memory_limit: "",
     input: "",
     output: "",
-    contest_id: null,
+    competition_id: null,
     is_visible: true,
-    test_cases: [{ input: '', output: '' }]
+    test_cases: [{ input_data: '', output_data: '' }]
 });
 
 const headers = ref([
-    { title: 'ID', value: 'Pid', align: 'center', sortable: false },
-    { title: t('message.problem'), value: 'Title', align: 'center', sortable: false },
-    { title: t('message.difficulty'), value: 'Difficulty', align: 'center', sortable: false },
-    { title: t('message.contestid'), value: 'ContestId', align: 'center', sortable: false },
-    { title: t('message.isvisible'), value: 'IsVisible', align: 'center', sortable: false },
+    { title: 'ID', value: 'id', align: 'center', sortable: false },
+    { title: t('message.problem'), value: 'title', align: 'center', sortable: false },
+    { title: t('message.difficulty'), value: 'difficulty', align: 'center', sortable: false },
+    { title: t('message.contestid'), value: 'competition_id', align: 'center', sortable: false },
+    { title: t('message.isvisible'), value: 'is_visible', align: 'center', sortable: false },
     { title: t('message.operation'), value: 'actions', align: 'center', sortable: false },
 ])
 
@@ -77,7 +77,7 @@ const filteredProblems = computed(() => {
     }
     return problems.value.filter((problem) =>
         problem.Title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-        problem.Pid.toString().includes(searchQuery.value)
+        problem.id.toString().includes(searchQuery.value)
     )
 })
 
@@ -105,18 +105,19 @@ const handleThemeChange = (event) => {
 
 // 添加测试样例
 const addTestCase = () => {
-    problemFields.test_cases.push({ input: '', output: '' });
+    problemFields.test_cases.push({ input_data: '', output_data: '' });
 };
 
 // 字段检查
 const validateFields = () => {
     for (const key in problemFields) {
         if (problemFields[key] === "" || (Array.isArray(problemFields[key]) && problemFields[key].length === 0)) {
+
             showAlert(t("message.formCheckfailed") + "!", "");
             return false;
         }
     }
-    if (problemFields.test_cases.some(testCase => testCase.output === "")) {
+    if (problemFields.test_cases.some(testCase => testCase.output_data === "")) {
         showAlert(t("message.formCheckfailed") + "!", "");
         return false;
     }
@@ -144,9 +145,9 @@ const fetchData = async () => {
     loading.value = true
     try {
         const response = await getAllProblemsAdmin();
-        problems.value = response.data.problems
+        problems.value = response.data.data
         totalProblems.value = problems.value.length
-        problemFields.pid = totalProblems.value + 1
+        problemFields.id = totalProblems.value + 1
     } catch (error) {
         showAlert(t("message.failed") + "!", "")
     } finally {
@@ -160,19 +161,19 @@ const createProblem = async () => {
     isCreate.value = true;
     dialog.value = true;
     // 重置内容
-    problemFields.pid = totalProblems.value + 1;
+    problemFields.id = totalProblems.value + 1;
     problemFields.title = "";
     problemFields.content = "";
-    problemFields.difficulty = "简单";
+    problemFields.difficulty = 0;
     problemFields.time_limit = "";
     problemFields.memory_limit = "";
     problemFields.input = "";
     problemFields.output = "";
-    problemFields.contest_id = 0;
+    problemFields.competition_id = 0;
     problemFields.is_visible = true;
-    problemFields.test_cases = [{ input: '', output: '' }];
+    problemFields.test_cases = [{ input_data: '', output_data: '' }];
     const compResp = await getAllCompetitionsInfo();
-    competitionIds.value = [0, ...compResp.data.contests.map(contest => contest.contest_id)];
+    competitionIds.value = [0, ...compResp.data.data.map(data => data.id)];
     networkloading.value = false;
 }
 
@@ -182,9 +183,9 @@ const goToEditProblem = async (pid) => {
     dialog.value = true;
     networkloading.value = true;
     const problemResp = await getProblemAllInfoByAdmin(pid);
-    Object.assign(problemFields, problemResp.data.problemInfo);
+    Object.assign(problemFields, problemResp.data.data);
     const compResp = await getAllCompetitionsInfo();
-    competitionIds.value = [0, ...compResp.data.contests.map(contest => contest.contest_id)];
+    competitionIds.value = [0, ...compResp.data.data.map(data => data.competition_id)];
     networkloading.value = false;
 };
 
@@ -193,7 +194,7 @@ const delProblem = async () => {
     delDialog.value = false;
     networkloading.value = true;
     try {
-        await deleteProblemAllInfo(problemFields.pid);
+        await deleteProblemAllInfo(problemFields.id);
         showAlert(t("message.success") + "!", "reload");
     } catch (error) {
         showAlert(t("message.failed") + "!", "");
@@ -208,7 +209,7 @@ const handleBatchImport = () => {
     const newCases = []
     for (let i = 0; i < lines.length; i += 2) {
         if (lines[i] !== undefined && lines[i + 1] !== undefined) {
-            newCases.push({ input: lines[i], output: lines[i + 1] })
+            newCases.push({ input_data: lines[i], output_data: lines[i + 1] })
         }
     }
     if (newCases.length > 0) {
@@ -234,7 +235,7 @@ onMounted(async () => {
             window.location = '#/403';
             return;
         }
-        userPrivilege.value = userInfoResponse.data.info.role;
+        userPrivilege.value = userInfoResponse.data.data.role;
         if (userPrivilege.value !== 1) {
             window.location = '#/403';
             return;
@@ -304,21 +305,21 @@ onUnmounted(() => {
                             <template v-slot:item="{ item }">
                                 <tr class="problemset-table-row">
                                     <td class="text-center pa-4 font-weight-medium">
-                                        {{ item.Pid }}
+                                        {{ item.Id }}
                                     </td>
                                     <td class="text-center pa-4 font-weight-medium">
                                         {{ item.Title }}
                                     </td>
                                     <td class="text-center pa-4">
                                         <v-chip
-                                            :color="item.Difficulty === '简单' ? 'success' : item.Difficulty === '中等' ? 'warning' : 'error'"
+                                            :color="item.Difficulty === 0 ? 'success' : item.Difficulty === 1 ? 'warning' : 'error'"
                                             variant="tonal" size="small" class="font-weight-medium">
                                             {{ $t(difficultyLang(item.Difficulty)) }}
                                         </v-chip>
                                     </td>
                                     <td class="text-center pa-4">
                                         <span class="text-body-2 text-medium-emphasis">
-                                            {{ item.ContestID }}
+                                            {{ item.CompetitionId }}
                                         </span>
                                     </td>
                                     <td class="text-center pa-4">
@@ -328,7 +329,7 @@ onUnmounted(() => {
                                         </v-chip>
                                     </td>
                                     <td class="text-center pa-4">
-                                        <v-btn @click="goToEditProblem(item.Pid)" variant="text" icon="mdi-pencil"
+                                        <v-btn @click="goToEditProblem(item.Id)" variant="text" icon="mdi-pencil"
                                             size="small" color="primary"></v-btn>
                                     </td>
                                 </tr>
@@ -359,7 +360,7 @@ onUnmounted(() => {
                 </v-card-title>
                 <v-card-text>
                     <v-form>
-                        <v-text-field label="ID" v-model="problemFields.pid" variant="solo-filled"
+                        <v-text-field label="ID" v-model="problemFields.id" variant="solo-filled"
                             readonly></v-text-field>
                         <!-- 题目名称 -->
                         <v-text-field :label="$t('message.title')" v-model="problemFields.title"
@@ -375,7 +376,7 @@ onUnmounted(() => {
                         <!-- 所属竞赛ID及是否可见 -->
                         <v-row class="limitRow">
                             <v-select :items="competitionIds" :label="$t('message.contestid')"
-                                v-model.number="problemFields.contest_id" variant="solo-filled"></v-select>
+                                v-model.number="problemFields.competition_id" variant="solo-filled"></v-select>
                             <div style="margin-inline: 30px;"></div>
                             <v-switch v-model="problemFields.is_visible" :label="$t('message.isvisible')"
                                 color="primary" inset></v-switch>
@@ -402,12 +403,12 @@ onUnmounted(() => {
                         <v-col cols="12">
                             <v-data-table :headers="testCaseHeaders" :items="problemFields.test_cases" class="mb-2"
                                 hide-default-footer>
-                                <template v-slot:item.input="{ item, index }">
-                                    <v-text-field v-model="item.input" variant="solo-filled" density="compact"
+                                <template v-slot:item.input_data="{ item, index }">
+                                    <v-text-field v-model="item.input_data" variant="solo-filled" density="compact"
                                         hide-details></v-text-field>
                                 </template>
-                                <template v-slot:item.output="{ item, index }">
-                                    <v-text-field v-model="item.output" variant="solo-filled" density="compact"
+                                <template v-slot:item.output_data="{ item, index }">
+                                    <v-text-field v-model="item.output_data" variant="solo-filled" density="compact"
                                         hide-details></v-text-field>
                                 </template>
                                 <template v-slot:item.actions="{ index }">

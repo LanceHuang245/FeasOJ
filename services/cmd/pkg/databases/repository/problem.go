@@ -119,7 +119,7 @@ func UpdateProblem(db *gorm.DB, req structs.AdminProblemInfoRequest) error {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				// 如果测试样例不存在，则创建新的样例
 				newTestCase := tables.TestCases{
-					Id:         req.Id,
+					ProblemId:  req.Id,
 					InputData:  testCase.InputData,
 					OutputData: testCase.OutputData,
 				}
