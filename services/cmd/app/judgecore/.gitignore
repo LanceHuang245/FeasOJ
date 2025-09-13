@@ -1,4 +1,5 @@
 docs/
 certificate/
 avatars/
-config.toml
+codefiles/
+config.json

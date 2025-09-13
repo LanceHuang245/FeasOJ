@@ -3,8 +3,8 @@ package main
 import (
 	"FeasOJ/app/backend/internal/config"
 	"FeasOJ/app/backend/internal/global"
-	"FeasOJ/app/backend/internal/judge"
 	"FeasOJ/app/backend/internal/utils"
+	"FeasOJ/app/backend/internal/utils/judge"
 	"FeasOJ/app/backend/internal/utils/scheduler"
 	"FeasOJ/app/backend/server"
 	"FeasOJ/pkg/databases/repository"

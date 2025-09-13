@@ -33,7 +33,7 @@ const fetchData = async () => {
   loading.value = true
   try {
     const response = await getAllDis(page.value, itemsPerPage.value);
-    discuss.value = response.data.discussions ? response.data.discussions : [];
+    discuss.value = response.data.data ? response.data.data : [];
     discussCount.value = response.data.total ? response.data.total : 0;
   } catch (error) {
     showAlert(t("message.failed") + "!", '/discussion')
@@ -87,12 +87,12 @@ onMounted(async () => {
       <template v-slot:item="{ item }">
         <tr>
           <td>
-            <v-btn @click="router.push({ path: `/discussion/${item.did}` })" variant="text" color="primary" class="disc-btn">{{ item.title
+            <v-btn @click="router.push({ path: `/discussion/${item.id}` })" variant="text" color="primary" class="disc-btn">{{ item.title
               }}</v-btn>
           </td>
           <td><v-chip class="font-weight-medium author-chip" variant="outlined" color="primary" @click="router.push({ path: `/profile/${item.username}` })"
             >{{ item.username }}</v-chip></td>
-          <td class="text-body-2 text-medium-emphasis">{{ moment(item.create_at).format('YYYY-MM-DD HH:mm') }}</td>
+          <td class="text-body-2 text-medium-emphasis">{{ moment(item.created_at).format('YYYY-MM-DD HH:mm') }}</td>
         </tr>
       </template>
       <template v-slot:bottom>

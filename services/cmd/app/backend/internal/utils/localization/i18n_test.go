@@ -1,4 +1,4 @@
-package utils
+package localization
 
 import (
 	"testing"
@@ -25,7 +25,7 @@ func TestLocalizeExistingMessage(t *testing.T) {
 		},
 	})
 	if err != nil {
-		t.Fatalf("Localize 出错: %v", err)
+		t.Fatalf("Localize Error: %v", err)
 	}
 }
 
@@ -44,7 +44,7 @@ func TestLocalizeMessageWithTemplate(t *testing.T) {
 		},
 	})
 	if err != nil {
-		t.Fatalf("Localize 出错: %v", err)
+		t.Fatalf("Localize Error: %v", err)
 	}
 }
 
@@ -60,6 +60,6 @@ func TestLocalizeFallbackMessage(t *testing.T) {
 		},
 	})
 	if err != nil {
-		t.Fatalf("Localize 出错: %v", err)
+		t.Fatalf("Localize Error: %v", err)
 	}
 }

@@ -61,7 +61,7 @@ func BuildImage(currentDir string) bool {
 }
 
 // CompileAndRun 编译并运行代码
-func CompileAndRun(filename string, containerID string, problem *tables.Problem, testCases []*structs.TestCaseRequest) string {
+func CompileAndRun(filename string, containerID string, problem *tables.Problems, testCases []*structs.TestCaseRequest) string {
 	taskDir := fmt.Sprintf("/workspace/task_%d", time.Now().UnixNano())
 
 	mkdirCmd := exec.Command("docker", "exec", containerID, "mkdir", "-p", taskDir)
@@ -184,7 +184,7 @@ func resetTaskDirectory(containerID, taskDir string) error {
 	return nil
 }
 
-func parseLimits(problem *tables.Problem) (timeLimit int, memoryLimit int, err error) {
+func parseLimits(problem *tables.Problems) (timeLimit int, memoryLimit int, err error) {
 	re := regexp.MustCompile(`\d+`)
 
 	timeMatches := re.FindAllString(problem.TimeLimit, -1)

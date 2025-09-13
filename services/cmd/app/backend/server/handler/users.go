@@ -305,9 +305,9 @@ func UploadAvatar(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "invalidrequest")})
 		return
 	}
-	newFileName := fmt.Sprintf("%d%s", userInfo.Id, path.Ext(file.Filename))
+	newFileName := fmt.Sprintf("%s%s", userInfo.Id, path.Ext(file.Filename))
 	tempFilePath := filepath.Join(global.AvatarsDir, newFileName)
-	compressedFilePath := filepath.Join(global.AvatarsDir, fmt.Sprintf("%d%s", userInfo.Id, path.Ext(file.Filename)))
+	compressedFilePath := filepath.Join(global.AvatarsDir, fmt.Sprintf("%s%s", userInfo.Id, path.Ext(file.Filename)))
 	if _, err := os.Stat(compressedFilePath); err == nil {
 		os.Remove(compressedFilePath)
 	}

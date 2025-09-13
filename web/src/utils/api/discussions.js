@@ -41,7 +41,7 @@ export const addDiscussion = async (Title, Content) => {
     const formData = new FormData();
     formData.append('title', Title);
     formData.append('content', Content);
-    return await axios.post(`${apiUrl}/discussions`, formData, {
+    return await axios.post(`${apiUrl}/discussions/add`, formData, {
         headers: {
             Username: encodeURIComponent(userName.value),
             Authorization: token.value,
@@ -54,7 +54,7 @@ export const addDiscussion = async (Title, Content) => {
 export const addComment = async (did, content) => {
     const formData = new FormData();
     formData.append('content', content);
-    return await axios.post(`${apiUrl}/discussions/comments/${did}`, formData, {
+    return await axios.post(`${apiUrl}/discussions/comments/add/${did}`, formData, {
         headers: {
             Username: encodeURIComponent(userName.value),
             Authorization: token.value,
@@ -64,8 +64,8 @@ export const addComment = async (did, content) => {
 }
 
 // 删除讨论
-export const deleteDiscussion = async (did) => {
-    return await axios.delete(`${apiUrl}/discussions/${did}`, {
+export const deleteDiscussion = async (id) => {
+    return await axios.post(`${apiUrl}/discussions/delete/${id}`, {}, {
         headers: {
             Username: encodeURIComponent(userName.value),
             Authorization: token.value,
@@ -75,8 +75,8 @@ export const deleteDiscussion = async (did) => {
 }
 
 // 删除讨论评论
-export const deleteComment = async (cid) => {
-    return await axios.delete(`${apiUrl}/discussions/comments/${cid}`, {
+export const deleteComment = async (id) => {
+    return await axios.post(`${apiUrl}/discussions/comments/delete/${id}`, {}, {
         headers: {
             Username: encodeURIComponent(userName.value),
             Authorization: token.value,

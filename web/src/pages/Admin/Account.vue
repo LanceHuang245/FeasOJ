@@ -63,7 +63,6 @@ const handleMenuClick = (menu, item) => {
 }
 
 const headers = ref([
-    { title: 'UID', value: 'uid', align: 'center', sortable: false },
     { title: t("message.username"), value: 'username', align: 'center', sortable: false },
     { title: t("message.email"), value: 'email', align: 'center', sortable: false },
     { title: t("message.role"), value: 'role', align: 'center', sortable: false },
@@ -99,18 +98,13 @@ const handlePageChange = (page) => {
     currentPage.value = page;
 };
 
-// 根据结果不同显示不同颜色
-const getStatusStyle = (status) => {
-    return status ? 'color: red; font-weight: bold;' : 'color: green; font-weight: bold;';
-};
-
 // 获取数据
 const fetchData = async () => {
     loading.value = true;
     try {
         const usersInfoResp = await getAllUsersInfo()
-        users.value = usersInfoResp.data.usersInfo;
-        totalUsers.value = usersInfoResp.data.usersInfo.length;
+        users.value = usersInfoResp.data.data;
+        totalUsers.value = usersInfoResp.data.data.length;
     } catch (error) {
         showAlert(t("message.failed") + "!", "");
     } finally {
@@ -127,7 +121,7 @@ onMounted(async () => {
             return;
         }
         const userInfoResponse = await verifyUserInfo(userName.value, token.value);
-        userPrivilege.value = userInfoResponse.data.info.role;
+        userPrivilege.value = userInfoResponse.data.data.role;
         if (userPrivilege.value !== 1) {
             window.location = '#/403';
             return;
@@ -195,9 +189,6 @@ onMounted(async () => {
                         >
                             <template v-slot:item="{ item }">
                                 <tr class="account-table-row">
-                                    <td class="text-center pa-4 font-weight-medium">
-                                        {{ item.uid }}
-                                    </td>
                                     <td class="text-center pa-4 font-weight-medium">
                                         {{ item.username }}
                                     </td>

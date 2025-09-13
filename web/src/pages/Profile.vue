@@ -103,7 +103,7 @@ const uploadAvat = async (cropper) => {
 const fetchSubmitData = async () => {
   try {
     const submitResponse = await getUserSubmitRecords(currentUsername.value);
-    userSubmitRecords.value = submitResponse.data.submitrecords;
+    userSubmitRecords.value = submitResponse.data.data;
     userSubmitRecordsLength.value = userSubmitRecords.value.length;
   } catch (error) {
     showAlert(t("message.failed") + "!", "");
@@ -133,7 +133,7 @@ const verifyAndFetchUserInfo = async () => {
     }
     await verifyUserInfo(userName.value, token.value);
     const userInfoResponse = await getUserInfo(currentUsername.value);
-    userInfo.value = userInfoResponse.data.info;
+    userInfo.value = userInfoResponse.data.data;
     synopsis.value = userInfo.value.synopsis;
     await fetchSubmitData();
   } catch (error) {

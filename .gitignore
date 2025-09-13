@@ -20,8 +20,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-# Golang
-vendor
-config.json
-certificate

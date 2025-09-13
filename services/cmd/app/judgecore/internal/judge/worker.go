@@ -17,7 +17,7 @@ import (
 )
 
 type Task struct {
-	UID  int
+	UID  string
 	PID  int
 	Name string
 }
@@ -85,7 +85,7 @@ func ProcessJudgeTasks(rmqConfig config.RabbitMQ, db *gorm.DB, pool *JudgePool) 
 				log.Printf("[FeasOJ] Invalid task data format: %s", taskData)
 				continue
 			}
-			uid, _ := strconv.Atoi(parts[0])
+			uid := parts[0]
 			pidStr := strings.Split(parts[1], ".")[0]
 			pid, _ := strconv.Atoi(pidStr)
 
@@ -113,7 +113,7 @@ func worker(taskChan chan Task, ch *amqp.Channel, wg *sync.WaitGroup, db *gorm.D
 		testCases := repository.SelectTestCasesByPid(db, task.PID)
 		if len(testCases) == 0 {
 			log.Printf("[FeasOJ] No test cases found for PID %d", task.PID)
-			repository.ModifyJudgeStatus(db, task.UID, task.PID, global.SystemError)
+			repository.ModifyJudgeStatus(db, task.PID, task.UID, global.SystemError)
 			continue
 		}
 
@@ -121,7 +121,7 @@ func worker(taskChan chan Task, ch *amqp.Channel, wg *sync.WaitGroup, db *gorm.D
 		pool.containerIDs.Store(task.Name, containerID)
 
 		result := CompileAndRun(task.Name, containerID, problem, testCases)
-		repository.ModifyJudgeStatus(db, task.UID, task.PID, result)
+		repository.ModifyJudgeStatus(db, task.PID, task.UID, result)
 
 		resultMsg := structs.JudgeResultMessage{
 			UserID:    task.UID,

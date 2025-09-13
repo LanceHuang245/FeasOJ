@@ -86,7 +86,7 @@ func UploadCode(c *gin.Context) {
 	defer rdb.Close()
 
 	// 提交频率限制
-	userRateLimitKey := fmt.Sprintf("ratelimit:%d", userInfo.Id)
+	userRateLimitKey := fmt.Sprintf("ratelimit:%s", userInfo.Id)
 
 	// 检查是否在限制时间内
 	exists, _ := rdb.Exists(userRateLimitKey).Result()
@@ -99,7 +99,7 @@ func UploadCode(c *gin.Context) {
 	rdb.Set(userRateLimitKey, 1, 10*time.Second)
 
 	// 将文件名改为用户ID_题目ID.扩展名
-	newFileName := fmt.Sprintf("%d_%s%s", userInfo.Id, problem, path.Ext(file.Filename))
+	newFileName := fmt.Sprintf("%s_%s%s", userInfo.Id, problem, path.Ext(file.Filename))
 
 	// 保存文件到临时目录
 	tempFilePath := filepath.Join(os.TempDir(), newFileName)
@@ -150,7 +150,7 @@ func UploadCode(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": GetMessage(c, "internalServerError")})
 		return
 	}
-	repository.AddSubmitRecord(global.Db, userInfo.Id, pidInt, "Running...", language, username, string(code))
+	repository.AddSubmitRecord(global.Db, pidInt, userInfo.Id, "Running...", language, username, string(code))
 	c.JSON(http.StatusOK, gin.H{"message": GetMessage(c, "success")})
 }
 

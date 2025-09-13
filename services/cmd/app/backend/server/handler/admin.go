@@ -124,7 +124,7 @@ func CalculateScore(c *gin.Context) {
 	competitionId, _ := strconv.Atoi(c.Param("id"))
 
 	// 查询竞赛信息
-	var competition tables.Competition
+	var competition tables.Competitions
 	global.Db.First(&competition, competitionId)
 	if competition.Scored {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "competition_scored")})
@@ -181,7 +181,7 @@ func CalculateScore(c *gin.Context) {
 		global.Db.Model(&tables.UserCompetitions{}).Where("user_id = ?", user.UserId).Update("score", score)
 	}
 
-	global.Db.Model(&tables.Competition{}).Where("competition_id = ?", competitionId).Update("scored", true)
+	global.Db.Model(&tables.Competitions{}).Where("competition_id = ?", competitionId).Update("scored", true)
 
 	c.JSON(http.StatusOK, gin.H{"message": GetMessage(c, "success")})
 }

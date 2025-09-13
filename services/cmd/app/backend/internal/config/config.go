@@ -1,81 +1,82 @@
 package config
 
 import (
-	"encoding/json"
+	"bytes"
 	"fmt"
 	"log"
 	"os"
 	"time"
 
+	"github.com/BurntSushi/toml"
 	"github.com/golang-jwt/jwt/v5"
 )
 
 // Config 全局配置结构体
 type Config struct {
-	Server   ServerConfig   `json:"server"`
-	RabbitMQ RabbitMQConfig `json:"rabbitmq"`
-	Consul   ConsulConfig   `json:"consul"`
-	Features FeaturesConfig `json:"features"`
-	MySQL    MySQLConfig    `json:"mysql"`
-	Redis    RedisConfig    `json:"redis"`
-	Mail     MailConfig     `json:"mail"`
-	JWT      JWTConfig      `json:"jwt"`
+	Server   ServerConfig   `toml:"server"`
+	RabbitMQ RabbitMQConfig `toml:"rabbitmq"`
+	Consul   ConsulConfig   `toml:"consul"`
+	Features FeaturesConfig `toml:"features"`
+	MySQL    MySQLConfig    `toml:"mysql"`
+	Redis    RedisConfig    `toml:"redis"`
+	Mail     MailConfig     `toml:"mail"`
+	JWT      JWTConfig      `toml:"jwt"`
 }
 
 // ServerConfig 服务器配置
 type ServerConfig struct {
-	Host        string `json:"host"`
-	EnableHTTPS bool   `json:"enable_https"`
-	CertPath    string `json:"cert_path"`
-	KeyPath     string `json:"key_path"`
+	Host        string `toml:"host"`
+	EnableHTTPS bool   `toml:"enable_https"`
+	CertPath    string `toml:"cert_path"`
+	KeyPath     string `toml:"key_path"`
 }
 
 // RabbitMQConfig RabbitMQ配置
 type RabbitMQConfig struct {
-	Host string `json:"host"`
+	Host string `toml:"host"`
 }
 
 // ConsulConfig Consul配置
 type ConsulConfig struct {
-	Host string `json:"host"`
+	Host string `toml:"host"`
 }
 
 // FeaturesConfig 功能开关配置
 type FeaturesConfig struct {
-	ImageGuardEnabled        bool `json:"image_guard_enabled"`
-	ProfanityDetectorEnabled bool `json:"profanity_detector_enabled"`
+	ImageGuardEnabled        bool `toml:"image_guard_enabled"`
+	ProfanityDetectorEnabled bool `toml:"profanity_detector_enabled"`
 }
 
 // MySQLConfig MySQL配置
 type MySQLConfig struct {
-	MaxOpenConns int    `json:"max_open_conns"`
-	MaxIdleConns int    `json:"max_idle_conns"`
-	MaxLifeTime  int    `json:"max_life_time"`
-	DbHost       string `json:"db_address"`
-	DbName       string `json:"db_name"`
-	DbUser       string `json:"db_user"`
-	DbPassword   string `json:"db_password"`
+	MaxOpenConns int    `toml:"max_open_conns"`
+	MaxIdleConns int    `toml:"max_idle_conns"`
+	MaxLifeTime  int    `toml:"max_life_time"`
+	DbHost       string `toml:"db_address"`
+	DbName       string `toml:"db_name"`
+	DbUser       string `toml:"db_user"`
+	DbPassword   string `toml:"db_password"`
 }
 
 // RedisConfig Redis配置
 type RedisConfig struct {
-	Host     string `json:"host"`
-	Password string `json:"password"`
+	Host     string `toml:"host"`
+	Password string `toml:"password"`
 }
 
 // MailConfig 邮件配置
 type MailConfig struct {
-	Host     string `json:"host"`
-	Port     int    `json:"port"`
-	User     string `json:"user"`
-	Password string `json:"password"`
+	Host     string `toml:"host"`
+	Port     int    `toml:"port"`
+	User     string `toml:"user"`
+	Password string `toml:"password"`
 }
 
 // JWTConfig JWT配置
 type JWTConfig struct {
-	SigningMethod    string `json:"signing_method"`
-	TokenExpireHours int    `json:"token_expire_hours"`
-	SecretKey        string `json:"secret_key"`
+	SigningMethod    string `toml:"signing_method"`
+	TokenExpireHours int    `toml:"token_expire_hours"`
+	SecretKey        string `toml:"secret_key"`
 }
 
 // 全局配置实例
@@ -83,36 +84,36 @@ var GlobalConfig *Config
 
 // 初始化配置
 func InitConfig() error {
-	configPath := "config.json"
+	configPath := "config.toml"
 
 	// 检查配置文件是否存在
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		log.Println("[FeasOJ] Configuration file does not exist, creating default configuration file...")
 		if err := createDefaultConfig(configPath); err != nil {
-			return fmt.Errorf("failed to create default configuration file: %v", err)
+			return fmt.Errorf("failed to create default configuration file")
 		}
-		log.Println("[FeasOJ] Default configuration file created, please edit config.json file and restart the program")
-		return fmt.Errorf("please edit config.json file to configure database and other information")
+		log.Println("[FeasOJ] Default configuration file created, please edit config.toml file and restart the program")
+		return fmt.Errorf("error connection to the database and other services")
 	}
 
 	// 读取配置文件
 	configData, err := os.ReadFile(configPath)
 	if err != nil {
 		log.Panicln("[FeasOJ] Failed to read configuration file, please check file permissions")
-		return fmt.Errorf("读取配置文件失败: %v", err)
+		return fmt.Errorf("failed to read configuration")
 	}
 
-	// 解析JSON配置
+	// 解析TOML配置
 	GlobalConfig = &Config{}
-	if err := json.Unmarshal(configData, GlobalConfig); err != nil {
+	if _, err := toml.Decode(string(configData), GlobalConfig); err != nil {
 		log.Panicln("[FeasOJ] Failed to parse configuration file, please check the format of the configuration file")
-		return fmt.Errorf("解析配置文件失败: %v", err)
+		return fmt.Errorf("failed to read configuration")
 	}
 
 	// 验证配置
 	if err := validateConfig(GlobalConfig); err != nil {
 		log.Panicln("[FeasOJ] Configuration validation failed, please check the configuration file")
-		return fmt.Errorf("配置验证失败: %v", err)
+		return fmt.Errorf("failed to read configuration")
 	}
 
 	log.Println("[FeasOJ] Configuration file loaded successfully")
@@ -135,8 +136,8 @@ func createDefaultConfig(configPath string) error {
 			Host: "localhost:8500",
 		},
 		Features: FeaturesConfig{
-			ImageGuardEnabled:        true,
-			ProfanityDetectorEnabled: true,
+			ImageGuardEnabled:        false,
+			ProfanityDetectorEnabled: false,
 		},
 		MySQL: MySQLConfig{
 			MaxOpenConns: 240,
@@ -164,24 +165,24 @@ func createDefaultConfig(configPath string) error {
 		},
 	}
 
-	configData, err := json.MarshalIndent(defaultConfig, "", "  ")
-	if err != nil {
+	buf := new(bytes.Buffer)
+	if err := toml.NewEncoder(buf).Encode(defaultConfig); err != nil {
 		return err
 	}
 
-	return os.WriteFile(configPath, configData, 0644)
+	return os.WriteFile(configPath, buf.Bytes(), 0644)
 }
 
 // 验证配置
 func validateConfig(config *Config) error {
 	if config.Server.Host == "" {
-		return fmt.Errorf("服务器地址不能为空")
+		return fmt.Errorf("Server Address cannot be empty")
 	}
 	if config.MySQL.DbHost == "" || config.MySQL.DbName == "" || config.MySQL.DbUser == "" {
-		return fmt.Errorf("MySQL配置不完整")
+		return fmt.Errorf("MySQL Configuration is incomplete")
 	}
 	if config.Redis.Host == "" {
-		return fmt.Errorf("Redis地址不能为空")
+		return fmt.Errorf("Redis Address cannot be empty")
 	}
 	return nil
 }

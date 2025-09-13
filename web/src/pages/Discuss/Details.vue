@@ -81,6 +81,7 @@ const addComments = async (content) => {
 const deleteCommentByID = async (commentID) => {
     loading.value = true;
     try {
+
         await deleteComment(commentID);
         showAlert(t("message.success") + "!", "reload");
     } catch (error) {
@@ -106,6 +107,7 @@ const deleteDis = async () => {
 // 确认删除讨论
 const showDelDialog = (isComment, commentID) => {
     checkDialog.value = true;
+    console.log(commentID);
     if (isComment && commentID != null) {
         isDelComment.value = true;
         deleteCommentID.value = commentID;
@@ -131,8 +133,8 @@ onMounted(async () => {
             const response = await getDisDetails(Did);
             // 获取评论
             const commentsResp = await getComments(Did);
-            comments.value = commentsResp.data.comments;
-            discussionInfos.value = response.data.discussionInfo;
+            comments.value = commentsResp.data.data;
+            discussionInfos.value = response.data.data;
         } catch (error) {
             showAlert(t("message.failed") + "!", "/discussion");
         } finally {
@@ -161,7 +163,7 @@ onUnmounted(() => {
                 <v-card-text>{{ t('message.suredel') }}</v-card-text>
                 <v-card-actions>
                     <v-btn variant="elevated" color="primary" @click="deleteChecker" rounded="xl">{{ $t('message.yes')
-                        }}</v-btn>
+                    }}</v-btn>
                     <v-btn color="primary" @click="checkDialog = false" rounded="xl">{{ $t('message.cancel') }}</v-btn>
                 </v-card-actions>
             </v-card>
@@ -197,7 +199,7 @@ onUnmounted(() => {
             <MdPreview :editorId="id" :modelValue="discussionInfos.content" :theme="previewTheme" />
             <v-card-subtitle style="justify-self: right">
                 <p style="font-size: 12px;margin: 10px">
-                    {{ moment(discussionInfos.create_at).format("YYYY-MM-DD HH:mm") }}
+                    {{ moment(discussionInfos.created_at).format("YYYY-MM-DD HH:mm") }}
                 </p>
             </v-card-subtitle>
         </v-card>
@@ -212,7 +214,7 @@ onUnmounted(() => {
             </div>
             <div style="margin: 10px">
                 <v-btn color="primary" rounded="xl" @click="addComments(commentContent)">{{ $t("message.submit")
-                    }}</v-btn>
+                }}</v-btn>
             </div>
             <v-divider></v-divider>
             <v-list>
@@ -227,7 +229,7 @@ onUnmounted(() => {
                                     {{ comment.username }}
                                 </div>
                                 <div class="timeline">
-                                    {{ moment(comment.create_at).format("MM-DD HH:mm") }}
+                                    {{ moment(comment.created_at).format("MM-DD HH:mm") }}
                                 </div>
                             </div>
                         </v-list-item-title>
@@ -242,7 +244,7 @@ onUnmounted(() => {
                     </v-list-item>
                     <div class="buttons">
                         <v-btn v-if="comment.username === userName" rounded="xl" variant="text" color="primary"
-                            @click="showDelDialog(true, comment.cid)">{{ $t("message.delete") }}</v-btn>
+                            @click="showDelDialog(true, comment.id)">{{ $t("message.delete") }}</v-btn>
                     </div>
                     <v-divider></v-divider>
                 </v-list-item>

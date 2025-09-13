@@ -59,7 +59,7 @@ func CreateDiscussion(c *gin.Context) {
 	defer rdb.Close()
 
 	// 设置频率限制键
-	userRateLimitKey := fmt.Sprintf("discussionRateLimit:%d", userInfo.Id)
+	userRateLimitKey := fmt.Sprintf("discussionRateLimit:%s", userInfo.Id)
 	exists, _ := rdb.Exists(userRateLimitKey).Result()
 	if exists == 1 {
 		c.JSON(http.StatusTooManyRequests, gin.H{"message": GetMessage(c, "rateLimit")})
@@ -95,7 +95,7 @@ func GetComment(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": comments})
 }
 
-// 删除指定Cid的评论
+// 删除指定id的评论
 func DelComment(c *gin.Context) {
 	cid, _ := strconv.Atoi(c.Param("id"))
 	if !repository.DeleteCommentByCid(global.Db, cid) {
@@ -110,7 +110,7 @@ func AddComment(c *gin.Context) {
 	encodedUsername := c.GetHeader("Username")
 	username, _ := url.QueryUnescape(encodedUsername)
 	content := c.PostForm("content")
-	did, _ := strconv.Atoi(c.Param("id"))
+	discussionId, _ := strconv.Atoi(c.Param("id"))
 	// 获取用户ID
 	userInfo := repository.SelectUserInfo(global.Db, username)
 
@@ -118,7 +118,7 @@ func AddComment(c *gin.Context) {
 	defer rdb.Close()
 
 	// 设置频率限制键
-	userRateLimitKey := fmt.Sprintf("commentRateLimit:%d", userInfo.Id)
+	userRateLimitKey := fmt.Sprintf("commentRateLimit:%s", userInfo.Id)
 	exists, _ := rdb.Exists(userRateLimitKey).Result()
 	if exists == 1 {
 		c.JSON(http.StatusTooManyRequests, gin.H{"message": GetMessage(c, "rateLimit")})
@@ -136,7 +136,7 @@ func AddComment(c *gin.Context) {
 		}
 	}
 
-	if !repository.AddComment(global.Db, content, did, userInfo.Id, false) {
+	if !repository.AddComment(global.Db, content, userInfo.Id, discussionId, false) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
 	}

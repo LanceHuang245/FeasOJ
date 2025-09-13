@@ -51,7 +51,7 @@ func UpdateCompetition(db *gorm.DB, req structs.AdminCompetitionInfoRequest) err
 }
 
 // 将用户添加至用户-竞赛表
-func AddUserCompetition(db *gorm.DB, userId int, competitionId int) error {
+func AddUserCompetition(db *gorm.DB, userId string, competitionId int) error {
 	var userInfo tables.Users
 	db.Table("users").Where("id = ?", userId).Find(&userInfo)
 	// 当前时间
@@ -77,12 +77,12 @@ func SelectUsersCompetition(db *gorm.DB, competitionId int) []structs.Competitio
 }
 
 // 查询用户是否在指定竞赛中
-func SelectUserCompetition(db *gorm.DB, userId int, competitionId int) bool {
+func SelectUserCompetition(db *gorm.DB, userId string, competitionId int) bool {
 	return db.Table("user_competitions").Where("user_id = ? AND competition_id = ?", userId, competitionId).Find(&tables.UserCompetitions{}).RowsAffected > 0
 }
 
 // 将用户从用户-竞赛表删除
-func DeleteUserCompetition(db *gorm.DB, userId int, competitionId int) error {
+func DeleteUserCompetition(db *gorm.DB, userId string, competitionId int) error {
 	if err := db.Table("user_competitions").Where("user_id = ? AND competition_id = ?", userId, competitionId).Delete(&tables.UserCompetitions{}).Error; err != nil {
 		return err
 	}
@@ -118,8 +118,8 @@ func UpdateCompetitionStatus(db *gorm.DB) error {
 }
 
 // 获取未开始的竞赛
-func GetUpcomingCompetitions(db *gorm.DB) []tables.Competition {
-	var competitions []tables.Competition
+func GetUpcomingCompetitions(db *gorm.DB) []tables.Competitions {
+	var competitions []tables.Competitions
 	err := db.Where("start_at > ?", time.Now()).Find(&competitions).Error
 	if err != nil {
 		return nil

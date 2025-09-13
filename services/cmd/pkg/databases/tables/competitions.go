@@ -3,7 +3,7 @@ package tables
 import "time"
 
 // 竞赛表
-type Competition struct {
+type Competitions struct {
 	Id           int       `gorm:"comment:比赛ID;primaryKey;autoIncrement"`
 	Title        string    `gorm:"comment:标题;not null"`
 	Subtitle     string    `gorm:"comment:副标题;not null"`
@@ -22,7 +22,7 @@ type Competition struct {
 type UserCompetitions struct {
 	Id            int       `gorm:"comment:ID;primaryKey;autoIncrement"`
 	CompetitionId int       `gorm:"comment:比赛ID;not null"`
-	UserId        int       `gorm:"comment:用户ID;not null"`
+	UserId        string    `gorm:"comment:用户ID;not null"`
 	Username      string    `gorm:"comment:用户名;not null"`
 	JoinDate      time.Time `gorm:"comment:加入时间;not null"`
 	Score         int       `gorm:"comment:用户分数;"`

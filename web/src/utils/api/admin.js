@@ -68,9 +68,10 @@ export const deleteProblemAllInfo = async (pid) => {
 
 // 封禁用户
 export const banUser = async (uid) => {
-    return await axios.put(`${apiUrl}/admin/users/ban`, {}, {
+    return await axios.put(`${apiUrl}/admin/users/status`, {}, {
         params: {
-            uid: uid
+            user_id: uid,
+            status: true
         },
         headers: {
             Username: encodeURIComponent(userName.value),
@@ -82,9 +83,10 @@ export const banUser = async (uid) => {
 
 // 解封用户
 export const unbanUser = async (uid) => {
-    return await axios.put(`${apiUrl}/admin/users/unban`, {}, {
+    return await axios.put(`${apiUrl}/admin/users/status`, {}, {
         params: {
-            uid: uid
+            user_id: uid,
+            status: false
         },
         headers: {
             Username: encodeURIComponent(userName.value),

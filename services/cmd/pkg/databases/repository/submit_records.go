@@ -9,7 +9,7 @@ import (
 )
 
 // 倒序查询指定用户ID的30天内的提交题目记录
-func SelectSubmitRecordsByUid(db *gorm.DB, uid int) []tables.SubmitRecord {
+func SelectSubmitRecordsByUid(db *gorm.DB, uid string) []tables.SubmitRecord {
 	var records []tables.SubmitRecord
 	db.Where("user_id = ?", uid).
 		Where("time > ?", time.Now().Add(-30*24*time.Hour)).Order("time desc").Find(&records)
@@ -18,7 +18,7 @@ func SelectSubmitRecordsByUid(db *gorm.DB, uid int) []tables.SubmitRecord {
 
 // 倒序查询指定用户ID的30天内的提交题目记录
 // 如果题目所属竞赛正在进行中，则返回的 Code 字段为空字符串
-func SelectSRByUidForChecker(db *gorm.DB, uid int) []tables.SubmitRecord {
+func SelectSRByUidForChecker(db *gorm.DB, uid string) []tables.SubmitRecord {
 	var records []tables.SubmitRecord
 	selectFields := []string{
 		"submit_records.id",
@@ -73,13 +73,13 @@ func SelectAllSubmitRecords(db *gorm.DB) []tables.SubmitRecord {
 }
 
 // 添加提交记录
-func AddSubmitRecord(db *gorm.DB, Uid, Pid int, Result, Language, Username, Code string) bool {
+func AddSubmitRecord(db *gorm.DB, Pid int, Uid, Result, Language, Username, Code string) bool {
 	err := db.Table("submit_records").Create(&tables.SubmitRecord{UserId: Uid, ProblemId: Pid, Username: Username, Result: Result, Time: time.Now(), Language: Language, Code: Code})
 	return err == nil
 }
 
 // ModifyJudgeStatus 修改提交记录状态
-func ModifyJudgeStatus(db *gorm.DB, Uid, Pid int, Result string) error {
+func ModifyJudgeStatus(db *gorm.DB, Pid int, Uid, Result string) error {
 	// 将result为Running...的记录修改为返回状态
 	result := db.Table("submit_records").Where("user_id = ? AND problem_id = ? AND result = ?", Uid, Pid, "Running...").Update("result", Result)
 	return result.Error

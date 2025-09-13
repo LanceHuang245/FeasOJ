@@ -6,7 +6,7 @@ import (
 
 // 判题结果消息结构体
 type JudgeResultMessage struct {
-	UserID    int    `json:"user_id"`
+	UserID    string `json:"user_id"`
 	ProblemID int    `json:"problem_id"`
 	Status    string `json:"status"`
 }
@@ -39,7 +39,7 @@ type DiscsInfoRequest struct {
 	Id        int       `json:"id"`
 	Title     string    `json:"title"`
 	Content   string    `json:"content"`
-	UserId    int       `json:"user_id"`
+	UserId    string    `json:"user_id"`
 	CreatedAt time.Time `json:"created_at"`
 	Username  string    `json:"username"`
 	Avatar    string    `json:"avatar"`
@@ -50,7 +50,7 @@ type CommentRequest struct {
 	Id           int    `json:"id"`
 	DiscussionId int    `json:"discussion_id"`
 	Content      string `json:"content"`
-	UserId       int    `json:"user_id"`
+	UserId       string `json:"user_id"`
 	Username     string `json:"username"`
 	Avatar       string `json:"avatar"`
 	CreatedAt    string `json:"created_at"`
@@ -59,7 +59,7 @@ type CommentRequest struct {
 
 // 用户信息请求体
 type UserInfoRequest struct {
-	Id        int       `json:"id"`
+	Id        string    `json:"id"`
 	Avatar    string    `json:"avatar"`
 	Username  string    `json:"username"`
 	Email     string    `json:"email"`
@@ -123,7 +123,7 @@ type AdminCompetitionInfoRequest struct {
 // 管理员获取竞赛情况请求体
 type AdminCompetitionScoreRequest struct {
 	Id       int       `json:"id"`
-	UserId   int       `json:"user_id"`
+	UserId   string    `json:"user_id"`
 	Username string    `json:"username"`
 	Score    int       `json:"score"`
 	JoinDate time.Time `json:"join_date"`
@@ -145,7 +145,7 @@ type CompetitionRequest struct {
 // 获取参赛人员请求体
 type CompetitionUserRequest struct {
 	Id       int       `json:"id"`
-	UserId   int       `json:"user_id"`
+	UserId   string    `json:"user_id"`
 	Username string    `json:"username"`
 	Avatar   string    `json:"avatar"`
 	JoinDate time.Time `json:"join_date"`

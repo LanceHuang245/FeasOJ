@@ -80,10 +80,10 @@ func LoadRouter(r *gin.Engine) *gin.RouterGroup {
 		authGroup.POST("/problems/:id/code", handler.UploadCode)
 
 		// 创建讨论
-		authGroup.POST("/discussions", handler.CreateDiscussion)
+		authGroup.POST("/discussions/add", handler.CreateDiscussion)
 
 		// 添加评论
-		authGroup.POST("/discussions/comments/:id", handler.AddComment)
+		authGroup.POST("/discussions/comments/add/:id", handler.AddComment)
 
 		// 加入有密码的竞赛
 		authGroup.POST("/competitions/join/pwd/:id", handler.JoinCompetitionWithPassword)
@@ -101,10 +101,10 @@ func LoadRouter(r *gin.Engine) *gin.RouterGroup {
 		authGroup.POST("/users/synopsis", handler.UpdateSynopsis)
 
 		// 删除讨论
-		authGroup.POST("/discussions/:id", handler.DeleteDiscussion)
+		authGroup.POST("/discussions/delete/:id", handler.DeleteDiscussion)
 
 		// 删除评论
-		authGroup.POST("/discussions/comments/:id", handler.DelComment)
+		authGroup.POST("/discussions/comments/delete/:id", handler.DelComment)
 
 	}
 

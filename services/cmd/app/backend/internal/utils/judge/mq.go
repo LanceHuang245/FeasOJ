@@ -2,6 +2,7 @@ package judge
 
 import (
 	"FeasOJ/app/backend/internal/utils"
+	"FeasOJ/app/backend/internal/utils/localization"
 	"FeasOJ/app/backend/server/handler"
 	"FeasOJ/pkg/structs"
 	"encoding/json"
@@ -76,7 +77,7 @@ func ConsumeJudgeResults() {
 				if client, ok := handler.Clients[fmt.Sprint(result.UserID)]; ok {
 					lang := client.Lang
 					tag := language.Make(lang)
-					langBundle := utils.InitI18n()
+					langBundle := localization.InitI18n()
 					localizer := i18n.NewLocalizer(langBundle, tag.String())
 					message, _ := localizer.Localize(&i18n.LocalizeConfig{
 						MessageID: "problem_completed",

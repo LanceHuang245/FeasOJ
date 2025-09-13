@@ -19,7 +19,7 @@ onMounted(async () => {
             return;
         }
         const userInfoResponse = await verifyUserInfo(userName.value, token.value);
-        userPrivilege.value = userInfoResponse.data.info.role;
+        userPrivilege.value = userInfoResponse.data.data.role;
         if (userPrivilege.value !== 1) {
             window.location = '#/403';
             return;

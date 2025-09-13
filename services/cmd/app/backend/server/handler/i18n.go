@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"FeasOJ/app/backend/internal/utils"
+	"FeasOJ/app/backend/internal/utils/localization"
 
 	"github.com/gin-gonic/gin"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
@@ -22,7 +22,7 @@ func GetLangFromHeader(c *gin.Context) language.Tag {
 
 // 获取国际化消息
 func GetMessage(c *gin.Context, messageID string) string {
-	langBundle := utils.InitI18n()
+	langBundle := localization.InitI18n()
 	tag := GetLangFromHeader(c)
 	localizer := i18n.NewLocalizer(langBundle, tag.String())
 

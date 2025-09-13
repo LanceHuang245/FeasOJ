@@ -1,7 +1,7 @@
 package tables
 
 // 题目表
-type Problem struct {
+type Problems struct {
 	Id            int    `gorm:"comment:题目ID;primaryKey;autoIncrement"`
 	Difficulty    int    `gorm:"comment:难度(0：简单，1:中等，2:困难);not null"`
 	Title         string `gorm:"comment:题目标题;not null"`
@@ -15,7 +15,7 @@ type Problem struct {
 }
 
 // 测试样例表
-type TestCase struct {
+type TestCases struct {
 	Id         int    `gorm:"comment:测试样例ID;primaryKey;autoIncrement"`
 	ProblemId  int    `gorm:"comment:题目ID;not null"`
 	InputData  string `gorm:"comment:输入数据;not null"`

@@ -13,58 +13,65 @@ func SelectDiscussList(db *gorm.DB, page int, itemsPerPage int) ([]structs.Discu
 	var discussRequests []structs.DiscussRequest
 	var total int64
 
-	db.Table("Discussions").
-		Select("Discussions.id, Discussions.title, Users.username, Discussions.created_at").
-		Joins("JOIN Users ON Discussions.user_id = Users.id").
-		Order("Discussions.created_at desc").Count(&total).
+	db.Table("discussions").
+		Select("discussions.id, discussions.title, users.username, discussions.created_at").
+		Joins("JOIN users ON discussions.user_id = users.id").
+		Order("discussions.created_at desc").Count(&total).
 		Offset((page - 1) * itemsPerPage).Limit(itemsPerPage).Find(&discussRequests)
 
 	return discussRequests, int(total)
 }
 
-// 获取指定Did讨论及User表中发帖人的头像
+// 获取指定id讨论及User表中发帖人的头像
 func SelectDiscussionByDid(db *gorm.DB, id int) structs.DiscsInfoRequest {
 	var discussion structs.DiscsInfoRequest
-	db.Table("Discussions").
-		Select("Discussions.id, Discussions.title, Discussions.content, Discussions.created_at, Users.id,Users.username, Users.avatar").
-		Joins("JOIN Users ON Discussions.Uid = Users.Uid").
-		Where("Discussions.id = ?", id).First(&discussion)
+	db.Table("discussions").
+		Select("discussions.id, discussions.title, discussions.content, discussions.created_at, users.id,users.username, users.avatar").
+		Joins("JOIN users ON discussions.user_id = users.id").
+		Where("discussions.id = ?", id).First(&discussion)
 	return discussion
 }
 
 // 添加讨论
-func AddDiscussion(db *gorm.DB, title, content string, userId int) bool {
+func AddDiscussion(db *gorm.DB, title, content, userId string) bool {
 	if title == "" || content == "" {
 		return false
 	}
-	err := db.Table("Discussions").
-		Create(&tables.Discussion{UserId: userId, Title: title, Content: content, CreatedAt: time.Now()}).Error
+	err := db.Table("discussions").
+		Create(&tables.Discussions{UserId: userId, Title: title, Content: content, CreatedAt: time.Now()}).Error
 	return err == nil
 }
 
 // 删除讨论
 func DelDiscussion(db *gorm.DB, id int) bool {
-	err := db.Table("Discussions").Where("id = ?", id).Delete(&tables.Discussion{}).Error
-	return err == nil
+	err := db.Table("discussions").Where("id = ?", id).Delete(&tables.Discussions{}).Error
+	if err != nil {
+		return false
+	}
+	err = db.Table("comments").Where("discussion_id = ?", id).Delete(&tables.Comments{}).Error
+	if err != nil {
+		return false
+	}
+	return true
 }
 
 // 添加评论
-func AddComment(db *gorm.DB, content string, id, userId int, profanity bool) bool {
-	return db.Table("Comments").Create(&tables.Comment{Id: id, UserId: userId, Content: content, CreatedAt: time.Now(), Profanity: profanity}).Error == nil
+func AddComment(db *gorm.DB, content, userId string, DiscussionId int, profanity bool) bool {
+	return db.Table("comments").Create(&tables.Comments{DiscussionId: DiscussionId, UserId: userId, Content: content, CreatedAt: time.Now(), Profanity: profanity}).Error == nil
 }
 
 // 获取指定讨论ID的所有评论信息
 func SelectCommentsByDid(db *gorm.DB, id int) []structs.CommentRequest {
 	var comments []structs.CommentRequest
-	db.Table("Comments").
-		Select("Comments.id, Comments.discussion_id, Comments.content, Comments.created_at, Users.id,Users.username, Users.avatar,Comments.profanity").
-		Joins("JOIN Users ON Comments.user_id = Users.id").
-		Order("create_at desc").
-		Where("Comments.discussion_id = ?", id).Find(&comments)
+	db.Table("comments").
+		Select("comments.id as id, comments.discussion_id, comments.content, comments.created_at, users.id as user_id, users.username, users.avatar, comments.profanity").
+		Joins("JOIN users ON comments.user_id = users.id").
+		Order("created_at desc").
+		Where("comments.discussion_id = ?", id).Find(&comments)
 	return comments
 }
 
 // 删除指定评论
 func DeleteCommentByCid(db *gorm.DB, id int) bool {
-	return db.Table("Comments").Where("id = ?", id).Delete(&tables.Comment{}).Error == nil
+	return db.Table("comments").Where("id = ?", id).Delete(&tables.Comments{}).Error == nil
 }

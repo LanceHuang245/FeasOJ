@@ -45,7 +45,7 @@ const fetchData = async () => {
   loading.value = true
   try {
     const response = await getAllProblems();
-    problems.value = response.data.problems
+    problems.value = response.data.data
     totalProblems.value = problems.value.length
   } catch (error) {
     showAlert(t("message.failed") + "!", "")

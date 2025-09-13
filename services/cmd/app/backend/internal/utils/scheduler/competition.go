@@ -2,7 +2,7 @@ package scheduler
 
 import (
 	"FeasOJ/app/backend/internal/global"
-	"FeasOJ/app/backend/internal/utils"
+	"FeasOJ/app/backend/internal/utils/localization"
 	"FeasOJ/app/backend/server/handler"
 	"FeasOJ/pkg/databases/repository"
 	"fmt"
@@ -48,7 +48,7 @@ func ScheduleCompetitionStatus() {
 										// 获取用户语言
 										lang := client.Lang
 										tag := language.Make(lang)
-										langBundle := utils.InitI18n()
+										langBundle := localization.InitI18n()
 										localizer := i18n.NewLocalizer(langBundle, tag.String())
 										message, _ := localizer.Localize(&i18n.LocalizeConfig{
 											MessageID: "competition_started",

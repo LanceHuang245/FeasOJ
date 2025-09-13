@@ -30,10 +30,10 @@ export function useNotificationState() {
 //
 let es = null;
 
-export function initSSE(uid) {
+export function initSSE(id) {
   function connect() {
     const language = i18n.global.locale;
-    es = new EventSource(`${apiUrl}/notification/${uid}?lang=${language.value}`);
+    es = new EventSource(`${apiUrl}/notification/${id}?lang=${language.value}`);
 
     es.onmessage = (event) => {
       showNotification(event.data);

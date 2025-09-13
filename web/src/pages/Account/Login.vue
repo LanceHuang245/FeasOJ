@@ -28,9 +28,10 @@ const login = async () => {
     const expirationTime = decodedToken.exp * 1000; // 将秒转换为毫秒
     localStorage.setItem('token', token);
     localStorage.setItem('tokenExpiration', expirationTime);
+    console.log(token);
     const response = await verifyUserInfo(forms.username, token);
-    localStorage.setItem('username', response.data.info.username);
-    localStorage.setItem('uid', response.data.info.uid);
+    localStorage.setItem('username', response.data.data.username);
+    localStorage.setItem('user_id', response.data.data.id);
     showAlert(loginResponse.data.message, "/");
     return;
   } catch (error) {

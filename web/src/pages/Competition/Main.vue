@@ -95,7 +95,7 @@ onMounted(async () => {
     }
     loading.value = true;
     const response = await getAllCompetitions();
-    competitions.value = response.data.contests;
+    competitions.value = response.data.data;
     loading.value = false;
 });
 </script>

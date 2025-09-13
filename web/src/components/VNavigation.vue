@@ -56,7 +56,7 @@ onMounted(async () => {
     }
     try {
       const resp = await verifyUserInfo(userName.value, token.value);
-      privilege.value = resp.data.info.role;
+      privilege.value = resp.data.data.role;
     } catch (error) {
       showAlert(t("message.tokenCheckfailed") + "!", "reload");
       localStorage.clear();

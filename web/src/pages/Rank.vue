@@ -30,11 +30,11 @@ const fetchData = async () => {
   try {
     const response = await getRanking()
     // 为每个用户添加排名
-    rankingData.value = response.data.ranking.map((user, index) => ({
+    rankingData.value = response.data.data.map((user, index) => ({
       ...user,
       rank: index + 1
     }));
-    rankingDataLength.value = response.data.ranking.length;
+    rankingDataLength.value = response.data.data.length;
   } catch (error) {
     showAlert(t("message.failed") + "!", "")
   } finally {

@@ -3,6 +3,7 @@ module FeasOJ
 go 1.25.1
 
 require (
+	github.com/BurntSushi/toml v1.5.0
 	github.com/docker/docker v28.4.0+incompatible
 	github.com/gin-gonic/gin v1.10.1
 	github.com/go-co-op/gocron v1.37.0
