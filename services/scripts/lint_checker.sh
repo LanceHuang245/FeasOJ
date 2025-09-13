@@ -27,3 +27,6 @@ golangci-lint run
 echo "====================================================================================="
 
 echo "Go Lint Checker Finished"
+echo "Enter any key to exit..."
+read -n 1 -s
+exit 0

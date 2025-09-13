@@ -81,7 +81,7 @@ func main() {
 	server.LoadRouter(r, db, judgePool, codeDir)
 
 	go func() {
-		serverAddr := fmt.Sprintf("%s:%d", cfg.Server.Address, cfg.Server.Port)
+		serverAddr := fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port)
 		var err error
 		if cfg.Server.EnableHTTPS {
 			certPath := filepath.Join(certDir, filepath.Base(cfg.Server.CertPath))

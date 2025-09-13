@@ -23,7 +23,7 @@ func RegService(client *api.Client, consulConfig config.Consul, serverConfig con
 		Port: serverConfig.Port,        // 服务端口
 		Tags: []string{"gin", "judge"},
 		Check: &api.AgentServiceCheck{
-			HTTP:     fmt.Sprintf("%s://%s:%d/api/v1/judgecore/health", protocol, serverConfig.Address, serverConfig.Port), // 健康检查地址
+			HTTP:     fmt.Sprintf("%s://%s:%d/api/v1/judgecore/health", protocol, serverConfig.Host, serverConfig.Port), // 健康检查地址
 			Interval: "60s",
 			Timeout:  "6s",
 		},

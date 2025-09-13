@@ -164,29 +164,29 @@ func SelectProblemsByCompID(db *gorm.DB, competitionId int) []structs.ProblemInf
 
 // 获取指定题目ID是否可用
 func IsProblemVisible(db *gorm.DB, id int) bool {
-	return db.Table("problems").Where("id = ? AND is_visible = ?", id, 1).First(&tables.Problems{}).Error == nil
+	return db.Table("problems").Where("id = ? AND is_visible = ?", id, true).First(&tables.Problems{}).Error == nil
 }
 
 // 题目状态更新
 func UpdateProblemVisibility(db *gorm.DB) error {
-	// 更新状态为正在进行中的题目：is_visible 为 1
+	// 更新状态为正在进行中的题目：is_visible 为 true
 	if err := db.Table("problems").
 		Where("competition_id IN (SELECT competition_id FROM competitions WHERE status = ?)", 1).
-		Update("is_visible", 1).Error; err != nil {
+		Update("is_visible", true).Error; err != nil {
 		return err
 	}
 
-	// 更新状态为已结束的题目：is_visible 为 1
+	// 更新状态为已结束的题目：is_visible 为 true
 	if err := db.Table("problems").
-		Where("competition_id IN (SELECT competition_id FROM competitions WHERE status = ?)", 1).
-		Update("is_visible", 1).Error; err != nil {
+		Where("competition_id IN (SELECT competition_id FROM competitions WHERE status = ?)", 2).
+		Update("is_visible", true).Error; err != nil {
 		return err
 	}
 
-	// 更新状态为未开始的题目：is_visible 为 0
+	// 更新状态为未开始的题目：is_visible 为 false
 	if err := db.Table("problems").
 		Where("competition_id IN (SELECT competition_id FROM competitions WHERE status = ?)", 0).
-		Update("is_visible", 0).Error; err != nil {
+		Update("is_visible", false).Error; err != nil {
 		return err
 	}
 

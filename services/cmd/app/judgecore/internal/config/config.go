@@ -11,17 +11,17 @@ import (
 )
 
 type Consul struct {
-	Host        string `toml:"address"`
+	Host        string `toml:"host"`
 	ServiceName string `toml:"service_name"`
 	ServiceID   string `toml:"service_id"`
 }
 
 type RabbitMQ struct {
-	Host string `toml:"address"`
+	Host string `toml:"host"`
 }
 
 type Server struct {
-	Address     string `toml:"address"`
+	Host        string `toml:"host"`
 	Port        int    `toml:"port"`
 	EnableHTTPS bool   `toml:"enable_https"`
 	CertPath    string `toml:"cert_path"`
@@ -36,10 +36,13 @@ type Sandbox struct {
 }
 
 type Database struct {
-	Host     string `toml:"address"`
+	Type     string `toml:"type"` // 数据库类型: mysql, postgresql
+	Host     string `toml:"host"`
+	Port     int    `toml:"port"`
 	Name     string `toml:"name"`
 	User     string `toml:"user"`
 	Password string `toml:"password"`
+	SSLMode  string `toml:"ssl_mode"` // PostgreSQL SSL模式
 }
 
 // AppConfig 配置结构体
@@ -90,7 +93,7 @@ func createDefaultConfig(configPath string) error {
 			Host: "amqp://rabbitmq:password@localhost:5672/",
 		},
 		Server: Server{
-			Address:     "127.0.0.1",
+			Host:        "127.0.0.1",
 			Port:        37885,
 			EnableHTTPS: false,
 			CertPath:    "./certificate/fullchain.pem",
@@ -103,10 +106,13 @@ func createDefaultConfig(configPath string) error {
 			MaxConcurrent: 5,
 		},
 		Database: Database{
-			Host:     "localhost:3306",
+			Type:     "mysql",
+			Host:     "localhost",
+			Port:     3306,
 			Name:     "feasoj",
 			User:     "feasoj",
 			Password: "password",
+			SSLMode:  "disable",
 		},
 	}
 

@@ -17,7 +17,7 @@ type Config struct {
 	RabbitMQ RabbitMQConfig `toml:"rabbitmq"`
 	Consul   ConsulConfig   `toml:"consul"`
 	Features FeaturesConfig `toml:"features"`
-	MySQL    MySQLConfig    `toml:"mysql"`
+	Database DatabaseConfig `toml:"database"`
 	Redis    RedisConfig    `toml:"redis"`
 	Mail     MailConfig     `toml:"mail"`
 	JWT      JWTConfig      `toml:"jwt"`
@@ -47,15 +47,18 @@ type FeaturesConfig struct {
 	ProfanityDetectorEnabled bool `toml:"profanity_detector_enabled"`
 }
 
-// MySQLConfig MySQL配置
-type MySQLConfig struct {
+// DatabaseConfig 数据库配置
+type DatabaseConfig struct {
+	Type         string `toml:"type"`          // 数据库类型: mysql, postgresql
+	Host         string `toml:"host"`
+	Port         int    `toml:"port"`
+	Name         string `toml:"name"`
+	User         string `toml:"user"`
+	Password     string `toml:"password"`
+	SSLMode      string `toml:"ssl_mode"`      // PostgreSQL SSL模式
 	MaxOpenConns int    `toml:"max_open_conns"`
 	MaxIdleConns int    `toml:"max_idle_conns"`
 	MaxLifeTime  int    `toml:"max_life_time"`
-	DbHost       string `toml:"db_address"`
-	DbName       string `toml:"db_name"`
-	DbUser       string `toml:"db_user"`
-	DbPassword   string `toml:"db_password"`
 }
 
 // RedisConfig Redis配置
@@ -139,14 +142,17 @@ func createDefaultConfig(configPath string) error {
 			ImageGuardEnabled:        false,
 			ProfanityDetectorEnabled: false,
 		},
-		MySQL: MySQLConfig{
+		Database: DatabaseConfig{
+			Type:         "mysql",
+			Host:         "localhost",
+			Port:         3306,
+			Name:         "feasoj",
+			User:         "feasoj",
+			Password:     "password",
+			SSLMode:      "disable",
 			MaxOpenConns: 240,
 			MaxIdleConns: 100,
 			MaxLifeTime:  32,
-			DbHost:       "localhost:3306",
-			DbName:       "feasoj",
-			DbUser:       "feasoj",
-			DbPassword:   "password",
 		},
 		Redis: RedisConfig{
 			Host:     "localhost:6379",
@@ -178,8 +184,8 @@ func validateConfig(config *Config) error {
 	if config.Server.Host == "" {
 		return fmt.Errorf("Server Address cannot be empty")
 	}
-	if config.MySQL.DbHost == "" || config.MySQL.DbName == "" || config.MySQL.DbUser == "" {
-		return fmt.Errorf("MySQL Configuration is incomplete")
+	if config.Database.Host == "" {
+		return fmt.Errorf("Database configuration is incomplete")
 	}
 	if config.Redis.Host == "" {
 		return fmt.Errorf("Redis Address cannot be empty")
@@ -187,14 +193,25 @@ func validateConfig(config *Config) error {
 	return nil
 }
 
-// 获取MySQL连接字符串
-func GetMySQLDSN() string {
+// 获取数据库连接字符串
+func GetDatabaseDSN() string {
 	if GlobalConfig == nil {
 		return ""
 	}
-	return fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Asia%%2FShanghai",
-		GlobalConfig.MySQL.DbUser, GlobalConfig.MySQL.DbPassword,
-		GlobalConfig.MySQL.DbHost, GlobalConfig.MySQL.DbName)
+	
+	// 根据数据库类型生成相应的连接字符串
+	switch GlobalConfig.Database.Type {
+	case "postgresql", "postgres":
+		return fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
+			GlobalConfig.Database.Host, GlobalConfig.Database.Port,
+			GlobalConfig.Database.User, GlobalConfig.Database.Password,
+			GlobalConfig.Database.Name, GlobalConfig.Database.SSLMode)
+	default: // 默认为MySQL
+		return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Asia%%2FShanghai",
+			GlobalConfig.Database.User, GlobalConfig.Database.Password,
+			GlobalConfig.Database.Host, GlobalConfig.Database.Port,
+			GlobalConfig.Database.Name)
+	}
 }
 
 // 获取JWT签名方法
