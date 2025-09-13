@@ -24,7 +24,7 @@ func IPStatistic() gin.HandlerFunc {
 		}
 
 		global.Db.Clauses(clause.OnConflict{
-			Columns: []clause.Column{{Name: "ip"}},
+			Columns: []clause.Column{{Name: "ip_address"}},
 			DoUpdates: clause.Assignments(map[string]interface{}{
 				"visit_count": gorm.Expr("visit_count + ?", 1),
 				"last_visit":  now,

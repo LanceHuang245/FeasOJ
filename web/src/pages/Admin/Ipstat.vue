@@ -54,7 +54,7 @@ const fetchData = async () => {
     loading.value = true;
     try {
         const response = await getIpStat();
-        ipStats.value = response.data.ipStatistics || [];
+        ipStats.value = response.data.data || [];
     } catch (error) {
         showAlert(t("message.failed") + "!", "");
     } finally {
@@ -92,7 +92,7 @@ onMounted(async () => {
             return;
         }
         const userInfoResponse = await verifyUserInfo(userName.value, token.value);
-        userPrivilege.value = userInfoResponse.data.info.role;
+        userPrivilege.value = userInfoResponse.data.data.role;
         if (userPrivilege.value !== 1) {
             window.location = '#/403';
             return;
@@ -150,7 +150,7 @@ onMounted(async () => {
                                         <v-chip color="primary" variant="elevated" class="ip-chip font-weight-medium"
                                             @click.stop="copyIp(item.IP)">
                                             <v-icon start small>mdi-content-copy</v-icon>
-                                            {{ item.IP }}
+                                            {{ item.IpAddress }}
                                         </v-chip>
                                     </td>
                                     <td class="text-center pa-4">
