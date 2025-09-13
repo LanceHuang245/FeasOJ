@@ -203,7 +203,7 @@ func SelectTestCasesByPid(db *gorm.DB, problemId int) []*structs.TestCaseRequest
 // SelectProblemByPid 获取指定题目信息
 func SelectProblemByPid(db *gorm.DB, pid int) (*tables.Problems, error) {
 	var problem tables.Problems
-	result := db.Table("problems").Where("pid = ?", pid).First(&problem)
+	result := db.Table("problems").Where("id = ?", pid).First(&problem)
 	if result.Error != nil {
 		return nil, result.Error
 	}

@@ -18,7 +18,7 @@ const { t } = useI18n();
 const router = useRouter();
 
 const headers = ref([
-  { title: t('message.problemId'), value: 'Pid', align: 'center', sortable: false },
+  { title: t('message.problemId'), value: 'ProblemId', align: 'center', sortable: false },
   { title: t('message.username'), value: 'Username', align: 'center', sortable: false },
   { title: t('message.result'), value: 'Result', align: 'center', sortable: false },
   { title: t('message.lang'), value: 'Language', align: 'center', sortable: false },
@@ -48,7 +48,7 @@ const fetchData = async () => {
   loading.value = true
   try {
     const response = await getSubmitRecords()
-    submitrecords.value = response.data.submitrecords
+    submitrecords.value = response.data.data
     submitRecordsLength.value = submitrecords.value.length
   } catch (error) {
     showAlert(t("message.failed") + "!", "")
@@ -120,7 +120,7 @@ onUnmounted(() => {
                   <td class="text-center pa-4">
                     <v-btn @click="router.push({ path: `/problem/${item.Pid}` })" variant="text" color="primary"
                       class="font-weight-medium" size="small" :ripple="false">
-                      {{ item.Pid }}
+                      {{ item.ProblemId }}
                     </v-btn>
                   </td>
                   <td class="text-center pa-4">

@@ -18,7 +18,7 @@ export const getNotification = async () => {
 export const updateSynopsis = async (synopsis) => {
     const formData = new FormData();
     formData.append('synopsis', synopsis);
-    return await axios.put(`${apiUrl}/users/synopsis`, formData, {
+    return await axios.post(`${apiUrl}/users/synopsis`, formData, {
         headers: {
             Username: encodeURIComponent(userName.value),
             Authorization: token.value,
@@ -31,7 +31,7 @@ export const updateSynopsis = async (synopsis) => {
 export const uploadAvatar = async (file) => {
     let formData = new FormData();
     formData.append('avatar', file);
-    return await axios.put(`${apiUrl}/users/avatar`, formData, {
+    return await axios.post(`${apiUrl}/users/avatar`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
             Username: encodeURIComponent(userName.value),

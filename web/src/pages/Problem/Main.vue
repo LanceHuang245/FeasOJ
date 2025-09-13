@@ -121,11 +121,11 @@ onMounted(async () => {
             </template>
             <template v-slot:item.Pid="{ item }">
               <v-chip variant="tonal" size="small" color="primary">
-                {{ item.Pid }}
+                {{ item.Id }}
               </v-chip>
             </template>
             <template v-slot:item.Title="{ item }">
-              <v-btn @click="router.push({ path: `/problemset/${item.Pid}` })" variant="text" color="primary">
+              <v-btn @click="router.push({ path: `/problemset/${item.Id}` })" variant="text" color="primary">
                 {{ item.Title }}
               </v-btn>
             </template>

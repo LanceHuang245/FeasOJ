@@ -116,7 +116,7 @@ onMounted(async () => {
     try {
       const problemId = route.params.Pid;
       const resp = await getPbDetails(problemId);
-      problemInfo.value = resp.data.problemInfo;
+      problemInfo.value = resp.data.data;
     } catch (error) {
       showAlert(error.response.data.message, "");
     } finally {

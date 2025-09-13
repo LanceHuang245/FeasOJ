@@ -221,7 +221,7 @@ onUnmounted(() => {
               <td class="text-center pa-4">
                 <v-btn @click="router.push({ path: `/problem/${item.Pid}` })" variant="text" color="primary"
                   class="font-weight-medium" size="small" :ripple="false">
-                  {{ item.Pid }}
+                  {{ item.ProblemId }}
                 </v-btn>
               </td>
               <td v-if="item.Result === 'Running...'" class="text-center pa-4">
