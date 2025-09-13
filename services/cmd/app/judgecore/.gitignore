@@ -2,4 +2,4 @@ docs/
 certificate/
 avatars/
 codefiles/
-config.json
+config.toml

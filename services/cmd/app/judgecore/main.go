@@ -56,7 +56,7 @@ func main() {
 
 	// 初始化Consul客户端
 	consulConfig := api.DefaultConfig()
-	consulConfig.Address = cfg.Consul.Address
+	consulConfig.Address = cfg.Consul.Host
 	log.Println("[FeasOJ] Connecting to Consul...")
 	consulClient, err := api.NewClient(consulConfig)
 	if err != nil {

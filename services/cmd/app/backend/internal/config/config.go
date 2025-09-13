@@ -130,7 +130,7 @@ func createDefaultConfig(configPath string) error {
 			KeyPath:     "./certificate/privkey.key",
 		},
 		RabbitMQ: RabbitMQConfig{
-			Host: "amqp://USERNAME:PASSWORD@IP:PORT/",
+			Host: "amqp://rabbitmq:password@localhost:5672/",
 		},
 		Consul: ConsulConfig{
 			Host: "localhost:8500",
@@ -145,7 +145,7 @@ func createDefaultConfig(configPath string) error {
 			MaxLifeTime:  32,
 			DbHost:       "localhost:3306",
 			DbName:       "feasoj",
-			DbUser:       "root",
+			DbUser:       "feasoj",
 			DbPassword:   "password",
 		},
 		Redis: RedisConfig{

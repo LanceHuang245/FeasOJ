@@ -10,7 +10,7 @@ import (
 
 // ConnectRabbitMQ RabbitMQ连接
 func ConnectRabbitMQ(rmqConfig config.RabbitMQ) (*amqp.Connection, *amqp.Channel, error) {
-	conn, err := amqp.Dial(rmqConfig.Address)
+	conn, err := amqp.Dial(rmqConfig.Host)
 	if err != nil {
 		return nil, nil, err
 	}
