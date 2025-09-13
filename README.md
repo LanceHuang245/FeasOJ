@@ -6,7 +6,7 @@ English | [简体中文](README_CN.md)
 </p>
 
 > FeasOJ [Backend](https://github.com/LanceHuang245/FeasOJ-Backend) and [JudgeCore](https://github.com/LanceHuang245/FeasOJ-JudgeCore) has been migrated to this project.\
-> FeasOJ is now undergoing comprehensive optimization and reconstruction. Please wait for the next stable version to be released and use it. Stay tuned! To track the real-time progress, please visit the [TODO List](/docs/CONFIG_README_EN.md).
+> FeasOJ is now undergoing comprehensive optimization and reconstruction. Please wait for the next stable version to be released and use it. Stay tuned!
 
 # FeasOJ
 ### Project Description
@@ -15,9 +15,7 @@ FeasOJ is an online programming practice platform based on Vue and Golang, suppo
 ### Related Links
 [ImageGuard](https://github.com/LanceHuang245/ImageGuard)\
 [Profanity Detector](https://github.com/LanceHuang245/ProfanityDetector)\
-[API Document](https://claret-feasoj.apifox.cn/en/)\
 [Config Document](/docs/CONFIG_README_EN.md)\
-[TODO List](/docs/TODO_LIST_EN.md)
 
 ### Features
 - Multi-language support: Support multiple languages, including English, Spanish, French, Italian, Japanese, Simplified Chinese etc
@@ -65,10 +63,11 @@ FeasOJ
 - The lastest version of Chromium or Firefox
 
 ### How to run
-1. Clone repository.
-2. Run `npm install` Install dependencies.
-3. Config `/web/src/utils/axios.js` to your FeasOJ-Backend address.
-4. Run `npm run dev` to start the front-end server.
+1. Clone repository
+2. Run `./scripts/deps_update.sh` to update backend and judgecore dependencies
+3. Run `npm install` Install dependencies
+4. Config `/web/src/utils/axios.js` to your FeasOJ-Backend address
+5. Run `npm run dev` to start the front-end server
 
 ### Notice
 This is the first time I've written a big project with Vue + Golang, so the code is going to be terrible, but I'll keep going to improve it!

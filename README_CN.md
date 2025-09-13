@@ -6,7 +6,7 @@
 </p>
 
 > FeasOJ [Backend](https://github.com/LanceHuang245/FeasOJ-Backend) 和 [JudgeCore](https://github.com/LanceHuang245/FeasOJ-JudgeCore)现已迁移到该项目中！\
-> 现在FeasOJ正在进行全面优化、重构，请等待下一个正式版发布后使用，敬请期待！想追踪实时进展，请前往[待办事项](/docs/TODO_LIST_CN.md)~
+> 现在FeasOJ正在进行全面优化、重构，请等待下一个正式版发布后使用，敬请期待！
 
 # FeasOJ
 ### 项目简介
@@ -15,9 +15,7 @@ FeasOJ 是一个基于 Vue 和 Golang 的在线编程练习平台，支持多国
 ### 相关链接
 [ImageGuard](https://github.com/LanceHuang245/ImageGuard)\
 [Profanity Detector](https://github.com/LanceHuang245/ProfanityDetector)\
-[API 文档](https://claret-feasoj.apifox.cn)\
 [配置文件说明文档](/docs/CONFIG_README_CN.md)\
-[待办事项](/docs/TODO_LIST_CN.md)
 
 ### 项目特性
 - 多语言支持：支持多种语言，包括英语、西班牙语、法语、意大利语、日语、简体中文等
@@ -66,10 +64,12 @@ FeasOJ
 - 最新版本的Chromium系浏览器或Firefox
 
 ### 如何运行
-1. 克隆此库。
-2. 运行 `npm install` 安装依赖项。
-3. 配置 `/web/src/utils/axios.js` 中的 `apiUrl` 为你FeasOJ-Bakcend服务器地址。
-4. 运行 `npm run dev` 启动前端服务器。
+1. 克隆此库
+2. 在项目目录下执行`./scripts/deps_update.sh` 更新后端与JudgeCore的依赖
+3. 确保Docker Desktop(Windows/MacOS)或Docker Engine已启动
+4. 在`web`目录下运行 `npm install` 安装依赖项
+5. 配置`/web/src/utils/axios.js` 中的 `apiUrl` 为你FeasOJ-Bakcend服务器地址
+6. 运行 `npm run dev` 启动前端服务器
 
 ### 注意
 这是我第一次用Vue + Golang写大项目，所以代码会一坨，不过我会一直去改进它！
