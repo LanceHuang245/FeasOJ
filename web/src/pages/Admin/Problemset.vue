@@ -185,7 +185,7 @@ const goToEditProblem = async (pid) => {
     const problemResp = await getProblemAllInfoByAdmin(pid);
     Object.assign(problemFields, problemResp.data.data);
     const compResp = await getAllCompetitionsInfo();
-    competitionIds.value = [0, ...compResp.data.data.map(data => data.competition_id)];
+    competitionIds.value = [0, ...compResp.data.data.map(data => data.id)];
     networkloading.value = false;
 };
 

@@ -68,6 +68,11 @@ const quitComp = async () => {
     }
 }
 
+const isContestEnded = computed(() => {
+    if (!contestInfo.value.end_at) return false;
+    return moment().isSameOrAfter(moment(contestInfo.value.end_at));
+});
+
 onMounted(async () => {
     loading.value = true;
     if (userLoggedIn.value) {
@@ -76,16 +81,16 @@ onMounted(async () => {
             try {
                 // 获取该竞赛详细信息
                 const resp = await getCompetitionById(competitionId);
-                contestInfo.value = resp.data.contest;
+                contestInfo.value = resp.data.data;
 
                 // 获取该竞赛参赛人员列表
                 const resp2 = await getCompetitionUsers(competitionId);
-                usersInfo.value = resp2.data.users;
+                usersInfo.value = resp2.data.data;
 
                 // 获取该竞赛题目列表
                 if (contestInfo.value.status != 0) {
                     const resp3 = await getCompetitionProblems(competitionId);
-                    problems.value = resp3.data.problems;
+                    problems.value = resp3.data.data;
                 }
             } catch (error) {
                 showAlert(t("message.failed") + "!", "");
@@ -145,7 +150,7 @@ onUnmounted(() => {
                 <p>{{ contestInfo.subtitle }}</p>
             </v-col>
             <template v-slot:append>
-                <v-btn color="primary" variant="flat" rounded="xl" @click="quitDialog = true">{{ t('message.quit')
+                <v-btn v-if="!isContestEnded" color="primary" variant="flat" rounded="xl" @click="quitDialog = true">{{ t('message.quit')
                     }}</v-btn>
             </template>
         </v-app-bar>
@@ -180,10 +185,10 @@ onUnmounted(() => {
                                 <span class="font-weight-black">{{ t("message.problem") }}</span>
                             </template>
                             <v-list v-if="problems.length > 0" style="max-height: 450px; overflow-y: auto;">
-                                <v-list-item v-for="p in problems" :key="p.pid">
+                                <v-list-item v-for="p in problems" :key="p.id">
                                     <v-list-item-title>
                                         <v-btn variant="text" color="primary" block
-                                            @click="router.push({ path: `/problemset/${p.pid}` })">
+                                            @click="router.push({ path: `/problemset/${p.id}` })">
                                             {{ p.title }}
                                         </v-btn>
                                     </v-list-item-title>

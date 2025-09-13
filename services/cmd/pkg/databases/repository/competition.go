@@ -57,7 +57,7 @@ func AddUserCompetition(db *gorm.DB, userId string, competitionId int) error {
 	// 当前时间
 	nowDateTime := time.Now()
 	if err := db.Table("user_competitions").Create(
-		&tables.UserCompetitions{Id: competitionId, UserId: userId, Username: userInfo.Username, JoinDate: nowDateTime}).Error; err != nil {
+		&tables.UserCompetitions{CompetitionId: competitionId, UserId: userId, Username: userInfo.Username, JoinDate: nowDateTime}).Error; err != nil {
 		return err
 	}
 	return nil

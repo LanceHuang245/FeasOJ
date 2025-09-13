@@ -3,9 +3,11 @@ package handler
 import (
 	"FeasOJ/app/backend/internal/global"
 	"FeasOJ/pkg/databases/repository"
+	"FeasOJ/pkg/databases/tables"
 	"net/http"
 	"net/url"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -89,6 +91,20 @@ func QuitCompetition(c *gin.Context) {
 	username, _ := url.QueryUnescape(encodedUsername)
 	competitionId, _ := strconv.Atoi(c.Param("id"))
 	uid := repository.SelectUserInfo(global.Db, username).Id
+
+	// 检查竞赛是否已经结束，如果结束则不允许退出
+	var competition tables.Competitions
+	if err := global.Db.Table("competitions").Where("id = ?", competitionId).First(&competition).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
+		return
+	}
+
+	// 如果当前时间已经等于或超过竞赛结束时间，则不允许退出
+	if time.Now().After(competition.EndAt) || time.Now().Equal(competition.EndAt) {
+		c.JSON(http.StatusForbidden, gin.H{"message": GetMessage(c, "competitionEnded")})
+		return
+	}
+
 	if repository.DeleteUserCompetition(global.Db, uid, competitionId) == nil {
 		c.JSON(http.StatusOK, gin.H{"message": GetMessage(c, "success")})
 		return

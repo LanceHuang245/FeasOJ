@@ -144,7 +144,7 @@ func CalculateScore(c *gin.Context) {
 		global.Db.
 			Where("user_id = ? AND result = ? AND time BETWEEN ? AND ?",
 				user.UserId,
-				"Success",
+				"Accepted",
 				competition.StartAt,
 				competition.EndAt).
 			Find(&submissions)
@@ -156,7 +156,7 @@ func CalculateScore(c *gin.Context) {
 			err := global.Db.
 				Table("problems").
 				Select("difficulty").
-				Where("competition_id = ? AND problem_id = ?", competitionId, submission.ProblemId).
+				Where("competition_id = ? AND id = ?", competitionId, submission.ProblemId).
 				Row().
 				Scan(&difficulty)
 			if err != nil {
@@ -181,7 +181,7 @@ func CalculateScore(c *gin.Context) {
 		global.Db.Model(&tables.UserCompetitions{}).Where("user_id = ?", user.UserId).Update("score", score)
 	}
 
-	global.Db.Model(&tables.Competitions{}).Where("competition_id = ?", competitionId).Update("scored", true)
+	global.Db.Model(&tables.Competitions{}).Where("id = ?", competitionId).Update("scored", true)
 
 	c.JSON(http.StatusOK, gin.H{"message": GetMessage(c, "success")})
 }

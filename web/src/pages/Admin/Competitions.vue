@@ -44,12 +44,12 @@ const currentPage = ref(1);
 const competitionItemsPerPage = ref(50);
 
 const competitionFields = reactive({
-    contest_id: null,
+    id: null,
     title: "",
     subtitle: "",
-    difficulty: "",
+    difficulty: 0,
     password: "",
-    have_password: false,
+    crypto: false,
     is_visible: true,
     start_at: "",
     end_at: "",
@@ -57,7 +57,7 @@ const competitionFields = reactive({
 });
 
 const headers = ref([
-    { title: 'ID', value: 'contest_id', align: 'center', sortable: false },
+    { title: 'ID', value: 'id', align: 'center', sortable: false },
     { title: t('message.competition'), value: 'title', align: 'center', sortable: false },
     { title: t('message.difficulty'), value: 'difficulty', align: 'center', sortable: false },
     { title: t('message.status'), value: 'status', align: 'center', sortable: false },
@@ -66,13 +66,12 @@ const headers = ref([
 ])
 
 const difficultyOptions = [
-    { value: '简单', label: t('message.easy') },
-    { value: '中等', label: t('message.medium') },
-    { value: '困难', label: t('message.hard') }
+    { value: 0, label: t('message.easy') },
+    { value: 1, label: t('message.medium') },
+    { value: 2, label: t('message.hard') }
 ];
 
 const scoreHeaders = ref([
-    { title: 'ID', value: 'Uid', align: 'center' },
     { title: t('message.username'), value: 'Username', align: 'center' },
     { title: 'Score', value: 'Score', align: 'center' },
 ])
@@ -122,7 +121,7 @@ const handleThemeChange = (event) => {
 // 字段检查
 const validateFields = () => {
     for (const key in competitionFields) {
-        if (key === "password" && !competitionFields.have_password || key === "announcement") {
+        if (key === "password" && !competitionFields.crypto || key === "announcement") {
             continue;
         }
         if (competitionFields[key] === "" || (Array.isArray(competitionFields[key]) && competitionFields[key].length === 0)) {
@@ -137,7 +136,7 @@ const validateFields = () => {
 const delCompetition = async () => {
     networkloading.value = true;
     try {
-        await deleteCompetition(competitionFields.contest_id);
+        await deleteCompetition(competitionFields.id);
         showAlert(t("message.success") + "!", "reload");
     } catch (error) {
         showAlert(t("message.failed") + "!", "");
@@ -149,7 +148,7 @@ const delCompetition = async () => {
 
 // 清除密码
 const clearPassword = () => {
-    if (!competitionFields.have_password) {
+    if (!competitionFields.crypto) {
         competitionFields.password = '';
     }
 }
@@ -159,12 +158,12 @@ const createCompetition = async () => {
     isCreate.value = true;
     dialog.value = true;
     // 重置内容
-    competitionFields.contest_id = totalCompetitions.value + 1;
+    competitionFields.id = totalCompetitions.value + 1;
     competitionFields.title = "";
     competitionFields.subtitle = "";
-    competitionFields.difficulty = "简单";
+    competitionFields.difficulty = 0;
     competitionFields.password = "";
-    competitionFields.have_password = false;
+    competitionFields.crypto = false;
     competitionFields.is_visible = true;
     competitionFields.start_at = "";
     competitionFields.end_at = "";
@@ -197,14 +196,14 @@ const save = async () => {
 };
 
 // 编辑/创建竞赛
-const goToEditCompetition = async (contest_id) => {
+const goToEditCompetition = async (id) => {
     isCreate.value = false;
     dialog.value = true;
     networkloading.value = true;
-    const comResp = await getCompetitionInfoByIDAdmin(contest_id);
+    const comResp = await getCompetitionInfoByIDAdmin(id);
     networkloading.value = false;
 
-    Object.assign(competitionFields, comResp.data.contest);
+    Object.assign(competitionFields, comResp.data.data);
     formatStartDate.value = moment(competitionFields.start_at).format('YYYY-MM-DD HH:mm');
     formatEndDate.value = moment(competitionFields.end_at).format('YYYY-MM-DD HH:mm');
 }
@@ -214,9 +213,9 @@ const fetchData = async () => {
     loading.value = true
     try {
         const response = await getAllCompetitionsInfo();
-        competitions.value = response.data.contests
+        competitions.value = response.data.data
         totalCompetitions.value = competitions.value.length
-        competitionFields.contest_id = totalCompetitions.value + 1
+        competitionFields.id = totalCompetitions.value + 1
     } catch (error) {
         loading.value = false
         showAlert(t("message.failed") + "!", "")
@@ -228,7 +227,7 @@ const fetchData = async () => {
 // 竞赛计分
 const calcCompetition = async (competitionId) => {
     try {
-        const response = await caculateComScore(competitionId);
+        await caculateComScore(competitionId);
         showAlert(t("message.calculating"), "");
     } catch (error) {
         showAlert(t("message.failed") + "!", "");
@@ -264,7 +263,7 @@ onMounted(async () => {
             return;
         }
         const userInfoResponse = await verifyUserInfo(userName.value, token.value);
-        userPrivilege.value = userInfoResponse.data.info.role;
+        userPrivilege.value = userInfoResponse.data.data.role;
         if (userPrivilege.value !== 1) {
             window.location = '#/403';
             return;
@@ -339,17 +338,17 @@ onUnmounted(() => {
                             <template v-slot:item="{ item }">
                                 <tr class="competitions-table-row">
                                     <td class="text-center pa-4 font-weight-medium">
-                                        {{ item.contest_id }}
+                                        {{ item.id }}
                                     </td>
                                     <td class="text-center pa-4">
-                                        <v-btn @click="goToEditCompetition(item.contest_id)" variant="text"
+                                        <v-btn @click="goToEditCompetition(item.id)" variant="text"
                                             color="primary" class="font-weight-medium">
                                             {{ item.title }}
                                         </v-btn>
                                     </td>
                                     <td class="text-center pa-4">
                                         <v-chip
-                                            :color="item.difficulty === '简单' ? 'success' : item.difficulty === '中等' ? 'warning' : 'error'"
+                                            :color="item.difficulty === 0 ? 'success' : item.difficulty === 1 ? 'warning' : 'error'"
                                             variant="tonal" size="small" class="font-weight-medium">
                                             {{ $t(difficultyLang(item.difficulty)) }}
                                         </v-chip>
@@ -373,7 +372,7 @@ onUnmounted(() => {
                                             </template>
                                             <v-list rounded="xl">
                                                 <v-list-item :disabled="(item.status != 2) || (item.scored != false)"
-                                                    @click="calcCompetition(item.contest_id)">
+                                                    @click="calcCompetition(item.id)">
                                                     <template v-slot:default="{ active, toggle }">
                                                         <div class="d-flex align-center">
                                                             <v-icon icon="mdi-calculator" class="me-2"></v-icon>
@@ -382,7 +381,7 @@ onUnmounted(() => {
                                                         </div>
                                                     </template>
                                                 </v-list-item>
-                                                <v-list-item @click="getScoreBoard(item.contest_id)"
+                                                <v-list-item @click="getScoreBoard(item.id)"
                                                     :disabled="item.scored != true">
                                                     <template v-slot:default="{ active, toggle }">
                                                         <div class="d-flex align-center">
@@ -423,7 +422,7 @@ onUnmounted(() => {
                 </v-card-title>
                 <v-card-text>
                     <v-form>
-                        <v-text-field label="ID" v-model="competitionFields.contest_id" variant="solo-filled"
+                        <v-text-field label="ID" v-model="competitionFields.id" variant="solo-filled"
                             readonly></v-text-field>
                         <!-- 竞赛名称 -->
                         <v-text-field :label="$t('message.title')" v-model="competitionFields.title"
@@ -442,10 +441,10 @@ onUnmounted(() => {
                                 color="primary" inset></v-switch>
                             <div style="margin-inline: 30px;"></div>
                             <!-- 启用密码 -->
-                            <v-switch v-model="competitionFields.have_password" :label="$t('message.withapwd')"
+                            <v-switch v-model="competitionFields.crypto" :label="$t('message.withapwd')"
                                 color="primary" inset @change="clearPassword"></v-switch>
                         </v-row>
-                        <v-text-field v-if="competitionFields.have_password" v-model="competitionFields.password"
+                        <v-text-field v-if="competitionFields.crypto" v-model="competitionFields.password"
                             :append-icon="showPwd ? 'mdi-eye' : 'mdi-eye-off'" variant="solo-filled"
                             :type="showPwd ? 'text' : 'password'" :label="$t('message.password')" counter
                             @click:append="showPwd = !showPwd"></v-text-field>

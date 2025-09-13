@@ -58,7 +58,7 @@ const joinComp = async (competitionId) => {
 
 // 选择竞赛并弹出对话框 
 const selectCompetition = async (contest) => {
-    selectedId.value = contest.contest_id;
+    selectedId.value = contest.id;
 
     // 检查用户是否在该竞赛中
     try {
@@ -68,7 +68,7 @@ const selectCompetition = async (contest) => {
         if (resp.data.isIn) {
             await router.push({path: `/competitions/${selectedId.value}`})
         } else {
-            contest.have_password ? withPwdDialog.value = true : noPwdDialog.value = true;
+            contest.crypto ? withPwdDialog.value = true : noPwdDialog.value = true;
         }
     } catch (error) {
         showAlert(error.response.data.message, '')
@@ -156,7 +156,7 @@ onMounted(async () => {
             </div>
             <v-container>
                 <v-row>
-                    <v-col v-for="contest in competitions" :key="contest.contest_id" cols="12" md="4">
+                    <v-col v-for="contest in competitions" :key="contest.id" cols="12" md="4">
                         <v-card rounded="xl" elevation="2" style="display: grid;" class="comp-card">
                             <v-card-title style="font-weight: bold;font-size:28px;justify-self: left;">{{ contest.title
                                 }}</v-card-title>

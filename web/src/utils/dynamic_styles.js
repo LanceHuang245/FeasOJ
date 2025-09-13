@@ -45,11 +45,11 @@ export const getResultChipColor = (result) => {
 // 根据题目难度显示不同字体
 export const difficultyColor = (difficulty) => {
     switch (difficulty) {
-        case '简单':
+        case 0:
             return 'font-weight: bold;color: green;';
-        case '中等':
+        case 1:
             return 'font-weight: bold;color: orange;';
-        case '困难':
+        case 2:
             return 'font-weight: bold;color: red;';
         default:
             return 'font-weight: bold;color: green;';
@@ -58,11 +58,11 @@ export const difficultyColor = (difficulty) => {
 
 export const difficultyLang = (difficulty) => {
     switch (difficulty) {
-        case '0':
+        case 0:
             return 'message.easy';
-        case '1':
+        case 1:
             return 'message.medium';
-        case '2':
+        case 2:
             return 'message.hard';
         default:
             return 'message.easy';
