@@ -26,7 +26,7 @@ func SelectDiscussList(db *gorm.DB, page int, itemsPerPage int) ([]structs.Discu
 func SelectDiscussionByDid(db *gorm.DB, id int) structs.DiscsInfoRequest {
 	var discussion structs.DiscsInfoRequest
 	db.Table("discussions").
-		Select("discussions.id, discussions.title, discussions.content, discussions.created_at, users.id,users.username, users.avatar").
+		Select("discussions.id, discussions.title, discussions.content, discussions.created_at, users.id as user_id, users.username, users.avatar").
 		Joins("JOIN users ON discussions.user_id = users.id").
 		Where("discussions.id = ?", id).First(&discussion)
 	return discussion
