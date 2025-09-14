@@ -81,7 +81,7 @@ onMounted(async () => {
   </v-app-bar>
 
   <v-container class="pa-6">
-    <v-card rounded="xl" elevation="4">
+    <v-card elevation="2" rounded="lg">
       <v-data-table-server :headers="headers" :items="rankingData" :items-length="rankingDataLength" :loading="loading"
         :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
         :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')" class="ranking-table"

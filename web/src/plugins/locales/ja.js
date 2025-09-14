@@ -157,6 +157,7 @@ export default {
         copyFailed: "コピーに失敗しました",
         batchImportTestCases: "バッチインポートテストケース",
         batchImportTip: "グループ内の2行ごとに、1行目は入力、2行目は出力、空白行は自動的にスキップされる。",
-        batchImportPlaceholder: "Input 1\nOutput 1\nInput 2\nOutput 2\n..."
+        batchImportPlaceholder: "Input 1\nOutput 1\nInput 2\nOutput 2\n...",
+        problemOfTheDay: "本日の問題"
     }
 }

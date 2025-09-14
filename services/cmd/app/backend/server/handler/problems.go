@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"FeasOJ/app/backend/internal/config"
 	"FeasOJ/app/backend/internal/global"
 	"FeasOJ/app/backend/internal/utils"
 	"FeasOJ/pkg/databases/repository"
@@ -25,6 +26,55 @@ func GetAllProblems(c *gin.Context) {
 	// 实时性要求较高，不做数据缓存
 	problems := repository.SelectAllProblems(global.Db)
 	c.JSON(http.StatusOK, gin.H{"data": problems})
+}
+
+// GetDailyProblem 获取每日一题
+func GetDailyProblem(c *gin.Context) {
+	// 生成缓存键
+	cacheKey := "daily_problem"
+	var problem structs.ProblemInfoRequest
+
+	// 从缓存中获取数据
+	err := utils.GetCache(cacheKey, &problem)
+	if err == nil && problem.Id != 0 {
+		// 缓存命中
+		c.JSON(http.StatusOK, gin.H{"data": problem})
+		return
+	}
+
+	// 缓存未命中，从数据库获取
+	dbType := config.GlobalConfig.Database.Type
+	dailyProblem, err := repository.SelectRandomProblem(global.Db, dbType)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"message": GetMessage(c, "notFound")})
+		return
+	}
+
+	problem = structs.ProblemInfoRequest{
+		Id:            dailyProblem.Id,
+		Difficulty:    dailyProblem.Difficulty,
+		Title:         dailyProblem.Title,
+		Content:       dailyProblem.Content,
+		TimeLimit:     dailyProblem.TimeLimit,
+		MemoryLimit:   dailyProblem.MemoryLimit,
+		Input:         dailyProblem.Input,
+		Output:        dailyProblem.Output,
+		CompetitionId: dailyProblem.CompetitionId,
+	}
+
+	// 数据存入缓存，时间为24小时
+	now := time.Now()
+	year, month, day := now.Date()
+	tomorrow := time.Date(year, month, day+1, 0, 0, 0, 0, now.Location())
+	duration := tomorrow.Sub(now)
+
+	err = utils.SetCache(cacheKey, problem, duration)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"data": problem})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": problem})
 }
 
 // 获取指定题目信息

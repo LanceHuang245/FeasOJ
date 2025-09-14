@@ -158,7 +158,7 @@ onUnmounted(() => {
 <template>
     <template>
         <v-dialog v-model="checkDialog" persistent max-width="290">
-            <v-card rounded="xl">
+            <v-card rounded="xl" elevation="2">
                 <v-card-title class="text-h5">{{ $t('message.notify') }}</v-card-title>
                 <v-card-text>{{ t('message.suredel') }}</v-card-text>
                 <v-card-actions>
@@ -192,7 +192,7 @@ onUnmounted(() => {
             </template>
         </v-app-bar>
         <div style="margin-top: 30px"></div>
-        <v-card class="mx-auto" width="75%" rounded="xl" elevation="8" style="display: grid;">
+        <v-card class="mx-auto" width="75%" rounded="lg" elevation="2" style="display: grid;">
             <template v-slot:title>
                 <span class="font-weight-black">{{ discussionInfos.title }}</span>
             </template>
@@ -204,7 +204,7 @@ onUnmounted(() => {
             </v-card-subtitle>
         </v-card>
         <div style="margin-top: 50px"></div>
-        <v-card class="mx-auto" width="75%" rounded="xl" elevation="8">
+        <v-card class="mx-auto" width="75%" rounded="lg" elevation="2">
             <template v-slot:title>
                 <span class="font-weight-black">{{ $t("message.comments") }}</span>
             </template>

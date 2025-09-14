@@ -72,15 +72,15 @@ type UserInfoRequest struct {
 
 // 题目信息请求体
 type ProblemInfoRequest struct {
-	Id          int    `json:"id"`
-	Difficulty  int    `json:"difficulty"`
-	Title       string `json:"title"`
-	Content     string `json:"content"`
-	TimeLimit   string `json:"time_limit"`
-	MemoryLimit string `json:"memory_limit"`
-	Input       string `json:"input"`
-	Output      string `json:"output"`
-	ContestId   int    `json:"contest_id"`
+	Id            int    `json:"id"`
+	Difficulty    int    `json:"difficulty"`
+	Title         string `json:"title"`
+	Content       string `json:"content"`
+	TimeLimit     string `json:"time_limit"`
+	MemoryLimit   string `json:"memory_limit"`
+	Input         string `json:"input"`
+	Output        string `json:"output"`
+	CompetitionId int    `json:"competition_id"`
 }
 
 // 测试样例请求体

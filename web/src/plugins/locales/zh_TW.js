@@ -157,6 +157,7 @@ export default{
         copyFailed: "複製失敗",
         batchImportTestCases: "批量導入測試用例",
         batchImportTip: "每兩行为一组，第一行为輸入，第二行為輸出，空行自動跳過。",
-        batchImportPlaceholder: "輸入1\n輸出1\n輸入2\n輸出2\n..."
+        batchImportPlaceholder: "輸入1\n輸出1\n輸入2\n輸出2\n...",
+        problemOfTheDay: "今日題目"
     }
 }

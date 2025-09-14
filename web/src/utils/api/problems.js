@@ -12,6 +12,16 @@ export const getAllProblems = async () => {
     });
 }
 
+// 获取每日一题
+export const getDailyProblem = async () => {
+    return await axios.get(`${apiUrl}/problems/daily`, {
+        headers: {
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value
+        }
+    });
+}
+
 // 获取题目详细信息
 export const getPbDetails = async (pid) => {
     return await axios.get(`${apiUrl}/problems/${pid}`, {

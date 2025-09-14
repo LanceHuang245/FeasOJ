@@ -83,7 +83,7 @@ onUnmounted(() => {
         <div style="margin-top: 60px"></div>
         <div class="form-align">
             <v-form style="min-width: 50%" @submit.prevent="submit">
-                <v-text-field v-model="title" :label="$t('message.title')" rounded="xl"
+                <v-text-field v-model="title" :label="$t('message.title')" rounded="lg" elevation="2"
                     variant="solo-filled"></v-text-field>
                 <MdEditor v-model="content" :noUploadImg="true" :footers="[]"
                     :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" :theme="editorTheme" />

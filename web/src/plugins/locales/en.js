@@ -93,7 +93,7 @@ export default {
         isvisible: "Visible",
         visible: "Visible",
         invisible: "Invisible",
-        contestid: "Contest ID",
+        contestid: "Competition ID",
         enter: "Enter",
         start_date: "Start Date",
         end_date: "End Date",
@@ -157,6 +157,7 @@ export default {
         copyFailed: "Copy failed",
         batchImportTestCases: "Batch import test cases",
         batchImportTip: "Every two lines are grouped, the first line is input, the second line is output, and blank lines are automatically skipped.",
-        batchImportPlaceholder: "Input 1\nOutput 1\nInput 2\nOutput2\n..."
+        batchImportPlaceholder: "Input 1\nOutput 1\nInput 2\nOutput2\n...",
+        problemOfTheDay: "Problem of the Day",
     }
 }

@@ -61,6 +61,9 @@ func LoadRouter(r *gin.Engine) *gin.RouterGroup {
 		// 获取所有题目
 		authGroup.GET("/problems", handler.GetAllProblems)
 
+		// 获取每日一题
+		authGroup.GET("/problems/daily", handler.GetDailyProblem)
+
 		// 获取所有帖子
 		authGroup.GET("/discussions", handler.GetAllDiscussions)
 

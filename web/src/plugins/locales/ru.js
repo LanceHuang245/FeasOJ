@@ -157,6 +157,7 @@ export default {
         copyFailed: "Ошибка при копировании",
         batchImportTestCases: "Тестовые образцы для серийного импорта",
         batchImportTip: "Каждые две строки группируются вместе, первая строка является входной, вторая - выходной, а пустые строки автоматически пропускаются.",
-        batchImportPlaceholder: "Вход 1\nВыход 1\nВход 2\nВыход 2\n..."
+        batchImportPlaceholder: "Вход 1\nВыход 1\nВход 2\nВыход 2\n...",
+        problemOfTheDay: "Задача дня"
     }
 }

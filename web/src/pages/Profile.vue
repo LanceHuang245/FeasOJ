@@ -172,8 +172,8 @@ onUnmounted(() => {
     <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
   </div>
   <div v-else>
-    <div style="margin: 10%"></div>
-    <v-card class="mx-auto" max-width="60%" min-width="60%" rounded="xl" elevation="10">
+    <div style="margin: 5%"></div>
+    <v-card class="mx-auto" max-width="60%" min-width="60%" rounded="lg" elevation="2">
       <div style="margin: 10px"></div>
       <div class="avatar-container">
         <v-avatar size="120" color="surface-variant">
@@ -204,14 +204,14 @@ onUnmounted(() => {
             $t('message.logout') }}</v-btn>
       </v-card-actions>
     </v-card>
-    <v-card class="mx-auto" max-width="60%" min-width="60%" rounded="xl" elevation="10" style="margin-top: 30px;">
+    <v-card class="mx-auto" max-width="60%" min-width="60%" rounded="lg" elevation="2" style="margin-top: 30px;">
       <v-card-text>
         <p class="text-h4 font-weight-black">{{ $t('message.submissions') }}</p>
         <Heatmap :user-submit-records="userSubmitRecords" />
       </v-card-text>
     </v-card>
     <div style="margin: 30px"></div>
-    <v-card class="mx-auto" max-width="60%" min-width="60%" rounded="xl" elevation="10">
+    <v-card class="mx-auto" max-width="60%" min-width="60%" rounded="lg" elevation="2">
       <v-card-text class="pa-0">
         <v-data-table-server :headers="headers" :items="userSubmitRecords" :items-length="userSubmitRecordsLength"
           :loading="loading" :loading-text="$t('message.loading')" @update="fetchSubmitData" :hide-default-footer="true"

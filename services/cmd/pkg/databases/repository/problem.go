@@ -73,7 +73,7 @@ func SelectProblemTestCases(db *gorm.DB, problemId string) structs.AdminProblemI
 
 // 更新题目信息
 func UpdateProblem(db *gorm.DB, req structs.AdminProblemInfoRequest) error {
-	// 更新题目表
+	// 更新题目表. GORM的Save方法会自动处理Id=0时创建新纪录，Id!=0时更新记录。
 	problem := tables.Problems{
 		Id:            req.Id,
 		Difficulty:    req.Difficulty,
@@ -92,11 +92,11 @@ func UpdateProblem(db *gorm.DB, req structs.AdminProblemInfoRequest) error {
 
 	// 获取该题目的测试样例
 	var existingTestCases []tables.TestCases
-	if err := db.Where("problem_id = ?", req.Id).Find(&existingTestCases).Error; err != nil {
+	if err := db.Where("problem_id = ?", problem.Id).Find(&existingTestCases).Error; err != nil {
 		return err
 	}
 
-	// 找出前端传入的测试样例中不存在的测试样例，并将其从数据库中删除
+	// 找出需要删除的测试样例
 	existingTestCaseMap := make(map[string]tables.TestCases)
 	for _, testCase := range existingTestCases {
 		existingTestCaseMap[testCase.InputData] = testCase
@@ -106,8 +106,8 @@ func UpdateProblem(db *gorm.DB, req structs.AdminProblemInfoRequest) error {
 		delete(existingTestCaseMap, testCase.InputData)
 	}
 
-	for _, testCase := range existingTestCaseMap {
-		if err := db.Delete(&testCase).Error; err != nil {
+	for _, testCaseToDelete := range existingTestCaseMap {
+		if err := db.Delete(&testCaseToDelete).Error; err != nil {
 			return err
 		}
 	}
@@ -115,11 +115,11 @@ func UpdateProblem(db *gorm.DB, req structs.AdminProblemInfoRequest) error {
 	// 更新或添加新的测试样例
 	for _, testCase := range req.TestCases {
 		var existingTestCase tables.TestCases
-		if err := db.Where("problem_id = ? AND input_data = ?", req.Id, testCase.InputData).First(&existingTestCase).Error; err != nil {
+		if err := db.Where("problem_id = ? AND input_data = ?", problem.Id, testCase.InputData).First(&existingTestCase).Error; err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				// 如果测试样例不存在，则创建新的样例
 				newTestCase := tables.TestCases{
-					Id:         req.Id,
+					ProblemId:  problem.Id,
 					InputData:  testCase.InputData,
 					OutputData: testCase.OutputData,
 				}
@@ -203,9 +203,27 @@ func SelectTestCasesByPid(db *gorm.DB, problemId int) []*structs.TestCaseRequest
 // SelectProblemByPid 获取指定题目信息
 func SelectProblemByPid(db *gorm.DB, pid int) (*tables.Problems, error) {
 	var problem tables.Problems
-	result := db.Table("problems").Where("pid = ?", pid).First(&problem)
+	result := db.Table("problems").Where("id = ?", pid).First(&problem)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	return &problem, nil
+}
+
+// SelectRandomProblem 获取一个随机的、公开的、非竞赛的题目
+func SelectRandomProblem(db *gorm.DB, dbType string) (tables.Problems, error) {
+	var problem tables.Problems
+	var orderClause string
+
+	if dbType == "mysql" {
+		orderClause = "RAND()"
+	} else {
+		orderClause = "RANDOM()"
+	}
+
+	err := db.Where("is_visible = ?", true).Order(orderClause).First(&problem).Error
+	if err != nil {
+		return tables.Problems{}, err
+	}
+	return problem, nil
 }

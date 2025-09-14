@@ -110,7 +110,7 @@ onMounted(async () => {
     </v-dialog>
     <template>
         <v-dialog v-model="withPwdDialog" max-width="500px">
-            <v-card rounded=xl>
+            <v-card elevation="2" rounded="lg">
                 <v-card-title class="text-h5">{{ t('message.joinCompetition') }}</v-card-title>
                 <v-card-subtitle>{{ t('message.followRules') }}</v-card-subtitle>
                 <v-card-text>
@@ -129,7 +129,7 @@ onMounted(async () => {
     </template>
     <template>
         <v-dialog v-model="noPwdDialog" max-width="500px">
-            <v-card rounded=xl>
+            <v-card elevation="2" rounded="lg">
                 <v-card-title class="text-h5">{{ t('message.joinCompetition') }}</v-card-title>
                 <v-card-subtitle>{{ t('message.followRules') }}</v-card-subtitle>
                 <v-card-actions>
@@ -157,9 +157,8 @@ onMounted(async () => {
             <v-container>
                 <v-row>
                     <v-col v-for="contest in competitions" :key="contest.id" cols="12" md="4">
-                        <v-card rounded="xl" elevation="2" style="display: grid;" class="comp-card">
-                            <v-card-title style="font-weight: bold;font-size:28px;justify-self: left;">{{ contest.title
-                                }}</v-card-title>
+                        <v-card elevation="2" rounded="lg" style="display: grid;" class="comp-card">
+                            <v-card-title class="competition-title">{{ contest.title }}</v-card-title>
                             <v-card-subtitle style="justify-self: left;">{{ contest.subtitle }}</v-card-subtitle>
                             <template v-slot:append>
                                 <v-chip :style="difficultyColor(contest.difficulty)">
@@ -207,6 +206,15 @@ onMounted(async () => {
 .comp-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.competition-title {
+  font-weight: bold;
+  font-size: 28px;
+  justify-self: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .empty-state {
@@ -261,3 +269,4 @@ onMounted(async () => {
     }
 }
 </style>
+

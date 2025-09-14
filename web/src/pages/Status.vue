@@ -104,11 +104,11 @@ onUnmounted(() => {
     </v-col>
   </v-app-bar>
 
-  <v-container fluid class="pa-6">
+  <v-container fluid>
     <v-row justify="center">
       <v-col cols="12" lg="11" xl="10">
         <!-- 状态卡片 -->
-        <v-card class="status-card" rounded="xl" elevation="2">
+        <v-card elevation="2" rounded="lg">
           <!-- 数据表格 -->
           <v-card-text class="pa-0">
             <v-data-table-server :headers="headers" :items="submitrecords" :items-length="submitRecordsLength"
@@ -179,10 +179,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-.status-card {
-  border-radius: 16px !important;
-}
-
 .status-table {
   border-radius: 0 0 16px 16px;
 }

@@ -65,7 +65,7 @@ onMounted(async () => {
   <v-app-bar :elevation="2">
     <p style="font-size: 24px;margin-left: 20px;">{{ t('message.discussion') }}</p>
   </v-app-bar>
-  <v-card class="mx-auto my-8" width="85%" elevation="10" rounded="xl">
+  <v-card class="mx-auto my-8" width="85%" elevation="2" rounded="lg">
     <v-data-table-server :headers="headers" :items="discuss" :items-length="discussCount" :loading="loading"
       :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
       :items-per-page="itemsPerPage" v-model:page="page"

@@ -157,6 +157,7 @@ export default {
         copyFailed: "فشل النسخ",
         batchImportTestCases: "دفعة استيراد عينات اختبار الاستيراد",
         batchImportTip: "يتم تجميع كل صفين، ويتم إدخال الصف الأول وإخراج الصف الثاني، ويتم تخطي الأسطر الفارغة تلقائيًا.",
-        batchImportPlaceholder: "الإدخال 1\nالإخراج 1\nالإدخال 2\nالإخراج 2\n..."
+        batchImportPlaceholder: "الإدخال 1\nالإخراج 1\nالإدخال 2\nالإخراج 2\n...",
+        problemOfTheDay: "مشكلة اليوم"
     }
 }

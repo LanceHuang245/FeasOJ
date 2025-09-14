@@ -157,6 +157,7 @@ export default {
         copyFailed: "Erreur lors de la copie",
         batchImportTestCases: "Échantillons de test d'importation par lots",
         batchImportTip: "Toutes les deux lignes sont regroupées, la première ligne est introduite, la deuxième ligne est émise, et les lignes vides sont automatiquement ignorées.",
-        batchImportPlaceholder: "Entrée 1\nSortie 1\nEntrée 2\nSortie 2\n..."
+        batchImportPlaceholder: "Entrée 1\nSortie 1\nEntrée 2\nSortie 2\n...",
+        problemOfTheDay: "Problème du jour"
     }
 }

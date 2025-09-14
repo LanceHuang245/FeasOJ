@@ -74,7 +74,7 @@ func ConsumeJudgeResults() {
 					continue
 				}
 				// 发送 SSE 通知
-				if client, ok := handler.Clients[fmt.Sprint(result.UserID)]; ok {
+				if client, ok := handler.Clients[result.UserID]; ok {
 					lang := client.Lang
 					tag := language.Make(lang)
 					langBundle := localization.InitI18n()
@@ -86,6 +86,8 @@ func ConsumeJudgeResults() {
 						},
 					})
 					client.MessageChan <- message
+				} else {
+					log.Printf("[FeasOJ] No active SSE client found for UserID: '%s'. Notification dropped.", result.UserID)
 				}
 			}
 			errChan <- fmt.Errorf("[FeasOJ] RabbitMQ channel closed")
