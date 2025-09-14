@@ -5,8 +5,7 @@ English | [简体中文](README_CN.md)
     </a>
 </p>
 
-> FeasOJ [Backend](https://github.com/LanceHuang245/FeasOJ-Backend) and [JudgeCore](https://github.com/LanceHuang245/FeasOJ-JudgeCore) has been migrated to this project.\
-> FeasOJ is now undergoing comprehensive optimization and reconstruction. Please wait for the next stable version to be released and use it. Stay tuned!
+> FeasOJ [Backend](https://github.com/LanceHuang245/FeasOJ-Backend) and [JudgeCore](https://github.com/LanceHuang245/FeasOJ-JudgeCore) has been migrated to this project.
 
 # FeasOJ
 ### Project Description
@@ -15,7 +14,7 @@ FeasOJ is an online programming practice platform based on Vue and Golang, suppo
 ### Related Links
 [ImageGuard](https://github.com/LanceHuang245/ImageGuard)\
 [Profanity Detector](https://github.com/LanceHuang245/ProfanityDetector)\
-[Config Document](/docs/CONFIG_README_EN.md)\
+[Config Document](/docs/CONFIG_README_EN.md)
 
 ### Features
 - Multi-language support: Support multiple languages, including English, Spanish, French, Italian, Japanese, Simplified Chinese etc
@@ -108,3 +107,6 @@ More screenshots can be found in the [images](/images) folder.
 - [md-editor-v3](https://github.com/imzbf/md-editor-v3)
 - [vue-i18n](https://github.com/intlify/vue-i18n)
 - [axios](https://github.com/axios/axios)
+
+### License
+[EPL-2.0](LICENSE)

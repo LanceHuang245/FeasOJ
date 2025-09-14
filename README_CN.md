@@ -5,8 +5,7 @@
     </a>
 </p>
 
-> FeasOJ [Backend](https://github.com/LanceHuang245/FeasOJ-Backend) 和 [JudgeCore](https://github.com/LanceHuang245/FeasOJ-JudgeCore)现已迁移到该项目中！\
-> 现在FeasOJ正在进行全面优化、重构，请等待下一个正式版发布后使用，敬请期待！
+> FeasOJ [Backend](https://github.com/LanceHuang245/FeasOJ-Backend) 和 [JudgeCore](https://github.com/LanceHuang245/FeasOJ-JudgeCore)现已迁移到该项目中！
 
 # FeasOJ
 ### 项目简介
@@ -15,7 +14,7 @@ FeasOJ 是一个基于 Vue 和 Golang 的在线编程练习平台，支持多国
 ### 相关链接
 [ImageGuard](https://github.com/LanceHuang245/ImageGuard)\
 [Profanity Detector](https://github.com/LanceHuang245/ProfanityDetector)\
-[配置文件说明文档](/docs/CONFIG_README_CN.md)\
+[配置文件说明文档](/docs/CONFIG_README_CN.md)
 
 ### 项目特性
 - 多语言支持：支持多种语言，包括英语、西班牙语、法语、意大利语、日语、简体中文等
@@ -109,3 +108,6 @@ FeasOJ
 - [md-editor-v3](https://github.com/imzbf/md-editor-v3)
 - [vue-i18n](https://github.com/intlify/vue-i18n)
 - [axios](https://github.com/axios/axios)
+
+### 许可证
+[EPL-2.0](LICENSE)
