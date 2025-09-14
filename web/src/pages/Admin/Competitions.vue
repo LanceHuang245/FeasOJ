@@ -49,7 +49,7 @@ const competitionFields = reactive({
     subtitle: "",
     difficulty: 0,
     password: "",
-    crypto: false,
+    encrypted: false,
     is_visible: true,
     start_at: "",
     end_at: "",
@@ -121,7 +121,7 @@ const handleThemeChange = (event) => {
 // 字段检查
 const validateFields = () => {
     for (const key in competitionFields) {
-        if (key === "password" && !competitionFields.crypto || key === "announcement") {
+        if (key === "password" && !competitionFields.encrypted || key === "announcement") {
             continue;
         }
         if (competitionFields[key] === "" || (Array.isArray(competitionFields[key]) && competitionFields[key].length === 0)) {
@@ -148,7 +148,7 @@ const delCompetition = async () => {
 
 // 清除密码
 const clearPassword = () => {
-    if (!competitionFields.crypto) {
+    if (!competitionFields.encrypted) {
         competitionFields.password = '';
     }
 }
@@ -163,7 +163,7 @@ const createCompetition = async () => {
     competitionFields.subtitle = "";
     competitionFields.difficulty = 0;
     competitionFields.password = "";
-    competitionFields.crypto = false;
+    competitionFields.encrypted = false;
     competitionFields.is_visible = true;
     competitionFields.start_at = "";
     competitionFields.end_at = "";
@@ -441,10 +441,10 @@ onUnmounted(() => {
                                 color="primary" inset></v-switch>
                             <div style="margin-inline: 30px;"></div>
                             <!-- 启用密码 -->
-                            <v-switch v-model="competitionFields.crypto" :label="$t('message.withapwd')"
+                            <v-switch v-model="competitionFields.encrypted" :label="$t('message.withapwd')"
                                 color="primary" inset @change="clearPassword"></v-switch>
                         </v-row>
-                        <v-text-field v-if="competitionFields.crypto" v-model="competitionFields.password"
+                        <v-text-field v-if="competitionFields.encrypted" v-model="competitionFields.password"
                             :append-icon="showPwd ? 'mdi-eye' : 'mdi-eye-off'" variant="solo-filled"
                             :type="showPwd ? 'text' : 'password'" :label="$t('message.password')" counter
                             @click:append="showPwd = !showPwd"></v-text-field>

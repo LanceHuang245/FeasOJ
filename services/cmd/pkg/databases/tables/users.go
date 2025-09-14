@@ -21,7 +21,7 @@ type Users struct {
 	IsBan     bool      `gorm:"comment:是否被封禁;not null"`
 }
 
-// BeforeCreate 在创建记录前生成UUID
+// BeforeCreate 在创建记录前生成UUID(PostgreSQL专属)
 func (u *Users) BeforeCreate(tx *gorm.DB) (err error) {
 	u.Id = uuid.New().String()
 	return

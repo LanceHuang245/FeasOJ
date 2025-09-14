@@ -113,7 +113,7 @@ type AdminCompetitionInfoRequest struct {
 	Password     string    `json:"password"`
 	Status       int       `json:"status"`
 	Scored       bool      `json:"scored"`
-	Crypto       bool      `json:"crypto"`
+	Encrypted    bool      `json:"encrypted"`
 	Announcement string    `json:"announcement"`
 	IsVisible    bool      `json:"is_visible"`
 	StartAt      time.Time `json:"start_at"`
@@ -135,7 +135,7 @@ type CompetitionRequest struct {
 	Title        string    `json:"title"`
 	Subtitle     string    `json:"subtitle"`
 	Difficulty   int       `json:"difficulty"`
-	Crypto       bool      `json:"crypto"`
+	Encrypted    bool      `json:"encrypted"`
 	Announcement string    `json:"announcement"`
 	Status       int       `json:"status"`
 	StartAt      time.Time `json:"start_at"`

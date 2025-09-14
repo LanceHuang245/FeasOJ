@@ -20,7 +20,7 @@ export default {
         username: 'Имя пользователя',
         password: 'Пароль',
         confirmPwd: 'Подтвердите пароль',
-        withapwd: 'С паролем',
+        withapwd: 'Шифровать',
         vCode: 'Код подтверждения',
         profile: 'Профиль',
         synopsis: 'Описание',

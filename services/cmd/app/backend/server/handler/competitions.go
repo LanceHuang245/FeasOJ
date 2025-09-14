@@ -2,6 +2,7 @@ package handler
 
 import (
 	"FeasOJ/app/backend/internal/global"
+	"FeasOJ/pkg/auth"
 	"FeasOJ/pkg/databases/repository"
 	"FeasOJ/pkg/databases/tables"
 	"net/http"
@@ -37,13 +38,13 @@ func JoinCompetitionWithPassword(c *gin.Context) {
 	username, _ := url.QueryUnescape(encodedUsername)
 	competitionId, _ := strconv.Atoi(c.Param("id"))
 	competitionPwd := c.Query("password")
-	uid := repository.SelectUserInfo(global.Db, username).Id
-	if repository.SelectUserCompetition(global.Db, uid, competitionId) {
+	userId := repository.SelectUserInfo(global.Db, username).Id
+	if repository.SelectUserCompetition(global.Db, userId, competitionId) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "userAlreadyExists")})
 		return
 	}
-	if repository.SelectCompetitionInfoAdminByCid(global.Db, competitionId).Password == competitionPwd {
-		if repository.AddUserCompetition(global.Db, uid, competitionId) == nil {
+	if auth.VerifyPassword(competitionPwd, repository.SelectCompetitionInfoAdminByCid(global.Db, competitionId).Password) {
+		if repository.AddUserCompetition(global.Db, userId, competitionId) == nil {
 			c.JSON(http.StatusOK, gin.H{"message": GetMessage(c, "success")})
 			return
 		}

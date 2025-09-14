@@ -4,6 +4,7 @@ import (
 	"FeasOJ/app/backend/internal/config"
 	"FeasOJ/app/backend/internal/global"
 	"FeasOJ/app/backend/internal/utils"
+	"FeasOJ/pkg/auth"
 	"FeasOJ/pkg/databases/repository"
 	"FeasOJ/pkg/structs"
 	"fmt"
@@ -73,7 +74,7 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "captchaError")})
 		return
 	}
-	success := repository.Register(global.Db, req.Username, utils.EncryptPassword(req.Password), req.Email, 0)
+	success := repository.Register(global.Db, req.Username, auth.EncryptPassword(req.Password), req.Email, 0)
 
 	// 计数键
 	var counterKey string
@@ -142,7 +143,7 @@ func Login(c *gin.Context) {
 	}
 
 	// 验证密码
-	ok := utils.VerifyPassword(password, storedPwd)
+	ok := auth.VerifyPassword(password, storedPwd)
 	// 统计 成功/失败
 	incrLoginCounter(rdb, clientIP, ok)
 
@@ -263,7 +264,7 @@ func UpdatePassword(c *gin.Context) {
 	}
 
 	// 更新密码
-	success := repository.UpdatePassword(global.Db, req.Email, utils.EncryptPassword(req.NewPassword))
+	success := repository.UpdatePassword(global.Db, req.Email, auth.EncryptPassword(req.NewPassword))
 	if success {
 		c.JSON(http.StatusOK, gin.H{"message": GetMessage(c, "success")})
 	} else {

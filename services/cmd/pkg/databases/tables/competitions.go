@@ -10,7 +10,7 @@ type Competitions struct {
 	Difficulty   int       `gorm:"comment:难度(0：简单，1:中等，2:困难);not null"`
 	Password     string    `gorm:"comment:密码;"`
 	Scored       bool      `gorm:"comment:是否已计分;not null"`
-	Crypto       bool      `gorm:"comment:是否加密;not null"`
+	Encrypted    bool      `gorm:"comment:是否加密;not null"`
 	IsVisible    bool      `gorm:"comment:是否可见;not null"`
 	Status       int       `gorm:"comment:竞赛状态(0:未开始，1:正在进行中，2:已结束);"`
 	Announcement string    `gorm:"comment:公告;"`

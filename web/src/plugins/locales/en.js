@@ -20,7 +20,7 @@ export default {
         username: 'Username',
         password: 'Password',
         confirmPwd: 'Confirm Password',
-        withapwd: 'With a password',
+        withapwd: 'Encrypt',
         vCode: 'Verification Code',
         profile: 'Profile',
         synopsis: 'Synopsis',

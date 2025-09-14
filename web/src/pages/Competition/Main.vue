@@ -68,7 +68,7 @@ const selectCompetition = async (contest) => {
         if (resp.data.isIn) {
             await router.push({path: `/competitions/${selectedId.value}`})
         } else {
-            contest.crypto ? withPwdDialog.value = true : noPwdDialog.value = true;
+            contest.encrypted ? withPwdDialog.value = true : noPwdDialog.value = true;
         }
     } catch (error) {
         showAlert(error.response.data.message, '')

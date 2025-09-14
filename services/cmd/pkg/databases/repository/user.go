@@ -1,11 +1,11 @@
 package repository
 
 import (
+	"FeasOJ/pkg/auth"
 	"FeasOJ/pkg/databases/tables"
 	"FeasOJ/pkg/structs"
 	"time"
 
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -25,7 +25,7 @@ func SelectUser(db *gorm.DB, username string) tables.Users {
 
 // 管理员更新用户信息
 func UpdateUser(db *gorm.DB, Uid int, field string, value interface{}) bool {
-	return db.Table("users").Where("uid = ?", Uid).Update(field, value).Error == nil
+	return db.Table("users").Where("id = ?", Uid).Update(field, value).Error == nil
 }
 
 // 封禁/解禁用户
@@ -78,10 +78,8 @@ func SelectUserByEmail(db *gorm.DB, email string) tables.Users {
 
 // 根据email修改密码
 func UpdatePassword(db *gorm.DB, email, newpassword string) bool {
-	tokensecret := uuid.New().String()
 	err := db.Model(&tables.Users{}).
-		Where("email = ?", email).Update("password", newpassword).
-		Update("token_secret", tokensecret).Error
+		Where("email = ?", email).Update("password", auth.EncryptPassword(newpassword)).Error
 	return err == nil
 }
 

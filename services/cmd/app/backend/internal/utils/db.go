@@ -3,6 +3,7 @@ package utils
 import (
 	"FeasOJ/app/backend/internal/config"
 	"FeasOJ/app/backend/internal/global"
+	"FeasOJ/pkg/auth"
 	"FeasOJ/pkg/databases/tables"
 	"fmt"
 	"log"
@@ -26,7 +27,7 @@ func InitAdminAccount() (string, string, string, int) {
 	fmt.Print("[FeasOJ] Email: ")
 	fmt.Scanln(&adminEmail)
 
-	return adminUsername, EncryptPassword(adminPassword), adminEmail, 1
+	return adminUsername, auth.EncryptPassword(adminPassword), adminEmail, 1
 }
 
 // 创建表
@@ -46,39 +47,6 @@ func InitTable() bool {
 	if err != nil {
 		return false
 	}
-
-	// 检查数据库类型，只有MySQL才需要创建触发器
-	if config.GlobalConfig.Database.Type == "mysql" {
-		// 检查触发器是否已存在
-		var count int64
-		global.Db.Raw("SELECT COUNT(*) FROM information_schema.triggers WHERE trigger_name = 'users_uuid_trigger' AND trigger_schema = DATABASE()").Scan(&count)
-
-		// 如果触发器不存在，则创建触发器
-		if count == 0 {
-			// 为users表创建UUID生成触发器
-			triggerSQL := `
-			CREATE TRIGGER users_uuid_trigger 
-			BEFORE INSERT ON users 
-			FOR EACH ROW 
-			BEGIN 
-				IF NEW.id IS NULL OR NEW.id = '' THEN 
-					SET NEW.id = UUID(); 
-				END IF; 
-			END;
-			`
-
-			// 执行创建触发器的SQL语句
-			err = global.Db.Exec(triggerSQL).Error
-			if err != nil {
-				log.Printf("[FeasOJ] Failed to create UUID trigger for users table: %v", err)
-				return false
-			}
-			log.Println("[FeasOJ] UUID trigger for users table created successfully")
-		} else {
-			log.Println("[FeasOJ] UUID trigger for users table already exists")
-		}
-	}
-
 	return true
 }
 

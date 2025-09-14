@@ -2,6 +2,7 @@ package handler
 
 import (
 	"FeasOJ/app/backend/internal/global"
+	"FeasOJ/pkg/auth"
 	"FeasOJ/pkg/databases/repository"
 	"FeasOJ/pkg/databases/tables"
 	"FeasOJ/pkg/structs"
@@ -108,6 +109,9 @@ func UpdateCompetitionInfo(c *gin.Context) {
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "invalidrequest")})
 		return
+	}
+	if req.Encrypted {
+		req.Password = auth.EncryptPassword(req.Password)
 	}
 
 	// 更新竞赛信息

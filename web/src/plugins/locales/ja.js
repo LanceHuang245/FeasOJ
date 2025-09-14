@@ -19,7 +19,7 @@ export default {
         usernameoremail: 'ユーザー名/メール',
         username: 'ユーザー名',
         password: 'パスワード',
-        withapwd: 'パスワード付き',
+        withapwd: '暗号化',
         vCode: '確認コード',
         confirmPwd: 'パスワード確認',
         profile: 'プロフィール',

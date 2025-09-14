@@ -19,7 +19,7 @@ export default {
         usernameoremail: 'Nome utente/Email',
         username: 'Nome utente',
         password: 'Password',
-        withapwd: 'Con password',
+        withapwd: 'Crittografare',
         confirmPwd: 'Conferma password',
         vCode: 'Codice di verifica',
         profile: 'Profilo',
