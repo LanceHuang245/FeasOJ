@@ -67,9 +67,11 @@ FeasOJ
 1. 克隆此库
 2. 在项目目录下执行`./scripts/deps_update.sh` 更新后端与JudgeCore的依赖
 3. 确保Docker Desktop(Windows/MacOS)或Docker Engine已启动
-4. 在`web`目录下运行 `npm install` 安装依赖项
-5. 配置`/web/src/utils/axios.js` 中的 `apiUrl` 为你FeasOJ-Bakcend服务器地址
-6. 运行 `npm run dev` 启动前端服务器
+4. 在`services/cmd/app/backend`和`services/cmd/app/judgecore`目录下分别运行`go run main.go`启动后端服务。其中，你需要先启动JudgeCore服务，才能启动Backend服务
+5. 第一次启动后端服务时会分别在目录下生成`config.toml`，您需要对其进行修改后再次进行启动
+6. 在`web`目录下运行 `npm install` 安装依赖项
+7. 配置`/web/src/utils/axios.js` 中的 `apiUrl` 为你FeasOJ-Bakcend服务器地址
+8. 运行 `npm run dev` 启动前端服务器
 
 ### 注意
 这是我第一次用Vue + Golang写大项目，所以代码会一坨，不过我会一直去改进它！
@@ -95,7 +97,6 @@ FeasOJ
 
 ### 项目截图
 ![Main](/images/Main.png)
-![Login](/images/Login.png)
 ![Problem](/images/Problem.png)
 ![Profile](/images/Profile.png)
 更多图片可在 [images](/images) 中查看。

@@ -63,11 +63,14 @@ FeasOJ
 - The lastest version of Chromium or Firefox
 
 ### How to run
-1. Clone repository
-2. Run `./scripts/deps_update.sh` to update backend and judgecore dependencies
-3. Run `npm install` Install dependencies
-4. Config `/web/src/utils/axios.js` to your FeasOJ-Backend address
-5. Run `npm run dev` to start the front-end server
+1. Clone this repository
+2. Run `./scripts/deps_update.sh` under the project directory to update dependencies for the backend and JudgeCore
+3. Ensure Docker Desktop (Windows/MacOS) or Docker Engine is started
+4. Run `go run main.go` in the `services/cmd/app/backend` and `services/cmd/app/judgecore` directories respectively to start the backend service. Note that you must start the JudgeCore service before the Backend service can be started
+5. On the first start of the backend service, `config.toml` will be generated in the directory. You will need to modify it and restart the service
+6. Run `npm install` under the `web` directory to install dependencies
+7. Configure the `apiUrl` in `/web/src/utils/axios.js` to the address of your FeasOJ-Backend server
+8. Run `npm run dev` to start the frontend server
 
 ### Notice
 This is the first time I've written a big project with Vue + Golang, so the code is going to be terrible, but I'll keep going to improve it!
@@ -93,7 +96,6 @@ If you want to contribute adding new language or improving existing language, fo
 
 ### Screenshots
 ![Main](/images/Main.png)
-![Login](/images/Login.png)
 ![Problem](/images/Problem.png)
 ![Profile](/images/Profile.png)
 More screenshots can be found in the [images](/images) folder.
