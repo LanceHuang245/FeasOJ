@@ -84,12 +84,22 @@ func (p *JudgePool) Shutdown() {
 	p.mutex.Unlock()
 
 	log.Println("[FeasOJ] Shutting down container pool...")
+	var wg sync.WaitGroup
+
 	p.containerIDs.Range(func(key, value interface{}) bool {
 		containerID := key.(string)
-		TerminateContainer(containerID)
-		log.Printf("[FeasOJ] Terminated container %s", containerID)
+		wg.Add(1)
+		go func(id string) {
+			defer wg.Done()
+			TerminateContainer(id)
+			log.Printf("[FeasOJ] Terminated container %s", id)
+		}(containerID)
 		return true
 	})
+
+	// 等待所有容器关闭完成
+	wg.Wait()
+	log.Println("[FeasOJ] All containers have been terminated")
 }
 
 // resetContainer 用于在归还容器到池中前清理所有残留的任务目录
