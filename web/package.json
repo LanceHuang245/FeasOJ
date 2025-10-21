@@ -30,7 +30,7 @@
     "@mdi/font": "^7.4.47",
     "@vitejs/plugin-vue": "^6.0.1",
     "esbuild": "^0.25.11",
-    "vite": "^7.1.10",
+    "vite": "^7.1.11",
     "vite-plugin-compression": "^0.5.1"
   }
 }
