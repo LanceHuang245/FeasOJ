@@ -5,7 +5,7 @@ cert_path = "./certificate/fullchain.pem"
 key_path = "./certificate/privkey.key"
 
 [rabbitmq]
-host = "amqp://admin:Sing5200@127.0.0.1:5672/"
+host = "amqp://admin:password@127.0.0.1:5672/"
 
 [consul]
 host = "localhost:8500"
