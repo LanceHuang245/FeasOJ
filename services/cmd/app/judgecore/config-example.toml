@@ -1,0 +1,29 @@
+[consul]
+host = "127.0.0.1:8500"
+service_name = "JudgeCore"
+service_id = "JudgeCore-1"
+
+[rabbitmq]
+host = "amqp://admin:Sing5200@127.0.0.1:5672/"
+
+[server]
+host = "127.0.0.1"
+port = 8082
+enable_https = false
+cert_path = "./certificate/fullchain.pem"
+key_path = "./certificate/privkey.key"
+
+[sandbox]
+memory = 2147483648
+nano_cpus = 0.5
+cpu_shares = 1024
+max_concurrent = 5
+
+[database]
+type = "mysql"
+host = "localhost"
+port = 3306
+name = "FeasOJ"
+user = "root"
+password = "password"
+ssl_mode = "disable"

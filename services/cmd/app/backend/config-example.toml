@@ -1,0 +1,42 @@
+[server]
+host = "127.0.0.1:8081"
+enable_https = false
+cert_path = "./certificate/fullchain.pem"
+key_path = "./certificate/privkey.key"
+
+[rabbitmq]
+host = "amqp://admin:Sing5200@127.0.0.1:5672/"
+
+[consul]
+host = "localhost:8500"
+
+[features]
+image_guard_enabled = false
+profanity_detector_enabled = false
+
+[database]
+type = "mysql"
+host = "localhost"
+port = 3306
+name = "FeasOJ"
+user = "root"
+password = "password"
+ssl_mode = "disable"
+max_open_conns = 240
+max_idle_conns = 100
+max_life_time = 32
+
+[redis]
+host = "localhost:6379"
+password = ""
+
+[mail]
+host = "smtp.qq.com"
+port = 465
+user = "test.test@qq.com"
+password = "smtp password"
+
+[jwt]
+signing_method = "HS256"
+token_expire_hours = 720
+secret_key = "jwtsecretkey12313"
