@@ -24,13 +24,13 @@
     "vue-i18n": "^11.1.12",
     "vue-router": "^4.6.3",
     "vue3-ace-editor": "^2.2.4",
-    "vuetify": "^3.10.5"
+    "vuetify": "^3.10.7"
   },
   "devDependencies": {
     "@mdi/font": "^7.4.47",
     "@vitejs/plugin-vue": "^6.0.1",
     "esbuild": "^0.25.11",
-    "vite": "^7.1.11",
+    "vite": "^7.1.12",
     "vite-plugin-compression": "^0.5.1"
   }
 }
