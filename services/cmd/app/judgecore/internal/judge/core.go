@@ -60,17 +60,19 @@ func BuildImage(currentDir string) bool {
 	return true
 }
 
-// CompileAndRun 编译并运行代码
+// CompileAndRun 编译并运行代�?
 func CompileAndRun(filename string, containerID string, problem *tables.Problems, testCases []*structs.TestCaseRequest) string {
 	taskDir := fmt.Sprintf("/workspace/task_%d", time.Now().UnixNano())
 
 	mkdirCmd := exec.Command("docker", "exec", containerID, "mkdir", "-p", taskDir)
 	if err := mkdirCmd.Run(); err != nil {
+		log.Printf("[FeasOJ] Create task dir %s error: %v", taskDir, err)
 		return global.SystemError
 	}
 
 	copyCmd := exec.Command("docker", "exec", containerID, "cp", fmt.Sprintf("/workspace/%s", filename), taskDir)
 	if err := copyCmd.Run(); err != nil {
+		log.Printf("[FeasOJ] Copy file %s to %s error: %v", filename, taskDir, err)
 		return global.SystemError
 	}
 
@@ -96,6 +98,7 @@ func CompileAndRun(filename string, containerID string, problem *tables.Problems
 		renameCmd := exec.Command("docker", "exec", containerID, "sh", "-c",
 			fmt.Sprintf("mv %s/%s %s/Main.java", taskDir, filename, taskDir))
 		if err := renameCmd.Run(); err != nil {
+			log.Printf("[FeasOJ] Rename Java file %s error: %v", filename, err)
 			return global.CompileError
 		}
 		compileCmd = exec.Command("docker", "exec", containerID, "sh", "-c",
@@ -111,20 +114,26 @@ func CompileAndRun(filename string, containerID string, problem *tables.Problems
 		exeName := strings.TrimSuffix(filename, ".pas")
 		compileCmd = exec.Command("docker", "exec", containerID, "sh", "-c",
 			fmt.Sprintf("fpc -v0 -O2 %s/%s -o%s/%s", taskDir, filename, taskDir, exeName))
+	case ".go":
+		compileCmd = exec.Command("docker", "exec", containerID, "sh", "-c",
+			fmt.Sprintf("go build -o %s/%s.out %s/%s", taskDir, filename, taskDir, filename))
 	}
 
 	if compileCmd != nil {
-		if err := compileCmd.Run(); err != nil {
+		compileOutput, err := compileCmd.CombinedOutput()
+		if err != nil {
+			log.Printf("[FeasOJ] Compile error for %s: %v, output=%s", filename, err, truncateForLog(string(compileOutput), 2000))
 			return global.CompileError
 		}
 	}
 
-	for _, testCase := range testCases {
+	for i, testCase := range testCases {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeLimitSeconds+1)*time.Second)
 		defer cancel()
 
 		cmdStr := buildRunCommand(ext, filename, taskDir, timeLimitSeconds, memoryLimitKB)
 		if cmdStr == "" {
+			log.Printf("[FeasOJ] Unsupported extension %s for %s", ext, filename)
 			return global.SystemError
 		}
 
@@ -133,6 +142,7 @@ func CompileAndRun(filename string, containerID string, problem *tables.Problems
 		output, err := runCmd.CombinedOutput()
 
 		if ctx.Err() == context.DeadlineExceeded {
+			log.Printf("[FeasOJ] Time limit exceeded: file=%s, case=%d", filename, i+1)
 			return global.TimeLimitExceeded
 		}
 
@@ -141,11 +151,14 @@ func CompileAndRun(filename string, containerID string, problem *tables.Problems
 			if errors.As(err, &exitErr) {
 				switch exitErr.ExitCode() {
 				case 124: // timeout 触发
+					log.Printf("[FeasOJ] Time limit exceeded (timeout): file=%s, case=%d, output=%s", filename, i+1, truncateForLog(string(output), 2000))
 					return global.TimeLimitExceeded
-				case 137: // SIGKILL, 可能是内存超限
+				case 137: // SIGKILL, 可能是超出内存限制
+					log.Printf("[FeasOJ] Memory limit exceeded: file=%s, case=%d, output=%s", filename, i+1, truncateForLog(string(output), 2000))
 					return global.MemoryLimitExceeded
 				}
 			}
+			log.Printf("[FeasOJ] Runtime error: file=%s, case=%d, err=%v, output=%s", filename, i+1, err, truncateForLog(string(output), 2000))
 			return global.RuntimeError
 		}
 
@@ -153,6 +166,7 @@ func CompileAndRun(filename string, containerID string, problem *tables.Problems
 		actualOutput := strings.TrimSpace(string(output))
 
 		if actualOutput != expectedOutput {
+			log.Printf("[FeasOJ] Wrong answer: file=%s, case=%d, expected=%s, actual=%s", filename, i+1, truncateForLog(expectedOutput, 2000), truncateForLog(actualOutput, 2000))
 			return global.WrongAnswer
 		}
 	}
@@ -232,7 +246,18 @@ func buildRunCommand(ext, filename, taskDir string, timeLimit, memoryLimit int) 
 		exeName := strings.TrimSuffix(filename, ".pas")
 		return fmt.Sprintf("ulimit -v %d && timeout -s SIGKILL %ds %s/%s",
 			memoryLimit, timeLimit, taskDir, exeName)
+	case ".go":
+		gomemlimit := max(memoryLimit*1024*80/100, 32*1024*1024) // 80% 限制，最小 32MB
+		return fmt.Sprintf("GOMEMLIMIT=%d timeout -s SIGKILL %ds %s/%s.out",
+			gomemlimit, timeLimit, taskDir, filename)
 	default:
 		return ""
 	}
+}
+
+func truncateForLog(s string, max int) string {
+	if max <= 0 || len(s) <= max {
+		return s
+	}
+	return s[:max] + "...(truncated)"
 }

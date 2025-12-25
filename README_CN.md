@@ -18,7 +18,7 @@ FeasOJ 是一个基于 Vue 和 Golang 的在线编程练习平台，支持多国
 
 ### 项目特性
 - 多语言支持：支持多种语言，包括英语、西班牙语、法语、意大利语、日语、简体中文等
-- 多编程语言支持：C++、Java、Python、Rust、PHP、Pascal
+- 多编程语言支持：C++、Java、Python、Rust、PHP、Pascal、Golang
 - 用户认证：支持用户注册、登录、注销等功能
 - 题目管理：支持题目上传、编辑、删除等功能
 - 讨论区：支持用户发表、回复、删除评论等功能
@@ -55,7 +55,7 @@ FeasOJ
 
 ### 环境
 - Vue 3
-- Golang 1.25.1
+- Golang 1.25.5
 - MySQL/PostgreSQL
 - Docker
 - Redis

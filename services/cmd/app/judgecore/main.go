@@ -50,9 +50,9 @@ func main() {
 	// 初始化数据库
 	db, err := utils.ConnectSql(cfg.Database)
 	if err != nil {
-		log.Fatalf("[FeasOJ] MySQL initialization failed: %v", err)
+		log.Fatalf("[FeasOJ] Database initialization failed: %v", err)
 	}
-	log.Println("[FeasOJ] MySQL initialization complete")
+	log.Println("[FeasOJ] Database initialization complete")
 
 	// 初始化Consul客户端
 	consulConfig := api.DefaultConfig()
