@@ -6,6 +6,7 @@ import modePy from "ace-builds/src-noconflict/mode-python?url";
 import modeRust from "ace-builds/src-noconflict/mode-rust?url";
 import modePHP from "ace-builds/src-noconflict/mode-php?url";
 import modePascal from "ace-builds/src-noconflict/mode-pascal?url";
+import modeGolang from "ace-builds/src-noconflict/mode-golang?url";
 import { config } from "ace-builds";
 
 // Theme
@@ -33,6 +34,7 @@ config.setModuleUrl("ace/mode/python", modePy);
 config.setModuleUrl("ace/mode/rust", modeRust);
 config.setModuleUrl("ace/mode/php", modePHP);
 config.setModuleUrl("ace/mode/pascal", modePascal);
+config.setModuleUrl("ace/mode/golang", modeGolang);
 
 export default {
   components: {

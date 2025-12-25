@@ -107,7 +107,6 @@ const deleteDis = async () => {
 // 确认删除讨论
 const showDelDialog = (isComment, commentID) => {
     checkDialog.value = true;
-    console.log(commentID);
     if (isComment && commentID != null) {
         isDelComment.value = true;
         deleteCommentID.value = commentID;

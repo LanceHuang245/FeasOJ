@@ -10,6 +10,12 @@ import { MdPreview } from "md-editor-v3";
 import { useI18n } from "vue-i18n";
 import { difficultyColor, difficultyLang } from "../../utils/dynamic_styles";
 import { getMdPreviewTheme } from "../../utils/theme";
+import {
+  DEFAULT_LANGUAGE,
+  getFileExtension,
+  getAceLang,
+  getLanguageOptions
+} from "../../utils/language_constants";
 import "md-editor-v3/lib/preview.css";
 
 const { t } = useI18n();
@@ -20,7 +26,7 @@ const route = useRoute();
 const loading = ref(true);
 const problemInfo = ref({});
 const content = ref("");
-const lang = ref("c_cpp"); // 初始选中语言
+const lang = ref(DEFAULT_LANGUAGE);
 const previewTheme = ref(getMdPreviewTheme());
 
 // Ace Editor字体
@@ -32,15 +38,8 @@ const stepFontSize = 1;
 // Ace Editor主题
 const theme = ref("chrome");
 
-// 支持的语言
-const langFileExtension = {
-  java: "java",
-  c_cpp: "cpp",
-  python: "py",
-  rust: "rs",
-  php: "php",
-  pascal: "pas",
-};
+// 生成组件的列表
+const languageOptions = computed(() => getLanguageOptions());
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value);
@@ -52,14 +51,14 @@ const handleThemeChange = (event) => {
 
 // 代码模板
 const templates = {
-  java: `
+  Java: `
 // Please don't edit the 'Main' class name. 请不要编辑 'Main' 类名。
 public class Main {
     public static void main(String[] args) {
         
     }
 }`,
-  c_cpp: `#include <iostream>
+  "C++": `#include <iostream>
             
 using namespace std;
 
@@ -67,19 +66,27 @@ int main() {
     
     return 0;
 }`,
-  python: ``,
-  rust: `
+  Python: ``,
+  Rust: `
 
 fn main() {
     
 }`,
-  php: `<?php
+  Php: `<?php
 
 ?>`,
-  pascal: `{ O2 Enabled / O2已启用 }
+  Pascal: `{ O2 Enabled / O2已启用 }
 begin
-    
+
 end.`,
+  Golang: `
+package main
+
+import "fmt"
+
+func main() {
+
+}`,
 };
 
 // 代码上传
@@ -89,7 +96,7 @@ const uploadContentAsFile = async () => {
     return;
   }
   const blob = new Blob([content.value], { type: "text/plain" });
-  const codefile = new File([blob], `main.${langFileExtension[lang.value]}`, {
+  const codefile = new File([blob], `main.${getFileExtension(lang.value)}`, {
     type: "text/plain",
   });
   try {
@@ -105,7 +112,7 @@ const uploadContentAsFile = async () => {
 
 // 应用用户偏好语言
 const applyPreferredLanguage = () => {
-  const savedPreferredLanguage = localStorage.getItem('preferredLanguage') || 'c_cpp';
+  const savedPreferredLanguage = localStorage.getItem('preferredLanguage') || DEFAULT_LANGUAGE;
   lang.value = savedPreferredLanguage;
   content.value = templates[savedPreferredLanguage];
 };
@@ -256,14 +263,8 @@ onUnmounted(() => {
                 <v-card-text class="pa-4">
                   <v-row>
                     <v-col cols="12" sm="6">
-                      <v-select :label="$t('message.lang')" v-model="lang" :items="[
-                        'c_cpp',
-                        'java',
-                        'pascal',
-                        'python',
-                        'php',
-                        'rust',
-                      ]" variant="outlined" density="compact" hide-details></v-select>
+                      <v-select :label="$t('message.lang')" v-model="lang" :items="languageOptions" variant="outlined"
+                        density="compact" hide-details></v-select>
                     </v-col>
                     <v-col cols="12" sm="6">
                       <v-select :label="$t('message.editor_theme')" v-model="theme" :items="[
@@ -303,7 +304,7 @@ onUnmounted(() => {
 
               <!-- 代码编辑器 -->
               <div class="editor-wrapper mt-4">
-                <v-ace-editor v-model:value="content" :theme="theme" :lang="lang"
+                <v-ace-editor v-model:value="content" :theme="theme" :lang="getAceLang(lang)"
                   :style="`height: 650px; font-size: ${fontSize}px; border-radius: 8px;`" />
               </div>
             </v-card-text>

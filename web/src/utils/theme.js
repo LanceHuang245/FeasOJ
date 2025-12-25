@@ -1,5 +1,3 @@
-import { useTheme } from 'vuetify';
-
 // 主题管理工具
 export const initTheme = () => {
   const savedTheme = localStorage.getItem('theme') || 'system';

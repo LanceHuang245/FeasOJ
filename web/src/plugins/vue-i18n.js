@@ -9,6 +9,7 @@ import pt from "./locales/pt.js";
 import ru from "./locales/ru.js";
 import zh_CN from "./locales/zh_CN.js";
 import zh_TW from "./locales/zh_TW.js";
+import { DEFAULT_LOCALE } from "../utils/locale_constants";
 
 const messages = {
   ar,
@@ -25,7 +26,7 @@ const messages = {
 
 export const i18n = createI18n({
   legacy: false,
-  locale: 'en',
-  fallbackLocale: 'en',
+  locale: DEFAULT_LOCALE,
+  fallbackLocale: DEFAULT_LOCALE,
   messages,
 })

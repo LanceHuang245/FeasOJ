@@ -1,2 +1,2 @@
-export const ojVersion = "v1.2.4"
+export const ojVersion = "v1.2.5"
 export const ojAuthor = "Lance Huang"

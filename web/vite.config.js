@@ -5,6 +5,15 @@ import compression from 'vite-plugin-compression';
 
 export default defineConfig({
   base: './',
+  server: {
+    cors: true,
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:37882',
+        changeOrigin: true,
+      },
+    },
+  },
   plugins: [
     compression({
       algorithm: 'brotliCompress',

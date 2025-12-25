@@ -3,28 +3,25 @@ import { ref, onMounted, watch, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useTheme } from 'vuetify';
 import { ojAuthor, ojVersion } from '../utils/oj_constants';
+import {
+  getLanguageOptionsWithIcon,
+  DEFAULT_LANGUAGE
+} from '../utils/language_constants';
+import {
+  getLocaleOptions,
+  DEFAULT_LOCALE
+} from '../utils/locale_constants';
 
 const { t, locale } = useI18n();
 const vuetifyTheme = useTheme();
 
-// TODO: 每次增加语言时，需要将语言添加到下方
-const langs = ref([
-  { title: "بالعربية", value: "ar" },
-  { title: "English", value: "en" },
-  { title: "Español", value: "es" },
-  { title: "Français", value: "fr" },
-  { title: "Italiano", value: "it" },
-  { title: "日本語", value: "ja" },
-  { title: "Português", value: "pt" },
-  { title: "Русский", value: "ru" },
-  { title: "简体中文", value: "zh_CN" },
-  { title: "繁體中文", value: "zh_TW" },
-]);
+// 使用共享的多语言常量
+const langs = ref(getLocaleOptions());
 
 const currentLocale = ref(locale.value);
 
 const theme = ref('system');
-const preferredLanguage = ref('c_cpp');
+const preferredLanguage = ref(DEFAULT_LANGUAGE);
 const showAboutDialog = ref(false);
 
 const themes = [
@@ -33,14 +30,8 @@ const themes = [
   { title: t('message.system'), value: 'system', icon: 'mdi-monitor' }
 ];
 
-const languages = [
-  { title: t('message.c_cpp'), value: 'c_cpp', icon: 'mdi-language-cpp' },
-  { title: t('message.java'), value: 'java', icon: 'mdi-language-java' },
-  { title: t('message.python'), value: 'python', icon: 'mdi-language-python' },
-  { title: t('message.rust'), value: 'rust', icon: 'mdi-language-rust' },
-  { title: t('message.php'), value: 'php', icon: 'mdi-language-php' },
-  { title: t('message.pascal'), value: 'pascal', icon: 'mdi-language-pascal' }
-];
+// 使用共享的语言常量（编程语言名称不需要翻译）
+const languages = getLanguageOptionsWithIcon();
 
 const applyThemeHandler = (selectedTheme) => {
   if (selectedTheme === 'system') {
@@ -75,8 +66,8 @@ watch(locale, (val) => {
 
 onMounted(() => {
   theme.value = localStorage.getItem('theme') || 'system';
-  locale.value = localStorage.getItem('language') || 'en';
-  preferredLanguage.value = localStorage.getItem('preferredLanguage') || 'c_cpp';
+  locale.value = localStorage.getItem('language') || DEFAULT_LOCALE;
+  preferredLanguage.value = localStorage.getItem('preferredLanguage') || DEFAULT_LANGUAGE;
   currentLocale.value = locale.value;
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', handleSystemThemeChange);
 });
@@ -99,12 +90,7 @@ watch(locale, (val) => {
   themes[0].title = t('message.light');
   themes[1].title = t('message.dark');
   themes[2].title = t('message.system');
-  languages[0].title = t('message.c_cpp');
-  languages[1].title = t('message.java');
-  languages[2].title = t('message.python');
-  languages[3].title = t('message.rust');
-  languages[4].title = t('message.php');
-  languages[5].title = t('message.pascal');
+  // 编程语言名称不需要翻译，无需动态更新
 });
 </script>
 
@@ -142,8 +128,8 @@ watch(locale, (val) => {
         <v-list-item-title class="settings-item-title">{{ t('message.preferredLanguage') }}</v-list-item-title>
         <template v-slot:append>
           <div class="select-wrapper" @click.stop>
-            <v-select v-model="preferredLanguage" :items="languages" item-title="title" item-value="value" variant="outlined"
-              density="compact" hide-details @update:model-value="applyLanguageHandler">
+            <v-select v-model="preferredLanguage" :items="languages" item-title="title" item-value="value"
+              variant="outlined" density="compact" hide-details @update:model-value="applyLanguageHandler">
               <template v-slot:item="{ props, item }">
                 <v-list-item v-bind="props" class="language-select-item">
                 </v-list-item>
