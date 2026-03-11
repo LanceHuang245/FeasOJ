@@ -75,8 +75,10 @@ onMounted(async () => {
 <template>
   <v-app-bar :elevation="2">
     <v-col class="align-left-solo">
-      <p style="font-size: 24px;">{{ $t('message.rank') }}</p>
-      <p style="font-size: 12px;">{{ $t('message.refresh5m') }}</p>
+      <div class="page-heading">
+        <p class="page-title">{{ $t('message.rank') }}</p>
+        <p class="page-subtitle">{{ $t('message.refresh5m') }}</p>
+      </div>
     </v-col>
   </v-app-bar>
 
@@ -187,7 +189,27 @@ onMounted(async () => {
 
 .align-left-solo {
   text-align: left;
-  margin-left: 10px;
+  margin-left: 20px;
+}
+
+.page-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.15;
+  font-weight: 700;
+}
+
+.page-subtitle {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.2;
+  color: rgba(var(--v-theme-on-surface), 0.68);
 }
 
 /* 响应式设计 */
