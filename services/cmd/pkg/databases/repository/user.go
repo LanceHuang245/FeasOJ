@@ -24,18 +24,18 @@ func SelectUser(db *gorm.DB, username string) tables.Users {
 }
 
 // 管理员更新用户信息
-func UpdateUser(db *gorm.DB, Uid int, field string, value interface{}) bool {
-	return db.Table("users").Where("id = ?", Uid).Update(field, value).Error == nil
+func UpdateUser(db *gorm.DB, userId string, field string, value interface{}) bool {
+	return db.Table("users").Where("id = ?", userId).Update(field, value).Error == nil
 }
 
 // 封禁/解禁用户
-func ChangeUserStatus(db *gorm.DB, userId int, status bool) bool {
+func ChangeUserStatus(db *gorm.DB, userId string, status bool) bool {
 	return UpdateUser(db, userId, "is_ban", status)
 }
 
 // 晋升为管理员
-func ChangePrivilege(db *gorm.DB, userId, action int) bool {
-	return UpdateUser(db, userId, "role", action)
+func ChangePrivilege(db *gorm.DB, userId string, role int) bool {
+	return UpdateUser(db, userId, "role", role)
 }
 
 // 管理员获取所有用户信息

@@ -12,9 +12,9 @@ const router = useRouter();
 const { t } = useI18n();
 
 const headers = ref([
-  { title: t('message.problemId'), value: 'Pid', align: 'center' },
-  { title: t('message.problem'), value: 'Title', align: 'center' },
-  { title: t('message.difficulty'), value: 'Difficulty', align: 'center' }
+  { title: t('message.problemId'), value: 'id', align: 'center' },
+  { title: t('message.problem'), value: 'title', align: 'center' },
+  { title: t('message.difficulty'), value: 'difficulty', align: 'center' }
 ])
 const problems = ref([])
 const totalProblems = ref(0)
@@ -28,7 +28,7 @@ const userLoggedIn = computed(() => !!token.value)
 // 搜索功能
 const filteredProblems = computed(() => {
   return problems.value.filter((problem) =>
-    problem.Title.toLowerCase().includes(searchQuery.value.toLowerCase())
+    problem.title.toLowerCase().includes(searchQuery.value.toLowerCase())
   )
 })
 
@@ -119,19 +119,19 @@ onMounted(async () => {
                 </p>
               </div>
             </template>
-            <template v-slot:item.Pid="{ item }">
+            <template v-slot:item.id="{ item }">
               <v-chip variant="tonal" size="small" color="primary">
-                {{ item.Id }}
+                {{ item.id }}
               </v-chip>
             </template>
-            <template v-slot:item.Title="{ item }">
-              <v-btn @click="router.push({ path: `/problemset/${item.Id}` })" variant="text" color="primary">
-                {{ item.Title }}
+            <template v-slot:item.title="{ item }">
+              <v-btn @click="router.push({ path: `/problemset/${item.id}` })" variant="text" color="primary">
+                {{ item.title }}
               </v-btn>
             </template>
-            <template v-slot:item.Difficulty="{ item }">
-              <v-chip :style="difficultyColor(item.Difficulty)">
-                {{ t(difficultyLang(item.Difficulty)) }}
+            <template v-slot:item.difficulty="{ item }">
+              <v-chip :style="difficultyColor(item.difficulty)">
+                {{ t(difficultyLang(item.difficulty)) }}
               </v-chip>
             </template>
           </v-data-table>

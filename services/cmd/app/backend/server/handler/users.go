@@ -163,7 +163,7 @@ func Login(c *gin.Context) {
 func GetCaptcha(c *gin.Context) {
 	clientIP := c.ClientIP()
 	email := c.Query("email")
-	isCreate := c.GetHeader("iscreate")
+	isCreate := c.GetHeader("is_create")
 
 	rdb := utils.ConnectRedis()
 	defer rdb.Close()

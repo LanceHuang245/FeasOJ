@@ -22,7 +22,7 @@ const itemsPerPage = ref(50);
 
 const getMenus = (item) => {
     let filteredMenus = []
-    if (!item.isBan) {
+    if (!item.is_banned) {
         filteredMenus.push({ title: t("message.banUser"), icon: 'mdi-account-off' })
     } else {
         filteredMenus.push({ title: t("message.unbanUser"), icon: 'mdi-account-check' })
@@ -39,7 +39,7 @@ const getMenus = (item) => {
 const handleAction = async (action, item) => {
     networkloading.value = true;
     try {
-        const resp = await action(item.uid)
+        const resp = await action(item.id)
         networkloading.value = false;
         showAlert(resp.data.message, "reload")
     } catch (error) {
@@ -209,17 +209,17 @@ onMounted(async () => {
                                     </td>
                                     <td class="text-center pa-4">
                                         <span class="text-body-2 text-medium-emphasis">
-                                            {{ moment(item.create_at).format('YYYY-MM-DD HH:mm') }}
+                                            {{ moment(item.created_at).format('YYYY-MM-DD HH:mm') }}
                                         </span>
                                     </td>
                                     <td class="text-center pa-4">
                                         <v-chip
-                                            :color="item.isBan ? 'error' : 'success'"
+                                            :color="item.is_banned ? 'error' : 'success'"
                                             variant="tonal"
                                             size="small"
                                             class="font-weight-medium"
                                         >
-                                            {{ item.isBan ? $t('message.isBan') : $t('message.normal') }}
+                                            {{ item.is_banned ? $t('message.isBan') : $t('message.normal') }}
                                         </v-chip>
                                     </td>
                                     <td class="text-center pa-4">

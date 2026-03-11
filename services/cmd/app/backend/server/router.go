@@ -28,7 +28,7 @@ func LoadRouter(r *gin.Engine) *gin.RouterGroup {
 		router1.POST("/users/password", handler.UpdatePassword)
 
 		// 通知
-		router1.GET("/notification/:id", handler.SSEHandler)
+		router1.GET("/notification/:user_id", handler.SSEHandler)
 	}
 
 	authGroup := router1.Group("")
@@ -41,22 +41,22 @@ func LoadRouter(r *gin.Engine) *gin.RouterGroup {
 		router1.GET("/users/:username/submitrecords", handler.GetSubmitRecordsByUsername)
 
 		// 获取指定帖子的评论
-		authGroup.GET("/discussions/comments/:id", handler.GetComment)
+		authGroup.GET("/discussions/comments/:discussion_id", handler.GetComment)
 
 		// 获取竞赛列表
 		authGroup.GET("/competitions", handler.GetCompetitionsList)
 
 		// 获取指定竞赛ID信息
-		authGroup.GET("/competitions/info/:id", handler.GetCompetitionInfoByID)
+		authGroup.GET("/competitions/info/:competition_id", handler.GetCompetitionInfoByID)
 
 		// 获取竞赛参与的用户列表
-		authGroup.GET("/competitions/info/:id/users", handler.GetCompetitionUsers)
+		authGroup.GET("/competitions/info/:competition_id/users", handler.GetCompetitionUsers)
 
 		// 获取指定竞赛的所有题目
-		authGroup.GET("/competitions/info/:id/problems", handler.GetProblemsByCompetitionID)
+		authGroup.GET("/competitions/info/:competition_id/problems", handler.GetProblemsByCompetitionID)
 
 		// 获取用户是否在竞赛中
-		authGroup.GET("/competitions/:id/in", handler.IsInCompetition)
+		authGroup.GET("/competitions/:competition_id/in", handler.IsInCompetition)
 
 		// 获取所有题目
 		authGroup.GET("/problems", handler.GetAllProblems)
@@ -71,31 +71,31 @@ func LoadRouter(r *gin.Engine) *gin.RouterGroup {
 		authGroup.GET("/ranking", handler.GetRanking)
 
 		// 获取指定题目ID的所有信息
-		authGroup.GET("/problems/:id", handler.GetProblemInfo)
+		authGroup.GET("/problems/:problem_id", handler.GetProblemInfo)
 
 		// 获取总提交记录
 		authGroup.GET("/submitrecords", handler.GetAllSubmitRecords)
 
 		// 获取指定帖子
-		authGroup.GET("/discussions/:id", handler.GetDiscussionByDid)
+		authGroup.GET("/discussions/:discussion_id", handler.GetDiscussionByDid)
 
 		// 上传代码
-		authGroup.POST("/problems/:id/code", handler.UploadCode)
+		authGroup.POST("/problems/:problem_id/code", handler.UploadCode)
 
 		// 创建讨论
 		authGroup.POST("/discussions/add", handler.CreateDiscussion)
 
 		// 添加评论
-		authGroup.POST("/discussions/comments/add/:id", handler.AddComment)
+		authGroup.POST("/discussions/comments/add/:discussion_id", handler.AddComment)
 
 		// 加入有密码的竞赛
-		authGroup.POST("/competitions/join/pwd/:id", handler.JoinCompetitionWithPassword)
+		authGroup.POST("/competitions/join/pwd/:competition_id", handler.JoinCompetitionWithPassword)
 
 		// 加入竞赛
-		authGroup.POST("/competitions/join/:id", handler.JoinCompetition)
+		authGroup.POST("/competitions/join/:competition_id", handler.JoinCompetition)
 
 		// 退出竞赛
-		authGroup.POST("/competitions/quit/:id", handler.QuitCompetition)
+		authGroup.POST("/competitions/quit/:competition_id", handler.QuitCompetition)
 
 		// 用户上传头像
 		authGroup.POST("/users/avatar", handler.UploadAvatar)
@@ -104,10 +104,10 @@ func LoadRouter(r *gin.Engine) *gin.RouterGroup {
 		authGroup.POST("/users/synopsis", handler.UpdateSynopsis)
 
 		// 删除讨论
-		authGroup.POST("/discussions/delete/:id", handler.DeleteDiscussion)
+		authGroup.POST("/discussions/delete/:discussion_id", handler.DeleteDiscussion)
 
 		// 删除评论
-		authGroup.POST("/discussions/comments/delete/:id", handler.DelComment)
+		authGroup.POST("/discussions/comments/delete/:comment_id", handler.DelComment)
 
 	}
 
@@ -128,10 +128,10 @@ func LoadRouter(r *gin.Engine) *gin.RouterGroup {
 		adminGroup.GET("/problems", handler.GetAllProblemsAdmin)
 
 		// 管理员获取指定竞赛ID信息
-		adminGroup.GET("/competitions/:id", handler.GetCompetitionInfoAdmin)
+		adminGroup.GET("/competitions/:competition_id", handler.GetCompetitionInfoAdmin)
 
 		// 管理员获取指定题目的所有信息
-		adminGroup.GET("/problems/:id", handler.GetProblemAllInfo)
+		adminGroup.GET("/problems/:problem_id", handler.GetProblemAllInfo)
 
 		// 管理员获取所有用户信息
 		adminGroup.GET("/users", handler.GetAllUsersInfo)
@@ -143,16 +143,16 @@ func LoadRouter(r *gin.Engine) *gin.RouterGroup {
 		adminGroup.POST("/competitions", handler.UpdateCompetitionInfo)
 
 		// 管理员删除题目
-		adminGroup.POST("/problems/:id", handler.DeleteProblem)
+		adminGroup.POST("/problems/:problem_id", handler.DeleteProblem)
 
 		// 管理员删除竞赛
-		adminGroup.POST("/competitions/:id", handler.DeleteCompetition)
+		adminGroup.POST("/competitions/:competition_id", handler.DeleteCompetition)
 
 		// 管理员启用竞赛计分
-		adminGroup.GET("/competitions/:id/score", handler.CalculateScore)
+		adminGroup.GET("/competitions/:competition_id/score", handler.CalculateScore)
 
 		// 管理员查看竞赛得分情况
-		adminGroup.GET("/competitions/:id/scoreboard", handler.GetScoreBoard)
+		adminGroup.GET("/competitions/:competition_id/scoreboard", handler.GetScoreBoard)
 
 		// 管理员获取IP访问统计信息
 		adminGroup.GET("/ipstats", handler.GetIPStatistics)

@@ -22,7 +22,7 @@ func GetCompetitionsList(c *gin.Context) {
 func GetCompetitionInfoByID(c *gin.Context) {
 	encodedUsername := c.GetHeader("Username")
 	username, _ := url.QueryUnescape(encodedUsername)
-	competitionId, _ := strconv.Atoi(c.Param("id"))
+	competitionId, _ := strconv.Atoi(c.Param("competition_id"))
 	uid := repository.SelectUserInfo(global.Db, username).Id
 	if repository.SelectUserCompetition(global.Db, uid, competitionId) {
 		c.JSON(http.StatusOK, gin.H{"data": repository.SelectCompetitionInfoByCid(global.Db, competitionId)})
@@ -36,7 +36,7 @@ func GetCompetitionInfoByID(c *gin.Context) {
 func JoinCompetitionWithPassword(c *gin.Context) {
 	encodedUsername := c.GetHeader("Username")
 	username, _ := url.QueryUnescape(encodedUsername)
-	competitionId, _ := strconv.Atoi(c.Param("id"))
+	competitionId, _ := strconv.Atoi(c.Param("competition_id"))
 	competitionPwd := c.Query("password")
 	userId := repository.SelectUserInfo(global.Db, username).Id
 	if repository.SelectUserCompetition(global.Db, userId, competitionId) {
@@ -56,7 +56,7 @@ func JoinCompetitionWithPassword(c *gin.Context) {
 func JoinCompetition(c *gin.Context) {
 	encodedUsername := c.GetHeader("Username")
 	username, _ := url.QueryUnescape(encodedUsername)
-	competitionId, _ := strconv.Atoi(c.Param("id"))
+	competitionId, _ := strconv.Atoi(c.Param("competition_id"))
 	uid := repository.SelectUserInfo(global.Db, username).Id
 	if repository.SelectUserCompetition(global.Db, uid, competitionId) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "userAlreadyExists")})
@@ -73,7 +73,7 @@ func JoinCompetition(c *gin.Context) {
 func IsInCompetition(c *gin.Context) {
 	encodedUsername := c.GetHeader("Username")
 	username, _ := url.QueryUnescape(encodedUsername)
-	competitionId, _ := strconv.Atoi(c.Param("id"))
+	competitionId, _ := strconv.Atoi(c.Param("competition_id"))
 	uid := repository.SelectUserInfo(global.Db, username).Id
 
 	in := repository.SelectUserCompetition(global.Db, uid, competitionId)
@@ -82,7 +82,7 @@ func IsInCompetition(c *gin.Context) {
 
 // 查询指定竞赛中的所有参与用户
 func GetCompetitionUsers(c *gin.Context) {
-	competitionId, _ := strconv.Atoi(c.Param("id"))
+	competitionId, _ := strconv.Atoi(c.Param("competition_id"))
 	c.JSON(http.StatusOK, gin.H{"data": repository.SelectUsersCompetition(global.Db, competitionId)})
 }
 
@@ -90,7 +90,7 @@ func GetCompetitionUsers(c *gin.Context) {
 func QuitCompetition(c *gin.Context) {
 	encodedUsername := c.GetHeader("Username")
 	username, _ := url.QueryUnescape(encodedUsername)
-	competitionId, _ := strconv.Atoi(c.Param("id"))
+	competitionId, _ := strconv.Atoi(c.Param("competition_id"))
 	uid := repository.SelectUserInfo(global.Db, username).Id
 
 	// 检查竞赛是否已经结束，如果结束则不允许退出
@@ -115,7 +115,7 @@ func QuitCompetition(c *gin.Context) {
 
 // 获取指定竞赛的所有题目
 func GetProblemsByCompetitionID(c *gin.Context) {
-	competitionId, _ := strconv.Atoi(c.Param("id"))
+	competitionId, _ := strconv.Atoi(c.Param("competition_id"))
 	if repository.SelectCompetitionInfoByCid(global.Db, competitionId).Status == 0 {
 		c.JSON(http.StatusForbidden, gin.H{"message": GetMessage(c, "forbidden")})
 		return

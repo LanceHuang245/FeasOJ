@@ -23,7 +23,7 @@ const userInfo = ref({});
 const showCropper = ref(false);
 const route = useRoute();
 const router = useRouter();
-const currentUsername = ref(route.params.Username);
+const currentUsername = ref(route.params.username);
 const loading = ref(false);
 const userSubmitRecords = ref([]);
 const userSubmitRecordsLength = ref(0);
@@ -37,10 +37,10 @@ const previewTheme = ref(getMdPreviewTheme());
 // 展示代码
 const currentCode = ref('');
 const headers = ref([
-  { title: t('message.problemId'), value: 'Pid', align: 'center' },
-  { title: t('message.result'), value: 'Result', align: 'center' },
-  { title: t('message.lang'), value: 'Language', align: 'center' },
-  { title: t('message.when'), value: 'Time', align: 'center' },
+  { title: t('message.problemId'), value: 'problem_id', align: 'center' },
+  { title: t('message.result'), value: 'result', align: 'center' },
+  { title: t('message.lang'), value: 'language', align: 'center' },
+  { title: t('message.when'), value: 'time', align: 'center' },
 ]);
 
 // 计算属性来判断用户是否已经登录
@@ -144,7 +144,7 @@ const verifyAndFetchUserInfo = async () => {
 };
 
 // 监听路由参数变化
-watch(() => route.params.Username, (newUsername) => {
+watch(() => route.params.username, (newUsername) => {
   currentUsername.value = newUsername;
   verifyAndFetchUserInfo();
 }, { immediate: true });
@@ -219,29 +219,29 @@ onUnmounted(() => {
           <template v-slot:item="{ item }">
             <tr class="profile-table-row">
               <td class="text-center pa-4">
-                <v-btn @click="router.push({ path: `/problem/${item.Pid}` })" variant="text" color="primary"
+                <v-btn @click="router.push({ path: `/problemset/${item.problem_id}` })" variant="text" color="primary"
                   class="font-weight-medium" size="small" :ripple="false">
-                  {{ item.ProblemId }}
+                  {{ item.problem_id }}
                 </v-btn>
               </td>
-              <td v-if="item.Result === 'Running...'" class="text-center pa-4">
+              <td v-if="item.result === 'Running...'" class="text-center pa-4">
                 <v-progress-circular indeterminate color="primary" size="24" width="2"></v-progress-circular>
               </td>
-              <td v-else :style="getResultStyle(item.Result)" @click="showCode(item.Code, item.Language)"
+              <td v-else :style="getResultStyle(item.result)" @click="showCode(item.code, item.language)"
                 class="text-center pa-4 result-cell">
-                <v-chip :color="getResultChipColor(item.Result)" variant="tonal" size="small"
+                <v-chip :color="getResultChipColor(item.result)" variant="tonal" size="small"
                   class="font-weight-medium">
-                  {{ item.Result }}
+                  {{ item.result }}
                 </v-chip>
               </td>
               <td class="text-center pa-4">
                 <v-chip color="secondary" variant="outlined" size="small" class="font-weight-medium">
-                  {{ item.Language }}
+                  {{ item.language }}
                 </v-chip>
               </td>
               <td class="text-center pa-4">
                 <span class="text-body-2 text-medium-emphasis">
-                  {{ moment(item.Time).format('YYYY-MM-DD HH:mm') }}
+                  {{ moment(item.time).format('YYYY-MM-DD HH:mm') }}
                 </span>
               </td>
             </tr>

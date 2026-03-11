@@ -68,10 +68,10 @@ export const deleteProblemAllInfo = async (pid) => {
 
 // 封禁用户
 export const banUser = async (uid) => {
-    return await axios.put(`${apiUrl}/admin/users/status`, {}, {
+    return await axios.post(`${apiUrl}/admin/users/status`, {}, {
         params: {
             user_id: uid,
-            status: true
+            is_banned: true
         },
         headers: {
             Username: encodeURIComponent(userName.value),
@@ -83,10 +83,10 @@ export const banUser = async (uid) => {
 
 // 解封用户
 export const unbanUser = async (uid) => {
-    return await axios.put(`${apiUrl}/admin/users/status`, {}, {
+    return await axios.post(`${apiUrl}/admin/users/status`, {}, {
         params: {
             user_id: uid,
-            status: false
+            is_banned: false
         },
         headers: {
             Username: encodeURIComponent(userName.value),
@@ -98,9 +98,10 @@ export const unbanUser = async (uid) => {
 
 // 晋升用户
 export const promoteUser = async (uid) => {
-    return await axios.put(`${apiUrl}/admin/users/promote`, {}, {
+    return await axios.post(`${apiUrl}/admin/users/privilege`, {}, {
         params: {
-            uid: uid
+            user_id: uid,
+            role: 1
         },
         headers: {
             Username: encodeURIComponent(userName.value),
@@ -112,9 +113,10 @@ export const promoteUser = async (uid) => {
 
 // 降级用户
 export const demoteUser = async (uid) => {
-    return await axios.put(`${apiUrl}/admin/users/demote`, {}, {
+    return await axios.post(`${apiUrl}/admin/users/privilege`, {}, {
         params: {
-            uid: uid
+            user_id: uid,
+            role: 0
         },
         headers: {
             Username: encodeURIComponent(userName.value),
@@ -136,7 +138,7 @@ export const getAllProblemsAdmin = async () => {
 
 // 管理员删除竞赛
 export const deleteCompetition = async (cid) => {
-    return await axios.delete(`${apiUrl}/admin/competitions/${cid}`, {
+    return await axios.post(`${apiUrl}/admin/competitions/${cid}`, {}, {
         headers: {
             Username: encodeURIComponent(userName.value),
             Authorization: token.value,
@@ -173,7 +175,7 @@ export const getScores = async (cid, page, itemsPerPage) => {
     return await axios.get(`${apiUrl}/admin/competitions/${cid}/scoreboard`, {
         params: {
             page: page,
-            itemsPerPage: itemsPerPage
+            items_per_page: itemsPerPage
         },
         headers: {
             Username: encodeURIComponent(userName.value),

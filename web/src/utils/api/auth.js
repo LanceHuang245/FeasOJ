@@ -6,9 +6,9 @@ import { language } from '../account';
 export const registerRequest = async (username, password, email, vcode) => {
     return await axios.post(`${apiUrl}/register`, {
         email: email,
-        Username: username,
+        username: username,
         password: password,
-        vcode: vcode,
+        captcha: vcode,
     },{
         headers: {
             "Accept-Language": language.value
@@ -36,7 +36,7 @@ export const getCaptchaCode = async (email,iscreate) => {
             email: email
         },
         headers: {
-            iscreate: iscreate,
+            is_create: iscreate,
             "Accept-Language": language.value
         }
     });
@@ -60,11 +60,13 @@ export const getUserInfo = async (username) => {
 
 // 修改密码
 export const updatePassword = async (email, vcode, newPassword) => {
-    return await axios.put(`${apiUrl}/users/password`, {
+    return await axios.post(`${apiUrl}/users/password`, {
         email: email,
-        vcode: vcode,
-        newpassword: newPassword
+        captcha: vcode,
+        new_password: newPassword
     },{
-        "Accept-Language": language.value
+        headers: {
+            "Accept-Language": language.value
+        }
     });
 }

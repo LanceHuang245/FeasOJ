@@ -22,7 +22,7 @@ func GetAllProblemsAdmin(c *gin.Context) {
 
 // 管理员获取指定题目所有信息
 func GetProblemAllInfo(c *gin.Context) {
-	problemInfo := repository.SelectProblemTestCases(global.Db, c.Param("id"))
+	problemInfo := repository.SelectProblemTestCases(global.Db, c.Param("problem_id"))
 	c.JSON(http.StatusOK, gin.H{"data": problemInfo})
 }
 
@@ -45,7 +45,7 @@ func UpdateProblemInfo(c *gin.Context) {
 
 // 删除题目及其输入输出样例
 func DeleteProblem(c *gin.Context) {
-	problemId, _ := strconv.Atoi(c.Param("id"))
+	problemId, _ := strconv.Atoi(c.Param("problem_id"))
 	if !repository.DeleteProblemAllInfo(global.Db, problemId) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
@@ -61,9 +61,9 @@ func GetAllUsersInfo(c *gin.Context) {
 
 // 晋升/降级用户
 func ChangeUserPrivilege(c *gin.Context) {
-	userId, _ := strconv.Atoi(c.Query("user_id"))
-	action, _ := strconv.Atoi(c.Query("action"))
-	if !repository.ChangePrivilege(global.Db, userId, action) {
+	userId := c.Query("user_id")
+	role, _ := strconv.Atoi(c.Query("role"))
+	if !repository.ChangePrivilege(global.Db, userId, role) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
 	}
@@ -72,9 +72,9 @@ func ChangeUserPrivilege(c *gin.Context) {
 
 // 封禁/解禁用户
 func ChangeUserStatus(c *gin.Context) {
-	userId, _ := strconv.Atoi(c.Query("user_id"))
-	status, _ := strconv.ParseBool(c.Query("status"))
-	if !repository.ChangeUserStatus(global.Db, userId, status) {
+	userId := c.Query("user_id")
+	isBanned, _ := strconv.ParseBool(c.Query("is_banned"))
+	if !repository.ChangeUserStatus(global.Db, userId, isBanned) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
 	}
@@ -88,13 +88,13 @@ func GetCompetitionListAdmin(c *gin.Context) {
 
 // 管理员获取指定竞赛ID信息
 func GetCompetitionInfoAdmin(c *gin.Context) {
-	competitionId, _ := strconv.Atoi(c.Param("id"))
+	competitionId, _ := strconv.Atoi(c.Param("competition_id"))
 	c.JSON(http.StatusOK, gin.H{"data": repository.SelectCompetitionInfoAdminByCid(global.Db, competitionId)})
 }
 
 // 删除指定ID竞赛
 func DeleteCompetition(c *gin.Context) {
-	competitionId, _ := strconv.Atoi(c.Param("id"))
+	competitionId, _ := strconv.Atoi(c.Param("competition_id"))
 
 	if !repository.DeleteCompetition(global.Db, competitionId) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
@@ -125,7 +125,7 @@ func UpdateCompetitionInfo(c *gin.Context) {
 
 // 计算分数
 func CalculateScore(c *gin.Context) {
-	competitionId, _ := strconv.Atoi(c.Param("id"))
+	competitionId, _ := strconv.Atoi(c.Param("competition_id"))
 
 	// 查询竞赛信息
 	var competition tables.Competitions
@@ -192,9 +192,9 @@ func CalculateScore(c *gin.Context) {
 
 // 查询指定竞赛中，参与人员的得分情况
 func GetScoreBoard(c *gin.Context) {
-	competitionId, _ := strconv.Atoi(c.Param("id"))
+	competitionId, _ := strconv.Atoi(c.Param("competition_id"))
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
-	itemsPerPage, _ := strconv.Atoi(c.DefaultQuery("itemsPerPage", "10"))
+	itemsPerPage, _ := strconv.Atoi(c.DefaultQuery("items_per_page", "10"))
 
 	users, total := repository.GetScores(global.Db, competitionId, page, itemsPerPage)
 

@@ -79,13 +79,13 @@ func GetDailyProblem(c *gin.Context) {
 
 // 获取指定题目信息
 func GetProblemInfo(c *gin.Context) {
-	pid, _ := strconv.Atoi(c.Param("id"))
+	pid, _ := strconv.Atoi(c.Param("problem_id"))
 	if !repository.IsProblemVisible(global.Db, pid) {
 		c.JSON(http.StatusForbidden, gin.H{"message": GetMessage(c, "forbidden")})
 		return
 	}
 	// 生成缓存键
-	cacheKey := "problemInfo_" + c.Param("id")
+	cacheKey := "problemInfo_" + c.Param("problem_id")
 	var problemInfo structs.ProblemInfoRequest
 
 	// 从缓存中获取数据
@@ -96,7 +96,7 @@ func GetProblemInfo(c *gin.Context) {
 	}
 	if problemInfo.Id == 0 {
 		// 缓存未命中
-		problemInfo = repository.SelectProblemInfo(global.Db, c.Param("id"))
+		problemInfo = repository.SelectProblemInfo(global.Db, c.Param("problem_id"))
 		// 数据存入缓存，时间10分钟
 		err = utils.SetCache(cacheKey, problemInfo, 10*time.Minute)
 		if err != nil {
@@ -110,7 +110,7 @@ func GetProblemInfo(c *gin.Context) {
 
 // 提交代码
 func UploadCode(c *gin.Context) {
-	problem := c.Param("id")
+	problem := c.Param("problem_id")
 	pidInt, _ := strconv.Atoi(problem)
 	encodedUsername := c.GetHeader("Username")
 	username, _ := url.QueryUnescape(encodedUsername)

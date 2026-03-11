@@ -37,7 +37,7 @@ const routes = [
         }
     },
     {
-        path: '/profile/:Username',
+        path: '/profile/:username',
         component: () => import('../pages/Profile.vue'),
         meta: {
             titleKey: 'message.profile'
@@ -47,7 +47,7 @@ const routes = [
         }
     },
     {
-        path: '/problemset/:Pid',
+        path: '/problemset/:problem_id',
         component: () => import('../pages/Problem/Details.vue'),
         meta: {
             titleKey: 'message.problem'
@@ -75,7 +75,7 @@ const routes = [
         }
     },
     {
-        path: '/competitions/:cid',
+        path: '/competitions/:competition_id',
         component: () => import('../pages/Competition/Details.vue'),
         meta: {
             titleKey: 'message.competition'
@@ -104,7 +104,7 @@ const routes = [
         }
     },
     {
-        path: '/discussion/:Did',
+        path: '/discussion/:discussion_id',
         component: () => import('../pages/Discuss/Details.vue'),
         meta: {
             titleKey: 'message.discussion'

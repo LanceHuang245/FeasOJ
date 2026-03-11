@@ -76,7 +76,7 @@ const filteredProblems = computed(() => {
         return problems.value;
     }
     return problems.value.filter((problem) =>
-        problem.Title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+        problem.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
         problem.id.toString().includes(searchQuery.value)
     )
 })
@@ -305,31 +305,31 @@ onUnmounted(() => {
                             <template v-slot:item="{ item }">
                                 <tr class="problemset-table-row">
                                     <td class="text-center pa-4 font-weight-medium">
-                                        {{ item.Id }}
+                                        {{ item.id }}
                                     </td>
                                     <td class="text-center pa-4 font-weight-medium">
-                                        {{ item.Title }}
+                                        {{ item.title }}
                                     </td>
                                     <td class="text-center pa-4">
                                         <v-chip
-                                            :color="item.Difficulty === 0 ? 'success' : item.Difficulty === 1 ? 'warning' : 'error'"
+                                            :color="item.difficulty === 0 ? 'success' : item.difficulty === 1 ? 'warning' : 'error'"
                                             variant="tonal" size="small" class="font-weight-medium">
-                                            {{ $t(difficultyLang(item.Difficulty)) }}
+                                            {{ $t(difficultyLang(item.difficulty)) }}
                                         </v-chip>
                                     </td>
                                     <td class="text-center pa-4">
                                         <span class="text-body-2 text-medium-emphasis">
-                                            {{ item.CompetitionId }}
+                                            {{ item.competition_id }}
                                         </span>
                                     </td>
                                     <td class="text-center pa-4">
-                                        <v-chip :color="item.IsVisible ? 'success' : 'error'" variant="tonal"
+                                        <v-chip :color="item.is_visible ? 'success' : 'error'" variant="tonal"
                                             size="small" class="font-weight-medium">
-                                            {{ item.IsVisible ? $t('message.visible') : $t('message.invisible') }}
+                                            {{ item.is_visible ? $t('message.visible') : $t('message.invisible') }}
                                         </v-chip>
                                     </td>
                                     <td class="text-center pa-4">
-                                        <v-btn @click="goToEditProblem(item.Id)" variant="text" icon="mdi-pencil"
+                                        <v-btn @click="goToEditProblem(item.id)" variant="text" icon="mdi-pencil"
                                             size="small" color="primary"></v-btn>
                                     </td>
                                 </tr>

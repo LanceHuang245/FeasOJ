@@ -20,7 +20,7 @@ const sparklineData = computed(() => {
   }
 
   props.userSubmitRecords.forEach(record => {
-    const date = new Date(record.Time);
+    const date = new Date(record.time);
     if (date >= startDate && date <= now) {
       const dateString = date.toISOString().split('T')[0];
       counts[dateString] = (counts[dateString] || 0) + 1;

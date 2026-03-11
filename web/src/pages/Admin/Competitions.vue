@@ -72,8 +72,8 @@ const difficultyOptions = [
 ];
 
 const scoreHeaders = ref([
-    { title: t('message.username'), value: 'Username', align: 'center' },
-    { title: 'Score', value: 'Score', align: 'center' },
+    { title: t('message.username'), value: 'username', align: 'center' },
+    { title: 'Score', value: 'score', align: 'center' },
 ])
 
 // 分页后的数据

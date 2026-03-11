@@ -33,7 +33,7 @@ const filteredIpStats = computed(() => {
         return ipStats.value;
     }
     return ipStats.value.filter((item) =>
-        item.IP.toLowerCase().includes(searchQuery.value.toLowerCase())
+        item.ip_address.toLowerCase().includes(searchQuery.value.toLowerCase())
     );
 });
 
@@ -148,20 +148,20 @@ onMounted(async () => {
                                 <tr class="ipstat-table-row">
                                     <td class="text-center pa-4 font-weight-medium">
                                         <v-chip color="primary" variant="elevated" class="ip-chip font-weight-medium"
-                                            @click.stop="copyIp(item.IP)">
+                                            @click.stop="copyIp(item.ip_address)">
                                             <v-icon start small>mdi-content-copy</v-icon>
-                                            {{ item.IpAddress }}
+                                            {{ item.ip_address }}
                                         </v-chip>
                                     </td>
                                     <td class="text-center pa-4">
                                         <v-chip color="secondary" variant="tonal" size="small"
                                             class="font-weight-medium">
-                                            {{ item.VisitCount }}
+                                            {{ item.visit_count }}
                                         </v-chip>
                                     </td>
                                     <td class="text-center pa-4">
                                         <span class="text-body-2 text-medium-emphasis">
-                                            {{ formatTime(item.LastVisit) }}
+                                            {{ formatTime(item.last_visit) }}
                                         </span>
                                     </td>
                                 </tr>

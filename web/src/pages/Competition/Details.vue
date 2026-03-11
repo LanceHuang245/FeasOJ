@@ -24,7 +24,7 @@ const quitDialog = ref(false);
 
 // 竞赛信息
 const contestInfo = ref({});
-const competitionId = route.params.cid;
+const competitionId = route.params.competition_id;
 
 // 参赛人员信息
 const usersInfo = ref([]);
@@ -211,7 +211,7 @@ onUnmounted(() => {
                                 <span class="font-weight-black">{{ t('message.participants') }}</span>
                             </template>
                             <v-list style="max-height: 450px; overflow-y: auto;">
-                                <v-list-item v-for="user in usersInfo" :key="user.Uid">
+                                <v-list-item v-for="user in usersInfo" :key="user.user_id">
                                     <v-list-item-title class="username-avatar">
                                         <v-avatar size="40" color="surface-variant">
                                             <v-img :src="avatarServer + user.avatar" alt="Avatar" cover></v-img>

@@ -17,7 +17,7 @@ import (
 // 获取所有讨论列表
 func GetAllDiscussions(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
-	itemsPerPage, _ := strconv.Atoi(c.DefaultQuery("itemsPerPage", "12"))
+	itemsPerPage, _ := strconv.Atoi(c.DefaultQuery("items_per_page", "12"))
 
 	discussions, total := repository.SelectDiscussList(global.Db, page, itemsPerPage)
 	c.JSON(http.StatusOK, gin.H{
@@ -28,7 +28,7 @@ func GetAllDiscussions(c *gin.Context) {
 
 // 获取指定id讨论信息
 func GetDiscussionByDid(c *gin.Context) {
-	did, _ := strconv.Atoi(c.Param("id"))
+	did, _ := strconv.Atoi(c.Param("discussion_id"))
 	discussion := repository.SelectDiscussionByDid(global.Db, did)
 	c.JSON(http.StatusOK, gin.H{"data": discussion})
 }
@@ -80,7 +80,7 @@ func CreateDiscussion(c *gin.Context) {
 
 // 删除讨论
 func DeleteDiscussion(c *gin.Context) {
-	did, _ := strconv.Atoi(c.Param("id"))
+	did, _ := strconv.Atoi(c.Param("discussion_id"))
 	if repository.DelDiscussion(global.Db, did) {
 		c.JSON(http.StatusOK, gin.H{"message": GetMessage(c, "success")})
 	} else {
@@ -90,14 +90,14 @@ func DeleteDiscussion(c *gin.Context) {
 
 // 获取指定讨论的评论
 func GetComment(c *gin.Context) {
-	did, _ := strconv.Atoi(c.Param("id"))
+	did, _ := strconv.Atoi(c.Param("discussion_id"))
 	comments := repository.SelectCommentsByDid(global.Db, did)
 	c.JSON(http.StatusOK, gin.H{"data": comments})
 }
 
 // 删除指定id的评论
 func DelComment(c *gin.Context) {
-	cid, _ := strconv.Atoi(c.Param("id"))
+	cid, _ := strconv.Atoi(c.Param("comment_id"))
 	if !repository.DeleteCommentByCid(global.Db, cid) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": GetMessage(c, "failed")})
 		return
@@ -110,7 +110,7 @@ func AddComment(c *gin.Context) {
 	encodedUsername := c.GetHeader("Username")
 	username, _ := url.QueryUnescape(encodedUsername)
 	content := c.PostForm("content")
-	discussionId, _ := strconv.Atoi(c.Param("id"))
+	discussionId, _ := strconv.Atoi(c.Param("discussion_id"))
 	// 获取用户ID
 	userInfo := repository.SelectUserInfo(global.Db, username)
 

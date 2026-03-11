@@ -7,7 +7,7 @@ export const getAllDis = async (page, itemsPerPage) => {
     return await axios.get(`${apiUrl}/discussions`, {
         params: {
             page: page,
-            itemsPerPage: itemsPerPage
+            items_per_page: itemsPerPage
         },
         headers: {
             Username: encodeURIComponent(userName.value),

@@ -101,7 +101,7 @@ const uploadContentAsFile = async () => {
   });
   try {
     networkloading.value = true;
-    const resp = await uploadCode(codefile, route.params.Pid);
+    const resp = await uploadCode(codefile, route.params.problem_id);
     networkloading.value = false;
     showAlert(resp.data.message, "reload");
   } catch (error) {
@@ -121,7 +121,7 @@ onMounted(async () => {
   loading.value = true;
   if (userLoggedIn.value) {
     try {
-      const problemId = route.params.Pid;
+      const problemId = route.params.problem_id;
       const resp = await getPbDetails(problemId);
       problemInfo.value = resp.data.data;
     } catch (error) {

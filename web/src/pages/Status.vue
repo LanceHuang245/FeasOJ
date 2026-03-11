@@ -18,11 +18,11 @@ const { t } = useI18n();
 const router = useRouter();
 
 const headers = ref([
-  { title: t('message.problemId'), value: 'ProblemId', align: 'center', sortable: false },
-  { title: t('message.username'), value: 'Username', align: 'center', sortable: false },
-  { title: t('message.result'), value: 'Result', align: 'center', sortable: false },
-  { title: t('message.lang'), value: 'Language', align: 'center', sortable: false },
-  { title: t('message.when'), value: 'Time', align: 'center', sortable: false },
+  { title: t('message.problemId'), value: 'problem_id', align: 'center', sortable: false },
+  { title: t('message.username'), value: 'username', align: 'center', sortable: false },
+  { title: t('message.result'), value: 'result', align: 'center', sortable: false },
+  { title: t('message.lang'), value: 'language', align: 'center', sortable: false },
+  { title: t('message.when'), value: 'time', align: 'center', sortable: false },
 ])
 const submitrecords = ref([])
 const submitRecordsLength = ref(0)
@@ -118,35 +118,35 @@ onUnmounted(() => {
               <template v-slot:item="{ item }">
                 <tr class="status-table-row">
                   <td class="text-center pa-4">
-                    <v-btn @click="router.push({ path: `/problem/${item.Pid}` })" variant="text" color="primary"
+                    <v-btn @click="router.push({ path: `/problemset/${item.problem_id}` })" variant="text" color="primary"
                       class="font-weight-medium" size="small" :ripple="false">
-                      {{ item.ProblemId }}
+                      {{ item.problem_id }}
                     </v-btn>
                   </td>
                   <td class="text-center pa-4">
-                    <v-btn @click="router.push({ path: `/profile/${item.Username}` })" variant="text" color="primary"
+                    <v-btn @click="router.push({ path: `/profile/${item.username}` })" variant="text" color="primary"
                       class="font-weight-medium" size="small" :ripple="false">
-                      {{ item.Username }}
+                      {{ item.username }}
                     </v-btn>
                   </td>
-                  <td v-if="item.Result === 'Running...'" class="text-center pa-4">
+                  <td v-if="item.result === 'Running...'" class="text-center pa-4">
                     <v-progress-circular indeterminate color="primary" size="24" width="2"></v-progress-circular>
                   </td>
-                  <td v-else :style="getResultStyle(item.Result)" @click="showCode(item.Code, item.Language)"
+                  <td v-else :style="getResultStyle(item.result)" @click="showCode(item.code, item.language)"
                     class="text-center pa-4 result-cell">
-                    <v-chip :color="getResultChipColor(item.Result)" variant="tonal" size="small"
+                    <v-chip :color="getResultChipColor(item.result)" variant="tonal" size="small"
                       class="font-weight-medium">
-                      {{ item.Result }}
+                      {{ item.result }}
                     </v-chip>
                   </td>
                   <td class="text-center pa-4">
                     <v-chip color="secondary" variant="outlined" size="small" class="font-weight-medium">
-                      {{ item.Language }}
+                      {{ item.language }}
                     </v-chip>
                   </td>
                   <td class="text-center pa-4">
                     <span class="text-body-2 text-medium-emphasis">
-                      {{ moment(item.Time).format('YYYY-MM-DD HH:mm') }}
+                      {{ moment(item.time).format('YYYY-MM-DD HH:mm') }}
                     </span>
                   </td>
                 </tr>

@@ -16,7 +16,7 @@ var Clients = make(map[string]Client)
 
 // SSEHandler SSE推送
 func SSEHandler(c *gin.Context) {
-	userId := c.Param("id")
+	userId := c.Param("user_id")
 	lang := c.Query("lang") // 获取语言参数
 	if lang == "" {
 		lang = "en" // 默认使用英文

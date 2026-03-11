@@ -23,7 +23,7 @@ type RegisterRequest struct {
 type UpdatePasswordRequest struct {
 	Email       string `json:"email"`
 	NewPassword string `json:"new_password"`
-	Captcha     string `json:"Captcha"`
+	Captcha     string `json:"captcha"`
 }
 
 // 讨论列表请求体
@@ -67,7 +67,7 @@ type UserInfoRequest struct {
 	Score     int       `json:"score"`
 	CreatedAt time.Time `json:"created_at"`
 	Role      int       `json:"role"`
-	IsBan     bool      `json:"is_Ban"`
+	IsBan     bool      `json:"is_banned"`
 }
 
 // 题目信息请求体

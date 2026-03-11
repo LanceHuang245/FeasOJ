@@ -22,7 +22,7 @@ const userLoggedIn = computed(() => !!token.value);
 
 // 用于获取路由的参数
 const route = useRoute();
-const Did = route.params.Did;
+const Did = route.params.discussion_id;
 
 // 用于路由处理
 const router = useRouter();
@@ -217,7 +217,7 @@ onUnmounted(() => {
             </div>
             <v-divider></v-divider>
             <v-list>
-                <v-list-item v-for="comment in paginatedComments" :key="comment.cid">
+                <v-list-item v-for="comment in paginatedComments" :key="comment.id">
                     <v-list-item>
                         <v-list-item-title class="username-avatar">
                             <v-avatar size="44" color="surface-variant">
@@ -233,8 +233,8 @@ onUnmounted(() => {
                             </div>
                         </v-list-item-title>
                         <v-chip color="warning" variant="tonal" class="ml-2"
-                            v-if="comment.profanity && !expandedComments[comment.cid]" style="color: darkblue;"
-                            @click="expandedComments[comment.cid] = true">
+                            v-if="comment.profanity && !expandedComments[comment.id]" style="color: darkblue;"
+                            @click="expandedComments[comment.id] = true">
                             {{ $t("message.profanity_expand") }}
                         </v-chip>
                         <v-list-item v-else class="comment-content">
