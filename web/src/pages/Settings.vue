@@ -30,6 +30,10 @@ const themes = [
   { title: t('message.system'), value: 'system', icon: 'mdi-monitor' }
 ];
 
+const getThemeIcon = (item) => {
+  return item?.raw?.icon ?? themes.find(({ value }) => value === item?.value)?.icon ?? 'mdi-palette';
+};
+
 // 使用共享的语言常量（编程语言名称不需要翻译）
 const languages = getLanguageOptionsWithIcon();
 
@@ -112,7 +116,7 @@ watch(locale, (val) => {
               <template v-slot:item="{ props, item }">
                 <v-list-item v-bind="props" class="theme-select-item">
                   <template v-slot:prepend>
-                    <v-icon :icon="item.raw.icon" size="20"></v-icon>
+                    <v-icon :icon="getThemeIcon(item)" size="20"></v-icon>
                   </template>
                 </v-list-item>
               </template>
