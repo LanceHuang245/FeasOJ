@@ -60,7 +60,7 @@ func BuildImage(currentDir string) bool {
 	return true
 }
 
-// CompileAndRun 编译并运行代�?
+// CompileAndRun 编译并运行代码
 func CompileAndRun(filename string, containerID string, problem *tables.Problems, testCases []*structs.TestCaseRequest) string {
 	taskDir := fmt.Sprintf("/workspace/task_%d", time.Now().UnixNano())
 

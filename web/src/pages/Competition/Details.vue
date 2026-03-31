@@ -145,9 +145,11 @@ onUnmounted(() => {
             <template v-slot:prepend>
                 <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
             </template>
-            <v-col class="align-left">
-                <p class="font-weight-black" style="font-size: 24px;">{{ contestInfo.title }}</p>
-                <p>{{ contestInfo.subtitle }}</p>
+            <v-col class="align-left-solo">
+                <div class="page-heading">
+                    <p class="page-title">{{ contestInfo.title }}</p>
+                    <p class="page-subtitle">{{ contestInfo.subtitle }}</p>
+                </div>
             </v-col>
             <template v-slot:append>
                 <v-btn v-if="!isContestEnded" color="primary" variant="flat" rounded="xl" @click="quitDialog = true">{{ t('message.quit')
@@ -243,6 +245,31 @@ onUnmounted(() => {
     justify-content: center;
     align-items: center;
     height: 100%;
+}
+
+.align-left-solo {
+    text-align: left;
+    margin-left: 20px;
+}
+
+.page-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.page-title {
+    margin: 0;
+    font-size: 24px;
+    line-height: 1.15;
+    font-weight: 700;
+}
+
+.page-subtitle {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.2;
+    color: rgba(var(--v-theme-on-surface), 0.68);
 }
 
 .username-avatar {
